@@ -51,6 +51,8 @@ public class User {
     private List<Follow> followers;
     @OneToMany(mappedBy = "user")
     private List<CommentLike> commentLikes;
+    @OneToMany(mappedBy = "user")
+    private List<PostLike> postLikes;
 
 
     public User(String userName, Integer age, String profileUrl, Gender gender) {

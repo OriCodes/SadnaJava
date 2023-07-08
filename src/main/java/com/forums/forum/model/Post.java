@@ -40,6 +40,8 @@ public class Post {
     private Topic topic; // the topic
     @OneToMany(mappedBy = "post")
     private List<Comment> comments;
+    @OneToMany(mappedBy = "post")
+    private List<PostLike> likes;
 
     public Post(String title, String text, Timestamp createdTimeStamp, User user, Topic topic) {
         this.title = title;

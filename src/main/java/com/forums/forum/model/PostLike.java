@@ -10,36 +10,35 @@ import java.sql.Timestamp;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "comment_like")
-@Table(name = "comment_like",uniqueConstraints = @UniqueConstraint(columnNames = { "comment_id", "user_id"}))
-public class CommentLike {
+@Entity(name = "post_like")
+@Table(name = "post_like",uniqueConstraints = @UniqueConstraint(columnNames = { "post_id", "user_id"}))
+public class PostLike {
     @Id
     @SequenceGenerator(
-            name = "comment_like_sequence",
-            sequenceName = "comment_like_sequence",
+            name = "post_like_sequence",
+            sequenceName = "post_like_sequence",
             allocationSize = 1
     )
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
-            generator = "comment_like_sequence"
+            generator = "post_like_sequence"
     )
     @Column(name = "comment_like_id")
-    private Long commentLikeId;
+    private Long postLikeId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "comment_id")
-    private Comment comment;
+    @JoinColumn(name = "post_id")
+    private Post post;
 
     @Column(name="like_time")
     private Timestamp likeTime;
-
-    public CommentLike(User user, Comment comment, Timestamp likeTime) {
+    public PostLike(User user, Post post, Timestamp likeTime) {
         this.user = user;
-        this.comment = comment;
+        this.post = post;
         this.likeTime = likeTime;
     }
 }
