@@ -57,11 +57,11 @@ public class User {
     private List<PostLike> postLikes;
 
 
-    public User(String userName, Integer age, String profileUrl, Gender gender) {
+    public User(String userName, Integer age, String profileUrl, Gender gender, String auth0Id) {
         this.userName = userName;
         this.age = age;
         this.profileUrl = profileUrl;
         this.gender = gender;
+        this.auth0Id = auth0Id;
     }
-
 }
