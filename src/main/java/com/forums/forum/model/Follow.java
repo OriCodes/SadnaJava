@@ -35,11 +35,11 @@ public class Follow {
     @JoinColumn(name = "followed_id")
     private User followed;
     @Column(name="follow_date")
-    private Timestamp followDte;
+    private Timestamp followDate;
 
-    public Follow(User follower, User followed, Timestamp followDte) {
+    public Follow(User follower, User followed, Timestamp followDate) {
         this.follower = follower;
         this.followed = followed;
-        this.followDte = followDte;
+        this.followDate = followDate;
     }
 }

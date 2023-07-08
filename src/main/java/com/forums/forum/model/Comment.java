@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,11 +37,15 @@ public class Comment
     @JoinColumn(name = "post_id")
     private Post post; // the post which the comment belong to
 
+    @OneToMany(mappedBy = "comment")
+    private List<CommentLike> commentLikes;
+
     public Comment(String text, Timestamp createdTimeStamp, User user, Post post) {
         this.text = text;
         this.createdTimeStamp = createdTimeStamp;
         this.user = user;
         this.post = post;
     }
+
 
 }

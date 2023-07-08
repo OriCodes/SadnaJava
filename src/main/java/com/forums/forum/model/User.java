@@ -45,6 +45,13 @@ public class User {
     private List<Message> sentMessages;
     @OneToMany(mappedBy = "receiver")
     private List<Message> receivedMessages;
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> following;
+    @OneToMany(mappedBy = "followed")
+    private List<Follow> followers;
+    @OneToMany(mappedBy = "user")
+    private List<CommentLike> commentLikes;
+
 
     public User(String userName, Integer age, String profileUrl, Gender gender) {
         this.userName = userName;
