@@ -5,7 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
+import java.sql.Timestamp;
+
 
 @Data
 @NoArgsConstructor
@@ -34,9 +35,9 @@ public class Follow {
     @JoinColumn(name = "followed_id")
     private User followed;
     @Column(name="follow_date")
-    private LocalDate followDte;
+    private Timestamp followDte;
 
-    public Follow(User follower, User followed, LocalDate followDte) {
+    public Follow(User follower, User followed, Timestamp followDte) {
         this.follower = follower;
         this.followed = followed;
         this.followDte = followDte;
