@@ -36,6 +36,8 @@ public class User {
     private String profileUrl;
     @Column(name = "gender")
     private Gender gender;
+    @Column(name = "auth0_id")
+    private String auth0Id;
     //Foreign key constrains
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
