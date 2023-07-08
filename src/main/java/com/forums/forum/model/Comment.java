@@ -2,11 +2,13 @@ package com.forums.forum.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 import java.sql.Timestamp;
 
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
 @Entity(name = "comments")
 @Table(name = "comments")
 public class Comment
@@ -41,55 +43,4 @@ public class Comment
         this.post = post;
     }
 
-    // Getters and setters
-    public long getCommentId() {
-        return commentId;
-    }
-
-    public void setCommentId(long commentId) {
-        this.commentId = commentId;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public void setText(String text) {
-        this.text = text;
-    }
-
-    public Timestamp getCreatedTimeStamp() {
-        return createdTimeStamp;
-    }
-
-    public void setCreatedTimeStamp(Timestamp createdTimeStamp) {
-        this.createdTimeStamp = createdTimeStamp;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public Post getPost() {
-        return post;
-    }
-
-    public void setPost(Post post) {
-        this.post = post;
-    }
-
-    @Override
-    public String toString() {
-        return "Comment{" +
-                "commentId=" + commentId +
-                ", text='" + text + '\'' +
-                ", createdTimeStamp=" + createdTimeStamp +
-                ", user=" + user +
-                ", post=" + post +
-                '}';
-    }
 }

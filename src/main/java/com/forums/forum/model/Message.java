@@ -2,11 +2,13 @@ package com.forums.forum.model;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "messages")
@@ -42,43 +44,4 @@ public class Message {
         this.receiver = receiver;
     }
 
-    public long getMessageId() {
-        return messageId;
-    }
-
-    public void setMessageId(long messageId) {
-        this.messageId = messageId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public Timestamp getCreatedTimeStamp() {
-        return createdTimeStamp;
-    }
-
-    public void setCreatedTimeStamp(Timestamp createdTimeStamp) {
-        this.createdTimeStamp = createdTimeStamp;
-    }
-
-    public User getSender() {
-        return sender;
-    }
-
-    public void setSender(User sender) {
-        this.sender = sender;
-    }
-
-    public User getReceiver() {
-        return receiver;
-    }
-
-    public void setReceiver(User receiver) {
-        this.receiver = receiver;
-    }
 }
