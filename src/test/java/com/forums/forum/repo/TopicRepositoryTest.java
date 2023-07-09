@@ -12,16 +12,14 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 @DataJpaTest
 class TopicRepositoryTest {
     @Autowired
-    private  TopicRepository underTest;
+    private  TopicRepository topicRepository;
 
     @AfterEach
     public void tearDown(){
-        underTest.deleteAll();
+        topicRepository.deleteAll();
     }
 
     @Test
@@ -30,10 +28,10 @@ class TopicRepositoryTest {
         Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
         String expectedTopic = "Basketball";
         Topic topic = new Topic(expectedTopic, timeStamp, "URL");
-        underTest.save(topic);
+        topicRepository.save(topic);
         //when
-        boolean expectedTrue = underTest.existsByTopicName(expectedTopic);
-        boolean expectedFalse = underTest.existsByTopicName(expectedTopic + "#");
+        boolean expectedTrue = topicRepository.existsByTopicName(expectedTopic);
+        boolean expectedFalse = topicRepository.existsByTopicName(expectedTopic + "#");
         //then
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
@@ -45,9 +43,9 @@ class TopicRepositoryTest {
         Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
         String expectedTopic = "Basketball";
         Topic topic = new Topic(expectedTopic, timeStamp, "URL");
-        underTest.save(topic);
+        topicRepository.save(topic);
         //when
-        Topic foundTopic = underTest.findByTopicName(expectedTopic);
+        Topic foundTopic = topicRepository.findByTopicName(expectedTopic);
         //then
         assertThat(foundTopic).isNotNull();
         assertThat(foundTopic.getTopicName()).isEqualTo(expectedTopic);
@@ -62,9 +60,9 @@ class TopicRepositoryTest {
         Timestamp inBounds = new Timestamp((lowerBound.getTime() + upperBound.getTime()) / 2);
         Topic expected = new Topic("baseball", inBounds, "URL");
         Topic notExpected = new Topic("baseball", outOfBounds, "URL");
-        underTest.saveAll(List.of(expected, notExpected));
+        topicRepository.saveAll(List.of(expected, notExpected));
         //when
-        List<Topic> expectedList = underTest.findAllByCreatedTimeStampBetween(lowerBound, upperBound);
+        List<Topic> expectedList = topicRepository.findAllByCreatedTimeStampBetween(lowerBound, upperBound);
         //then
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getCreatedTimeStamp()).isEqualTo(inBounds);
@@ -78,10 +76,10 @@ class TopicRepositoryTest {
         Timestamp timeStamp =new Timestamp(System.currentTimeMillis());
         Topic topic1 = new Topic("Football", timeStamp, "URL");
         Topic topic2 = new Topic("basketball", timeStamp, "URL");
-        underTest.saveAll(List.of(topic1, topic2));
+        topicRepository.saveAll(List.of(topic1, topic2));
         String seq = "Fo";
         //when
-        List<Topic> expectedList = underTest.findAllByTopicNameContains(seq);
+        List<Topic> expectedList = topicRepository.findAllByTopicNameContains(seq);
         //then
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getTopicName().contains(seq)).isTrue();

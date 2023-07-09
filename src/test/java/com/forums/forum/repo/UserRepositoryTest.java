@@ -16,20 +16,20 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 class UserRepositoryTest {
 
     @Autowired
-    private  UserRepository underTest;
+    private  UserRepository userRepository;
 
     @AfterEach
     void tearDown(){
-        underTest.deleteAll();
+        userRepository.deleteAll();
     }
     @Test
     public void existsByUserName() {
         //given
         User user = new User("Poseidon", 19, "URL", Gender.MALE, "Auth");
-        underTest.save(user);
+        userRepository.save(user);
         //when
-        boolean expectedTrue = underTest.existsByUserName("Poseidon");
-        boolean expectedFalse = underTest.existsByUserName("Venus");
+        boolean expectedTrue = userRepository.existsByUserName("Poseidon");
+        boolean expectedFalse = userRepository.existsByUserName("Venus");
         //then
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
@@ -41,9 +41,9 @@ class UserRepositoryTest {
         //given
         String userName = "Poseidon";
         User user = new User(userName, 19, "URL", Gender.MALE, "Auth");
-        underTest.save(user);
+        userRepository.save(user);
         //when
-        User foundUser = underTest.findByUserName(userName);
+        User foundUser = userRepository.findByUserName(userName);
         //then
         assertThat(foundUser).isNotNull();
         assertThat(foundUser.getUserName()).isEqualTo(userName);
@@ -54,10 +54,10 @@ class UserRepositoryTest {
         //given
         User user1 = new User("Poseidon", 19, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", 10, "URL", Gender.FEMALE, "Auth");
-        underTest.saveAll(List.of(user1, user2));
+        userRepository.saveAll(List.of(user1, user2));
         String seq = "on";
         //when
-        List<User> expected = underTest.findAllByUserNameContaining(seq);
+        List<User> expected = userRepository.findAllByUserNameContaining(seq);
         //then
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getUserName().contains(seq)).isTrue();
@@ -68,10 +68,10 @@ class UserRepositoryTest {
         //given
         User user1 = new User("Poseidon", 19, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", 10, "URL", Gender.FEMALE, "Auth");
-        underTest.saveAll(List.of(user1, user2));
+        userRepository.saveAll(List.of(user1, user2));
         Gender expectedGender = Gender.FEMALE;
         //when
-        List<User> expectedUserList = underTest.findAllByGender(expectedGender);
+        List<User> expectedUserList = userRepository.findAllByGender(expectedGender);
         //then
         assertThat(expectedUserList.size()).isEqualTo(1);
         assertThat(expectedUserList.get(0).getGender()).isEqualTo(expectedGender);
