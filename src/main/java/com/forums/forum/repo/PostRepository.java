@@ -13,7 +13,7 @@ import java.util.List;
 public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsByTitle(String title);
 
-    Post findByTitleName(String title);
+    Post findByTitle(String title);
 
     List<Post> findAllByTitle(String title);
     List<Post> findAllByTitleContaining(String seq);
