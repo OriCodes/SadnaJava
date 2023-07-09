@@ -12,6 +12,6 @@ public interface TopicRepository extends JpaRepository<Topic,Long> {
 
     Topic findByTopicName(String topicName);
     List<Topic> findAllByCreatedTimeStampBetween(Timestamp lowerBound, Timestamp upperBound);
-    List<Topic> findAllByTopicNameContains(String topicName);
+    List<Topic> findAllByTopicNameContains(String seq);
 
 }
