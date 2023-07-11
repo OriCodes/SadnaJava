@@ -8,5 +8,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message,Long> {
     boolean existsBySenderAndReceiver(User sender,User receiver);
+    int countAllBySender(User sender);
     List<Message>findAllBySenderAndReceiver(User sender, User receiver);
 }
