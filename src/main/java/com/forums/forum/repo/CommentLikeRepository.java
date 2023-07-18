@@ -10,4 +10,5 @@ import org.springframework.stereotype.Repository;
 public interface CommentLikeRepository extends JpaRepository<CommentLike,Long> {
     int countAllByComment(Comment comment);
     boolean existsByCommentAndUser(Comment comment, User user);
+    void deleteAllByCommentAndUser(Comment comment, User user);
 }
