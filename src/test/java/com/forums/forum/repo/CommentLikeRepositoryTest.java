@@ -78,4 +78,19 @@ class CommentLikeRepositoryTest {
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
     }
+
+    @Test
+    public void deleteAllByCommentAndUser() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        CommentLike commentLike1 = new CommentLike(user1,comment1,timestamp);
+        CommentLike commentLike2 = new CommentLike(user2,comment2,timestamp);
+        commentLikeRepository.saveAll(List.of(commentLike1,commentLike2));
+        //when
+        commentLikeRepository.deleteAllByCommentAndUser(comment1, user1);
+        List<CommentLike>expectedList = commentLikeRepository.findAll(); // the expected size should be 1
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+
+    }
 }

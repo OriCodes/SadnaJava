@@ -71,4 +71,18 @@ class PostLikeRepositoryTest {
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
     }
+
+    @Test
+    public void deleteAllByPostAndUser() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
+        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
+        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        //when
+        postLikeRepository.deleteAllByPostAndUser(post1,user1);
+        List<PostLike>expectedList = postLikeRepository.findAll();
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+    }
 }
