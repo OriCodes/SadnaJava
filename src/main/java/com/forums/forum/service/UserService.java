@@ -7,6 +7,8 @@ import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @AllArgsConstructor
 @Service
 public class UserService {
@@ -20,5 +22,23 @@ public class UserService {
         User newUser = new User(userName, age,  profileUrl, gender,  auth0Id);
         return userRepository.save(newUser);
     }
+
+    public List<User> allUsers(){
+        return userRepository.findAll();
+    }
+
+    public List<User> byUserNameContainingSequence(String seq){
+        return userRepository.findAllByUserNameContaining(seq);
+    }
+
+    public User byUserName(String userName){
+        return userRepository.findByUserName(userName);
+    }
+
+    public List<User> allByGender(Gender gender){
+        return userRepository.findAllByGender(gender);
+    }
+
+
 
 }
