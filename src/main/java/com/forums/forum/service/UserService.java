@@ -35,6 +35,10 @@ public class UserService {
         return userRepository.findByUserName(userName);
     }
 
+    public User byId(Long id){
+        return userRepository.findById(id).orElse(null);
+    }
+
     public List<User> allByGender(Gender gender){
         return userRepository.findAllByGender(gender);
     }
