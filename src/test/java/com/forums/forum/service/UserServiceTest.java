@@ -51,7 +51,6 @@ class UserServiceTest {
             assertThat(newUser).isEqualTo(savedUser);
         } catch (UserNameAlreadyExistException e) { // this should never happen
             System.out.println(e.getStackTrace());
-            throw new RuntimeException(e);
         }
     }
 

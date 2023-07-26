@@ -22,7 +22,7 @@ public class MessageService{
         List<Message> side2 = messageRepository.findAllBySenderAndReceiver(user2, user1);
 
         List<Message> conversation = new ArrayList<>();
-        conversation.addAll(side2);
+        conversation.addAll(side1);
         conversation.addAll(side2);
         conversation.sort(Comparator.comparing(Message::getCreatedTimeStamp));
 
