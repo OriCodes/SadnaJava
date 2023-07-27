@@ -55,4 +55,8 @@ public class FollowService {
         Follow newFollow = new Follow(follower,followed,timestamp);
         return followRepository.save(newFollow);
     }
+
+    public void unfollow(User follower, User followed){
+        followRepository.deleteAllByFollowerAndAndFollowed(follower, followed);
+    }
 }

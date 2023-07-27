@@ -189,5 +189,23 @@ class FollowServiceTest {
                 .isInstanceOf(IllegalArgumentException.class);
     }
 
+    @Test
+    public void unfollow(){
+        //given
+        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE,"auth0Id");
+        //when
+        followService.unfollow(user1, user2);
+        //then
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class) ;
+        verify(followRepository).deleteAllByFollowerAndAndFollowed(
+                userArgumentCaptor.capture(),
+                userArgumentCaptor.capture())
+        ;
 
+        List<User> capturedUsers = userArgumentCaptor.getAllValues();
+        assertThat(capturedUsers.size()).isEqualTo(2);
+        assertThat(user1).isEqualTo(capturedUsers.get(0));
+        assertThat(user2).isEqualTo(capturedUsers.get(1));
+    }
 }
