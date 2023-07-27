@@ -7,9 +7,14 @@ import com.forums.forum.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -33,7 +38,7 @@ class UserServiceTest {
 
 
     @Test
-    void addUserSuccess() {
+    public void addUserSuccess() {
         //given
         when(userRepository.existsByUserName(anyString())).thenReturn(false);
         String userName = "poseidon";
@@ -55,7 +60,7 @@ class UserServiceTest {
     }
 
     @Test
-    void addUserShouldThrow() {
+    public void addUserShouldThrow() {
         //given
         when(userRepository.existsByUserName(anyString())).thenReturn(true);
         String userName = "poseidon";
@@ -68,8 +73,85 @@ class UserServiceTest {
         assertThatThrownBy(()-> userService.addUser(userName,age,profileUrl,gender,auth0Id)).
                 isInstanceOf(UserNameAlreadyExistException.class);
         verify(userRepository, never()).save(any());
+    }
 
+    @Test
+    public void allUsers(){
+        //given
+        User user1 = new User("Poseidon", 19, "URL",Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", 12, "URL",Gender.FEMALE,"auth0Id");
+        List<User>expecList = Arrays.asList(user1,user2);
+        when(userRepository.findAll()).thenReturn(expecList);
+        //when
+        List<User>resList = userService.allUsers();
+        //then
+        assertThat(resList).isNotNull();
+        assertThat(resList.get(0)).isEqualTo(user1);
+        assertThat(resList.get(1)).isEqualTo(user2);
+    }
 
+    @Test
+    public void byUserNameContainingSequence(){
+        //given
+        String expected = "Heyy";
+        //when
+        userService.byUserNameContainingSequence(expected);
+        //then
+        ArgumentCaptor<String>stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userRepository).findAllByUserNameContaining(stringArgumentCaptor.capture());
+
+        String captured = stringArgumentCaptor.getValue();
+        assertThat(captured).isEqualTo(expected);
+    }
+
+    @Test
+    public void byUserName(){
+        //given
+        String expected = "Heyy";
+        //when
+        userService.byUserName(expected);
+        //then
+        ArgumentCaptor<String>stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
+        verify(userRepository).findByUserName(stringArgumentCaptor.capture());
+
+        String captured = stringArgumentCaptor.getValue();
+        assertThat(captured).isEqualTo(expected);
+    }
+
+    @Test
+    public void allByGender(){
+        //given
+        Gender expected = Gender.FEMALE;
+        //when
+        userService.allByGender(expected);
+        //then
+        ArgumentCaptor<Gender>genderArgumentCaptor = ArgumentCaptor.forClass(Gender.class);
+        verify(userRepository).findAllByGender(genderArgumentCaptor.capture());
+
+        Gender captured = genderArgumentCaptor.getValue();
+        assertThat(captured).isEqualTo(expected);
+    }
+
+    @Test
+    public void byIdFound(){
+        //given
+        User user = new User("Poseidon", 19, "URL",Gender.MALE,"auth0Id");
+        when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
+        //when
+        User res = userService.byId(1L);
+        //then
+        assertThat(res).isNotNull();
+        assertThat(res).isEqualTo(user);
+    }
+
+    @Test
+    public void byIdNotFound(){
+        //given
+        when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
+        //when
+        User res = userService.byId(1L);
+        //then
+        assertThat(res).isNull();
     }
 
 }
