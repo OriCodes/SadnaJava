@@ -43,6 +43,4 @@ public class UserService {
         return userRepository.findAllByGender(gender);
     }
 
-
-
 }
