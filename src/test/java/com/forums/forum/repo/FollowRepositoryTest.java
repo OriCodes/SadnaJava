@@ -108,4 +108,19 @@ class FollowRepositoryTest {
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getFollowed()).isEqualTo(user2);
     }
+
+    @Test
+    public void findByFollowerAndFollowed()
+    {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Follow follow1 = new Follow(user1,user2,timestamp);
+        Follow follow2 = new Follow(user2,user1,timestamp);
+        followRepository.saveAll(List.of(follow1,follow2));
+        //when
+        Follow res = followRepository.findByFollowerAndAndFollowed(user1,user2);
+        //then
+        assertThat(res).isNotNull();
+        assertThat(res).isEqualTo(follow1);
+    }
 }
