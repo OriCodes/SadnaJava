@@ -40,8 +40,17 @@ public class FollowService {
     }
 
     public Follow addFollow(User follower, User followed, Timestamp timestamp) throws AlreadyFollowsException {
-        if (followRepository.existsByFollowerAndFollowed(follower,followed))
+        if (follower == null || followed == null || timestamp == null) {
+            throw new IllegalArgumentException("Follower, followed, and timestamp cannot be null.");
+        }
+
+        if (follower.equals(followed)) {
+            throw new IllegalArgumentException("Follower and followed cannot be the same user.");
+        }
+
+        if (followRepository.existsByFollowerAndFollowed(follower, followed)) {
             throw new AlreadyFollowsException();
+        }
 
         Follow newFollow = new Follow(follower,followed,timestamp);
         return followRepository.save(newFollow);
