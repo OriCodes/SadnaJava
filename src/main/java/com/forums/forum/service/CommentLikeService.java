@@ -5,6 +5,8 @@ import com.forums.forum.repo.CommentLikeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+
 @AllArgsConstructor
 @Service
 public class CommentLikeService {
@@ -21,7 +23,8 @@ public class CommentLikeService {
         commentLikeRepository.deleteAllByCommentAndUser(comment, user);
     }
 
-    public void addLike(CommentLike commentLike){
+    public void addLike(User user, Comment comment, Timestamp timestamp){
+        CommentLike commentLike = new CommentLike(user,comment,timestamp);
         commentLikeRepository.save(commentLike);
     }
 

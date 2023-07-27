@@ -27,7 +27,8 @@ public class PostLikeService {
         postLikeRepository.deleteAllByPostAndUser(post,user);
     }
 
-    public void addLike(PostLike postLike){
+    public void addLike(User user, Post post, Timestamp timestamp){
+        PostLike postLike = new PostLike(user,post,timestamp);
         postLikeRepository.save(postLike);
     }
 }

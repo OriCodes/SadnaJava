@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.sql.Timestamp;
+
 import static org.mockito.Mockito.verify;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -81,14 +83,18 @@ class PostLikeServiceTest {
     @Test
     public void addLike() {
         //given
-        PostLike postLike = new PostLike();
+        User user = new User();
+        Post post = new Post();
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //when
-        postLikeService.addLike(postLike);
+        postLikeService.addLike(user,post,timestamp);
         //then
         ArgumentCaptor<PostLike> postLikeArgumentCaptor = ArgumentCaptor.forClass(PostLike.class) ;
         verify(postLikeRepository).save(postLikeArgumentCaptor.capture());
 
         PostLike capturedPostLike = postLikeArgumentCaptor.getValue();
-        assertThat(capturedPostLike).isEqualTo(postLike);
+        assertThat(capturedPostLike.getLikeTime()).isEqualTo(timestamp);
+        assertThat(capturedPostLike.getPost()).isEqualTo(post);
+        assertThat(capturedPostLike.getUser()).isEqualTo(user);
     }
 }
