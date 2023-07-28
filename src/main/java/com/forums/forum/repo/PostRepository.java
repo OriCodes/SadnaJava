@@ -12,12 +12,15 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsByTitle(String title);
+    boolean existsByTitleAndTopic(String title, Topic topic);
 
     Post findByTitle(String title);
+    Post findByTitleAndTopic(String title, Topic topic);
 
+    List<Post> findAllByTopicAndTitleContaining(Topic topic, String seq);
+    List<Post> findAllByTopicAndTitle(Topic topic, String title);
     List<Post> findAllByTitle(String title);
     List<Post> findAllByTitleContaining(String seq);
-
     List<Post> findAllByUser(User user);
     List<Post> findAllByTopic(Topic topic);
     List<Post> findAllByTopicAndUser(Topic topic, User user);

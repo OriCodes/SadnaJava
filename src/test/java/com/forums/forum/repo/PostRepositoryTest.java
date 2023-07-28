@@ -51,6 +51,23 @@ class PostRepositoryTest {
         //then
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
+    }
+
+    @Test
+    public void existsByTitleAndTopic() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String expectedTitle = "What is your fav sport";
+        Post post  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        postRepository.save(post);
+        //when
+        boolean expectedTrue = postRepository.existsByTitleAndTopic(expectedTitle, topic1);
+        boolean expectedFalseTitle = postRepository.existsByTitleAndTopic(expectedTitle+"#", topic1);
+        boolean expectedFalseTopic = postRepository.existsByTitleAndTopic(expectedTitle, topic2);
+        //then
+        assertThat(expectedTrue).isTrue();
+        assertThat(expectedFalseTitle).isFalse();
+        assertThat(expectedFalseTopic).isFalse();
 
 
     }
@@ -71,6 +88,23 @@ class PostRepositoryTest {
     }
 
     @Test
+    public void findByTitleAndTopic() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String expectedTitle = "What is your fav sport";
+        Post post1  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post2  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic2);
+        postRepository.saveAll(List.of(post1,post2));
+        //when
+        Post expected = postRepository.findByTitleAndTopic(expectedTitle,topic1);
+        //then
+        assertThat(expected).isNotNull();
+        assertThat(expected.getTitle()).isEqualTo(expectedTitle);
+        assertThat(expected.getTopic()).isEqualTo(topic1);
+
+    }
+
+    @Test
     public void findAllByTitle() {
         //given
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -84,6 +118,44 @@ class PostRepositoryTest {
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getTitle()).isEqualTo(expectedTitle);
 
+    }
+
+
+    @Test
+    public void findAllByTopicAndTitle() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String expectedTitle = "What is your fav sport";
+        Post post1  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post3  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic2);
+        Post post4  = new Post("**", "Mine is judo",timestamp,user1, topic1);
+        postRepository.saveAll(List.of(post1,post2,post3,post4));
+        //when
+        List<Post> expected = postRepository.findAllByTopicAndTitle(topic1,expectedTitle);
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getTitle()).isEqualTo(expectedTitle);
+        assertThat(expected.get(0).getTopic()).isEqualTo(topic1);
+
+    }
+
+    @Test
+    public void findAllByTopicAndTitleContaining() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String seq = "topg";
+        Post post1  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic1);
+        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post3  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic2);
+        Post post4  = new Post("hey", "there",timestamp,user2, topic1);
+        postRepository.saveAll(List.of(post1,post2,post3,post4));
+        //when
+        List<Post> expected = postRepository.findAllByTopicAndTitleContaining(topic1,seq);
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getTitle().contains(seq)).isTrue();
+        assertThat(expected.get(0).getTopic()).isEqualTo(topic1);
     }
 
     @Test
