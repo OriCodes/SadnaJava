@@ -16,6 +16,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -39,8 +41,9 @@ class MessageServiceTest {
     @Test
     public void getConversation() {
         //given
-        User user1 = new User("Yoav",19,"PhotoURL", Gender.MALE,"authOId");
-        User user2 = new User("Yonatan",15,"PhotoURL", Gender.FEMALE,"authOId");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Yoav",dob,"PhotoURL", Gender.MALE,"authOId");
+        User user2 = new User("Yonatan",dob,"PhotoURL", Gender.FEMALE,"authOId");
 
         Timestamp timestamp1 = Timestamp.valueOf("2023-07-26 12:34:56");
         Timestamp timestamp2 = Timestamp.valueOf("2023-07-26 13:45:12");
@@ -94,7 +97,8 @@ class MessageServiceTest {
     @Test
     public void getAmountOfMessagesSent() {
         //given
-        User user1 = new User("Yoav",19,"PhotoURL", Gender.MALE,"authOId");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Yoav",dob,"PhotoURL", Gender.MALE,"authOId");
         int expected = 5;
         when(messageRepository.countAllBySender(user1)).thenReturn(expected);
         //when
@@ -105,8 +109,9 @@ class MessageServiceTest {
 
     @Test
     public void hasConversationBetween() {
-        User user1 = new User("Yoav",19,"PhotoURL", Gender.MALE,"authOId");
-        User user2 = new User("Yonatan",15,"PhotoURL", Gender.FEMALE,"authOId");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Yoav",dob,"PhotoURL", Gender.MALE,"authOId");
+        User user2 = new User("Yonatan",dob,"PhotoURL", Gender.FEMALE,"authOId");
 
         when(messageRepository.existsBySenderAndReceiver(user1,user2)).thenReturn(true);
 

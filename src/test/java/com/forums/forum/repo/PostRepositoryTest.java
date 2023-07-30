@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -23,8 +25,10 @@ class PostRepositoryTest {
     private TopicRepository topicRepository;
     @Autowired
     private  PostRepository postRepository;
-    private User user1 = new User("Poseidon", 19, "URL", Gender.MALE, "Auth");
-    private User user2 = new User("Venus", 10, "URL", Gender.FEMALE, "Auth");
+
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+    private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
+    private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
     private Topic topic1 = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
     private Topic topic2 = new Topic("Art", new Timestamp(System.currentTimeMillis()), "URL");
     @BeforeEach
@@ -216,6 +220,27 @@ class PostRepositoryTest {
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getUser()).isEqualTo(user2);
         assertThat(expected.get(0).getTopic()).isEqualTo(topic1);
+    }
 
+    @Test
+    public void deleteTest() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        String seq = "topg";
+        User user3 = new User("Zeus", dob, "URL", Gender.MALE, "Auth");
+        Post post1  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic1);
+        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post3  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic2);
+        Post post4  = new Post("hey", "there",timestamp,user3, topic1);
+        postRepository.saveAll(List.of(post1,post2,post3,post4));
+        userRepository.save(user3);
+        Long id = userRepository.findByUserName("Zeus").getUserId();
+        //when
+        userRepository.deleteById(id);
+        //then
+        List<Post> expected = postRepository.findAll();
+//        User user = userRepository.findByUserName("Zeus");
+        assertThat(expected.size()).isEqualTo(3);
+//        assertThat(user).isNotNull();
     }
 }

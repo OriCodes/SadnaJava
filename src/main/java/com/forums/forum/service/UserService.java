@@ -7,6 +7,7 @@ import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @AllArgsConstructor
@@ -14,12 +15,12 @@ import java.util.List;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User addUser(String userName, Integer age, String profileUrl, Gender gender, String auth0Id) throws UserNameAlreadyExistException
+    public User addUser(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) throws UserNameAlreadyExistException
     {
         if(userRepository.existsByUserName(userName)){
             throw new UserNameAlreadyExistException();
         }
-        User newUser = new User(userName, age,  profileUrl, gender,  auth0Id);
+        User newUser = new User(userName, dob,  profileUrl, gender,  auth0Id);
         return userRepository.save(newUser);
     }
 

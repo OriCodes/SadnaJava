@@ -43,6 +43,7 @@ public class PostService {
     public List<Post> allByTitle(String title){
         return  postRepository.findAllByTitle(title);
     }
+
     public List<Post> allByTitleContaining(String seq){
         return postRepository.findAllByTitleContaining(seq);
     }

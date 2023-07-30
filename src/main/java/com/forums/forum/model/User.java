@@ -5,7 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 
@@ -30,14 +30,15 @@ public class User {
     private long userId;
     @Column(name = "user_name")
     private String userName;
-    @Column(name = "age")
-    private Integer age;
+    @Column(name = "dob")
+    private LocalDate dob;
     @Column(name = "profile_url")
     private String profileUrl;
     @Column(name = "gender")
     private Gender gender;
     @Column(name = "auth0_id")
     private String auth0Id;
+
     //Foreign key constrains
     @OneToMany(mappedBy = "user")
     private List<Post> posts;
@@ -57,9 +58,9 @@ public class User {
     private List<PostLike> postLikes;
 
 
-    public User(String userName, Integer age, String profileUrl, Gender gender, String auth0Id) {
+    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) {
         this.userName = userName;
-        this.age = age;
+        this.dob = dob;
         this.profileUrl = profileUrl;
         this.gender = gender;
         this.auth0Id = auth0Id;

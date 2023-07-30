@@ -3,7 +3,6 @@ package com.forums.forum.repo;
 import com.forums.forum.model.Follow;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
-import org.assertj.core.api.Assert;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,6 +11,8 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,9 +23,11 @@ class FollowRepositoryTest {
     UserRepository userRepository;
     @Autowired
     FollowRepository followRepository;
-    private User user1 = new User("Poseidon", 19, "URL", Gender.MALE, "Auth");
-    private User user2 = new User("Venus", 10, "URL", Gender.FEMALE, "Auth");
-    private User user3 = new User("zeus", 14, "URL", Gender.MALE, "Auth");
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+
+    private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
+    private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
+    private User user3 = new User("zeus", dob, "URL", Gender.MALE, "Auth");
 
     @BeforeEach
     public void initiateDb(){

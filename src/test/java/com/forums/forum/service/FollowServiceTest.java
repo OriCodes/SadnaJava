@@ -15,6 +15,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -36,8 +38,9 @@ class FollowServiceTest {
     @Test
     public void isFollowing() {
         //given
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE,"auth0Id");
         //when
         followService.isFollowing(user1, user2);
         //then
@@ -53,7 +56,8 @@ class FollowServiceTest {
     @Test
     public void getNumberOfFollowers() {
         //given
-        User user = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
         //when
         followService.getNumberOfFollowers(user);
         //then
@@ -68,7 +72,8 @@ class FollowServiceTest {
     @Test
     public void getNumberOfFollowed() {
         //given
-        User user = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
         //when
         followService.getNumberOfFollowed(user);
         //then
@@ -83,8 +88,9 @@ class FollowServiceTest {
     @Test
     public void byFollowAndFollower() {
         //given
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE,"auth0Id");
         //when
         followService.byFollowAndFollower(user1, user2);
         //then
@@ -100,7 +106,8 @@ class FollowServiceTest {
     @Test
     public void getFollowers() {
         //given
-        User user = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
         //when
         followService.getFollowers(user);
         //then
@@ -115,7 +122,8 @@ class FollowServiceTest {
     @Test
     public void getFollowed() {
         //given
-        User user = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
         //when
         followService.getFollowed(user);
         //then
@@ -131,9 +139,10 @@ class FollowServiceTest {
     public void addFollowSuccess() {
         try {
             //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
             when(followRepository.existsByFollowerAndFollowed(any(), any())).thenReturn(false);
-            User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE, "auth0Id");
-            User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE, "auth0Id");
+            User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
             Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             //when
             followService.addFollow(user1, user2, timestamp);
@@ -155,9 +164,10 @@ class FollowServiceTest {
     @Test
     public void addFollowShouldThrowAlreadyExist() {
         //given
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
         when(followRepository.existsByFollowerAndFollowed(any(),any())).thenReturn(true);
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE,"auth0Id");
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE,"auth0Id");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //then
         assertThatThrownBy(()-> followService.addFollow(user1,user2,timestamp)).
@@ -166,8 +176,9 @@ class FollowServiceTest {
     }
     @Test
     public void addFollowWithNullParametersShouldThrow() {
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE, "auth0Id");
-        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE, "auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         assertThatThrownBy(() -> followService.addFollow(null, user2, timestamp))
@@ -182,7 +193,8 @@ class FollowServiceTest {
 
     @Test
     public void addFollowWithSameUserShouldThrow() {
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE, "auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         assertThatThrownBy(() -> followService.addFollow(user1, user1, timestamp))
@@ -192,8 +204,9 @@ class FollowServiceTest {
     @Test
     public void unfollow(){
         //given
-        User user1 = new User("Poseidon", 19, "profileURL", Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 19, "profileURL", Gender.FEMALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE,"auth0Id");
         //when
         followService.unfollow(user1, user2);
         //then

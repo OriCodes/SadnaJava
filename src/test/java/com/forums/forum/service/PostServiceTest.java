@@ -14,6 +14,8 @@ import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -120,8 +122,9 @@ class PostServiceTest {
     public void allPosts() {
         //given
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        User user1 = new User("Poseidon", 19, "URL", Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 12, "URL",Gender.FEMALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob, "URL", Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob, "URL",Gender.FEMALE,"auth0Id");
         Topic topic = new Topic("Topic",timestamp,"URL");
         Post post1 = new Post("title","text", timestamp, user1, topic);
         Post post2 = new Post("title","text", timestamp, user2, topic);
@@ -208,7 +211,8 @@ class PostServiceTest {
     @Test
     public void allByUser() {
         //given
-        User user = new User("Poseidon", 19, "URL", Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "URL", Gender.MALE,"auth0Id");
         //when
         postService.allByUser(user);
         //then
@@ -238,8 +242,9 @@ class PostServiceTest {
     @Test
     public void allByUserAndTopic() {
         //given
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
         Topic topic = new Topic("Topic",new Timestamp(System.currentTimeMillis()),"URL");
-        User user = new User("Poseidon", 19, "URL", Gender.MALE,"auth0Id");
+        User user = new User("Poseidon", dob, "URL", Gender.MALE,"auth0Id");
         //when
         postService.allByUserAndTopic(user,topic);
         //then
@@ -263,8 +268,9 @@ class PostServiceTest {
     @Test
     public void addPost() {
         //given
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
         Topic topic = new Topic("Topic",new Timestamp(System.currentTimeMillis()),"URL");
-        User user = new User("Poseidon", 19, "URL", Gender.MALE,"auth0Id");
+        User user = new User("Poseidon", dob, "URL", Gender.MALE,"auth0Id");
         String title = "title" , text = "text";
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //when

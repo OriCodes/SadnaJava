@@ -12,6 +12,8 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -42,15 +44,15 @@ class UserServiceTest {
         //given
         when(userRepository.existsByUserName(anyString())).thenReturn(false);
         String userName = "poseidon";
-        Integer age = 19;
+        LocalDate dob2 = LocalDate.of(1999, Month.APRIL,7);
         String profileUrl = "Profile_URL";
         Gender gender = Gender.MALE;
         String auth0Id= "auth0Id";
-        User savedUser = new User(userName, age, profileUrl, gender, auth0Id);
+        User savedUser = new User(userName, dob2, profileUrl, gender, auth0Id);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         //when
         try {
-            User newUser = userService.addUser(userName,age,profileUrl,gender,auth0Id);
+            User newUser = userService.addUser(userName,dob2,profileUrl,gender,auth0Id);
             //then
             verify(userRepository, times(1)).save(any(User.class));
             assertThat(newUser).isEqualTo(savedUser);
@@ -64,13 +66,13 @@ class UserServiceTest {
         //given
         when(userRepository.existsByUserName(anyString())).thenReturn(true);
         String userName = "poseidon";
-        Integer age = 19;
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
         String profileUrl = "Profile_URL";
         Gender gender = Gender.MALE;
         String auth0Id= "auth0Id";
 
         //then
-        assertThatThrownBy(()-> userService.addUser(userName,age,profileUrl,gender,auth0Id)).
+        assertThatThrownBy(()-> userService.addUser(userName,dob,profileUrl,gender,auth0Id)).
                 isInstanceOf(UserNameAlreadyExistException.class);
         verify(userRepository, never()).save(any());
     }
@@ -78,8 +80,9 @@ class UserServiceTest {
     @Test
     public void allUsers(){
         //given
-        User user1 = new User("Poseidon", 19, "URL",Gender.MALE,"auth0Id");
-        User user2 = new User("Venus", 12, "URL",Gender.FEMALE,"auth0Id");
+        LocalDate dob1 = LocalDate.of(1999, Month.APRIL,7);
+        User user1 = new User("Poseidon", dob1, "URL",Gender.MALE,"auth0Id");
+        User user2 = new User("Venus", dob1, "URL",Gender.FEMALE,"auth0Id");
         List<User>expecList = Arrays.asList(user1,user2);
         when(userRepository.findAll()).thenReturn(expecList);
         //when
@@ -135,7 +138,8 @@ class UserServiceTest {
     @Test
     public void byIdFound(){
         //given
-        User user = new User("Poseidon", 19, "URL",Gender.MALE,"auth0Id");
+        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
+        User user = new User("Poseidon", dob, "URL",Gender.MALE,"auth0Id");
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
         //when
         User res = userService.byId(1L);
