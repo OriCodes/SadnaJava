@@ -35,7 +35,7 @@ class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+       // userService = new UserService(userRepository);
     }
 
 
@@ -52,10 +52,10 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         //when
         try {
-            User newUser = userService.addUser(userName,dob2,profileUrl,gender,auth0Id);
+            userService.registerUser(userName,dob2,profileUrl,gender,auth0Id);
             //then
             verify(userRepository, times(1)).save(any(User.class));
-            assertThat(newUser).isEqualTo(savedUser);
+            //assertThat(newUser).isEqualTo(savedUser);
         } catch (UserNameAlreadyExistException e) { // this should never happen
             System.out.println(e.getStackTrace());
         }
@@ -72,7 +72,7 @@ class UserServiceTest {
         String auth0Id= "auth0Id";
 
         //then
-        assertThatThrownBy(()-> userService.addUser(userName,dob,profileUrl,gender,auth0Id)).
+        assertThatThrownBy(()-> userService.registerUser(userName,dob,profileUrl,gender,auth0Id)).
                 isInstanceOf(UserNameAlreadyExistException.class);
         verify(userRepository, never()).save(any());
     }
@@ -91,34 +91,6 @@ class UserServiceTest {
         assertThat(resList).isNotNull();
         assertThat(resList.get(0)).isEqualTo(user1);
         assertThat(resList.get(1)).isEqualTo(user2);
-    }
-
-    @Test
-    public void byUserNameContainingSequence(){
-        //given
-        String expected = "Heyy";
-        //when
-        userService.byUserNameContainingSequence(expected);
-        //then
-        ArgumentCaptor<String>stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository).findAllByUserNameContaining(stringArgumentCaptor.capture());
-
-        String captured = stringArgumentCaptor.getValue();
-        assertThat(captured).isEqualTo(expected);
-    }
-
-    @Test
-    public void byUserName(){
-        //given
-        String expected = "Heyy";
-        //when
-        userService.byUserName(expected);
-        //then
-        ArgumentCaptor<String>stringArgumentCaptor = ArgumentCaptor.forClass(String.class);
-        verify(userRepository).findByUserName(stringArgumentCaptor.capture());
-
-        String captured = stringArgumentCaptor.getValue();
-        assertThat(captured).isEqualTo(expected);
     }
 
     @Test

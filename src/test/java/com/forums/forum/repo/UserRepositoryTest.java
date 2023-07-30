@@ -54,6 +54,22 @@ class UserRepositoryTest {
     }
 
     @Test
+    public void findAllByUserName() {
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
+        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
+        //given
+        User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+        User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
+        userRepository.saveAll(List.of(user1, user2));
+        String userName = "Poseidon";
+        //when
+        List<User> expected = userRepository.findAllByUserName(userName);
+        //then
+        assertThat(expected.size()).isEqualTo(1);
+        assertThat(expected.get(0).getUserName()).isEqualTo(userName);
+    }
+
+    @Test
     public void findAllByUserNameContaining() {
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
         LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
