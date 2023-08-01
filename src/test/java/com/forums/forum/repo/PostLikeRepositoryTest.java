@@ -87,4 +87,53 @@ class PostLikeRepositoryTest {
         //then
         assertThat(expectedList.size()).isEqualTo(1);
     }
+
+    @Test
+    public void deleteAllByPost() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
+        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
+        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        //when
+        postLikeRepository.deleteAllByPost(post1);
+        List<PostLike>expectedList = postLikeRepository.findAll();
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getPost()).isNotEqualTo(post1);
+    }
+
+    @Test
+    public void deleteAllByUser() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
+        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
+        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        //when
+        postLikeRepository.deleteAllByUser(user1);
+        List<PostLike>expectedList = postLikeRepository.findAll();
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getUser()).isNotEqualTo(user1);
+    }
+
+
+    @Test
+    public void findByPostLikeId() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
+        Long correctId = 1L;
+        Long incorrectId = 2L;
+        postLikeRepository.save(postLike1);
+        //when
+        PostLike correct = postLikeRepository.findByPostLikeId(correctId);
+        PostLike incorrect = postLikeRepository.findByPostLikeId(incorrectId);
+        //then
+        assertThat(incorrect).isNull();
+        assertThat(correct).isNotNull();
+        assertThat(correct.getPostLikeId()).isEqualTo(correctId);
+
+    }
 }

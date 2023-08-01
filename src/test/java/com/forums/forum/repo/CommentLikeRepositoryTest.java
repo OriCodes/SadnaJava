@@ -97,4 +97,55 @@ class CommentLikeRepositoryTest {
         assertThat(expectedList.size()).isEqualTo(1);
 
     }
+    @Test
+    public void deleteAllByComment() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        CommentLike commentLike1 = new CommentLike(user1,comment1,timestamp);
+        CommentLike commentLike2 = new CommentLike(user2,comment2,timestamp);
+        commentLikeRepository.saveAll(List.of(commentLike1,commentLike2));
+        //when
+        commentLikeRepository.deleteAllByComment(comment1);
+        List<CommentLike>expectedList = commentLikeRepository.findAll(); // the expected size should be 1
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getComment()).isNotEqualTo(comment1);
+
+    }
+
+    @Test
+    public void deleteAllByUser() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        CommentLike commentLike1 = new CommentLike(user1,comment1,timestamp);
+        CommentLike commentLike2 = new CommentLike(user2,comment2,timestamp);
+        commentLikeRepository.saveAll(List.of(commentLike1,commentLike2));
+        //when
+        commentLikeRepository.deleteAllByUser(user1);
+        List<CommentLike>expectedList = commentLikeRepository.findAll(); // the expected size should be 1
+        //then
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getUser()).isNotEqualTo(user1);
+
+    }
+
+
+
+    @Test
+    public void findByCommentLikeId() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        CommentLike commentLike1 = new CommentLike(user1,comment1,timestamp);
+        Long correctId = 1L, incorrectId = 2L;
+        commentLikeRepository.save(commentLike1);
+        //when
+        CommentLike correct = commentLikeRepository.findByCommentLikeId(correctId);
+        CommentLike incorrect = commentLikeRepository.findByCommentLikeId(incorrectId);
+        //then
+        assertThat(correct).isNotNull();
+        assertThat(correct.getCommentLikeId()).isEqualTo(correctId);
+
+    }
+
+
 }

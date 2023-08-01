@@ -32,7 +32,7 @@ public class Post {
     private String text;
     @Column(name = "created_time_stamp")
     private Timestamp createdTimeStamp;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user; // the user who posted the post
     @ManyToOne

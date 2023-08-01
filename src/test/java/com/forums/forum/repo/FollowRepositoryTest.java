@@ -142,4 +142,38 @@ class FollowRepositoryTest {
         assertThat(expectedList).isNotNull();
         assertThat(expectedList.size()).isEqualTo(1);
     }
+
+    @Test
+    public void deleteAllByFollower()
+    {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Follow follow1 = new Follow(user1,user2,timestamp);
+        Follow follow2 = new Follow(user2,user1,timestamp);
+        followRepository.saveAll(List.of(follow1,follow2));
+        //when
+        followRepository.deleteAllByFollower(user1);
+        //then
+        List<Follow> expectedList =  followRepository.findAll();
+        assertThat(expectedList).isNotNull();
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getFollower()).isNotEqualTo(user1);
+    }
+
+    @Test
+    public void deleteAllByFollowed()
+    {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Follow follow1 = new Follow(user1,user2,timestamp);
+        Follow follow2 = new Follow(user2,user1,timestamp);
+        followRepository.saveAll(List.of(follow1,follow2));
+        //when
+        followRepository.deleteAllByFollowed(user1);
+        //then
+        List<Follow> expectedList =  followRepository.findAll();
+        assertThat(expectedList).isNotNull();
+        assertThat(expectedList.size()).isEqualTo(1);
+        assertThat(expectedList.get(0).getFollowed()).isNotEqualTo(user1);
+    }
 }

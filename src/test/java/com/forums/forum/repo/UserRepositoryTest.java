@@ -54,6 +54,24 @@ class UserRepositoryTest {
     }
 
     @Test
+    public void findById()
+    {
+        //given
+        LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+        String userName = "Poseidon";
+        long correctId = 1, incorrectId = 2;
+        User user = new User(userName, dob, "URL", Gender.MALE, "Auth");
+        userRepository.save(user);
+        //when
+        User foundUser = userRepository.findByUserId(correctId);
+        User nullUser = userRepository.findByUserId(incorrectId);
+        //then
+        assertThat(nullUser).isNull();
+        assertThat(foundUser).isNotNull();
+        assertThat(foundUser.getUserId()).isEqualTo(correctId);
+    }
+
+    @Test
     public void findAllByUserName() {
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
         LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);

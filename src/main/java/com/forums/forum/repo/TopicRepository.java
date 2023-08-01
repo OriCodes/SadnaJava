@@ -12,6 +12,7 @@ import java.util.List;
 public interface TopicRepository extends JpaRepository<Topic,Long> {
     boolean existsByTopicName(String topicName);
 
+    Topic findByTopicId(Long topicId);
     Topic findByTopicName(String topicName);
     List<Topic> findAllByCreatedTimeStampBetween(Timestamp lowerBound, Timestamp upperBound);
     List<Topic> findAllByTopicNameContains(String seq);

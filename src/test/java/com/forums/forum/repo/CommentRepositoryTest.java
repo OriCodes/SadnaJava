@@ -47,6 +47,24 @@ class CommentRepositoryTest {
         topicRepository.deleteAll();
         userRepository.deleteAll();
     }
+
+    @Test
+    public void findByCommentId() {
+        //given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Comment comment1 = new Comment("Text",timestamp,user1,post1);
+        Long correctId = 1L, incorrectId = 2L;
+        commentRepository.save(comment1);
+        //when
+        Comment correct = commentRepository.findByCommentId(correctId);
+        Comment incorrect = commentRepository.findByCommentId(incorrectId);
+        //then
+        assertThat(incorrect).isNull();
+        assertThat(correct).isNotNull();
+        assertThat(correct.getCommentId()).isEqualTo(correctId);
+
+    }
+
     @Test
     public void findAllByPost() {
         //given

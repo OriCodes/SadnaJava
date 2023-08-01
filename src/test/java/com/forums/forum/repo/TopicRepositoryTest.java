@@ -52,6 +52,24 @@ class TopicRepositoryTest {
     }
 
     @Test
+    public void findByTopicId() {
+        //given
+        Timestamp timeStamp = new Timestamp(System.currentTimeMillis());
+        String expectedTopic = "Basketball";
+        Long correctId = 1L;
+        Long incorrectId = 2L;
+        Topic topic = new Topic(expectedTopic, timeStamp, "URL");
+        topicRepository.save(topic);
+        //when
+        Topic foundTopic = topicRepository.findByTopicId(correctId);
+        Topic nullTopic = topicRepository.findByTopicId(incorrectId);
+        //then
+        assertThat(nullTopic).isNull();
+        assertThat(foundTopic).isNotNull();
+        assertThat(foundTopic.getTopicId()).isEqualTo(correctId);
+    }
+
+    @Test
     public void findAllByCreatedTimeStampBetween() {
         //given
         Timestamp lowerBound = Timestamp.valueOf("2023-07-09 10:00:00.123456789");
