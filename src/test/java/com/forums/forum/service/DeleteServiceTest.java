@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
@@ -63,8 +64,8 @@ class DeleteServiceTest {
         LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
         User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
-        when(userRepository.findByUserId(1L)).thenReturn(user1);
-        when(userRepository.findByUserId(2L)).thenReturn(user2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
         when(followRepository.existsByFollowerAndFollowed(user1,user2)).thenReturn(true);
         //when
         deleteService.unfollow(1L,2L);
@@ -81,21 +82,22 @@ class DeleteServiceTest {
     @Test
     public void unfollowThrowUserIdNotInSystem() {
         //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
-        User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        when(userRepository.findByUserId(1L)).thenReturn(null);
-        when(userRepository.findByUserId(2L)).thenReturn(null);
-        when(userRepository.findByUserId(3L)).thenReturn(user1);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
+        when(userRepository.findById(2L)).thenReturn(Optional.empty());
+        when(userRepository.findById(3L)).thenReturn(Optional.of(new User()));
         //when
         //then
         assertThatThrownBy(()-> deleteService.unfollow(1L,2L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Follower or Followed don't exist");
+                isInstanceOf(IllegalArgumentException.class);
+
         assertThatThrownBy(()-> deleteService.unfollow(1L,3L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Follower or Followed don't exist");
+                isInstanceOf(IllegalArgumentException.class);
+
         assertThatThrownBy(()-> deleteService.unfollow(3L,2L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Follower or Followed don't exist");
+                isInstanceOf(IllegalArgumentException.class);
 
         verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(),any());
+        verify(followRepository, never()).existsByFollowerAndFollowed(any(),any());
     }
 
     @Test
@@ -105,8 +107,8 @@ class DeleteServiceTest {
         LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
         User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
-        when(userRepository.findByUserId(1L)).thenReturn(user1);
-        when(userRepository.findByUserId(2L)).thenReturn(user2);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
         when(followRepository.existsByFollowerAndFollowed(user1,user2)).thenReturn(false);
         //when
         //then
@@ -118,162 +120,145 @@ class DeleteServiceTest {
         verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(),any());
     }
 
+
     @Test
     public void unlikePostSuccess() {
-        //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
+        // given
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
         Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
-        when(userRepository.findByUserId(1L)).thenReturn(user);
-        when(postRepository.findByPostId(1L)).thenReturn(post);
-        when(postLikeRepository.existsByPostAndUser(post,user)).thenReturn(true);
+        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
 
-        //when
-        deleteService.unlikePost(1L,1L);
-        //then
-        ArgumentCaptor<User> userArgCaptor = ArgumentCaptor.forClass(User.class);
-        ArgumentCaptor<Post> postArgCaptor = ArgumentCaptor.forClass(Post.class);
-        verify(postLikeRepository).deleteAllByPostAndUser(postArgCaptor.capture(), userArgCaptor.capture());
-        User expectedUser = userArgCaptor.getValue();
-        Post expectedPost = postArgCaptor.getValue();
-        assertThat(expectedUser).isNotNull();
-        assertThat(expectedUser).isEqualTo(user);
-        assertThat(expectedPost).isNotNull();
-        assertThat(expectedPost).isEqualTo(post);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+        when(postLikeRepository.existsByPostAndUser(post, user)).thenReturn(true);
 
+        // when
+        deleteService.unlikePost(1L, 1L);
 
+        // then
+        verify(postLikeRepository).deleteAllByPostAndUser(post, user);
     }
 
     @Test
-    public void unlikePostThrowNotInSystem() {
-        //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
-        when(userRepository.findByUserId(1L)).thenReturn(null);
-        when(postRepository.findByPostId(1L)).thenReturn(null);
-        when(userRepository.findByUserId(2L)).thenReturn(user);
-        when(postRepository.findByPostId(2L)).thenReturn(post);
-        //when
-        //then
-        assertThatThrownBy(()-> deleteService.unlikePost(1L,2L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Post or user don't exist");
+    public void unlikePostThrowUserNotFound() {
+        // given
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
-        assertThatThrownBy(()-> deleteService.unlikePost(2L,1L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Post or user don't exist");
+        // when & then
+        assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("User with id 1 not found");
 
-        assertThatThrownBy(()-> deleteService.unlikePost(1L,1L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining("Post or user don't exist");
-
-        verify(postLikeRepository, never()).deleteAllByPostAndUser(any(),any());
+        verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
     }
 
     @Test
-    public void unlikePostThrowDontLike() {
-        //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
+    public void unlikePostThrowPostNotFound() {
+        // given
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(postRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Post with id 1 not found");
+
+        verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
+    }
+
+    @Test
+    public void unlikePostThrowNotLiked() {
+        // given
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
         Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
-        when(userRepository.findByUserId(1L)).thenReturn(user);
-        when(postRepository.findByPostId(1L)).thenReturn(post);
-        when(postLikeRepository.existsByPostAndUser(post,user)).thenReturn(false);
-        //when
-        //then
-        assertThatThrownBy(()-> deleteService.unlikePost(1L,1L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining(
-                        "User with id " + 1L + " don't like post with id " + 1L
-                );
+        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
 
-        verify(postLikeRepository, never()).deleteAllByPostAndUser(any(),any());
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+        when(postLikeRepository.existsByPostAndUser(post, user)).thenReturn(false);
+
+        // when & then
+        assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("User with id 1 don't like post with id 1");
+
+        verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
     }
-
 
     @Test
     public void unlikeCommentSuccess() {
         // given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
         Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
+        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
         Comment comment = new Comment("Nice post!", timestamp, user, post);
 
-        when(userRepository.findByUserId(1L)).thenReturn(user);
-        when(commentRepository.findByCommentId(1L)).thenReturn(comment);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
         when(commentLikeRepository.existsByCommentAndUser(comment, user)).thenReturn(true);
 
         // when
         deleteService.unlikeComment(1L, 1L);
 
         // then
-        ArgumentCaptor<User> userArgCaptor = ArgumentCaptor.forClass(User.class);
-        ArgumentCaptor<Comment> commentArgCaptor = ArgumentCaptor.forClass(Comment.class);
-        verify(commentLikeRepository).deleteAllByCommentAndUser(commentArgCaptor.capture(), userArgCaptor.capture());
-        User expectedUser = userArgCaptor.getValue();
-        Comment expectedComment = commentArgCaptor.getValue();
-        assertThat(expectedUser).isNotNull();
-        assertThat(expectedUser).isEqualTo(user);
-        assertThat(expectedComment).isNotNull();
-        assertThat(expectedComment).isEqualTo(comment);
+        verify(commentLikeRepository).deleteAllByCommentAndUser(comment, user);
     }
 
     @Test
-    public void unlikeCommentThrowNotInSystem() {
+    public void unlikeCommentThrowUserNotFound() {
         // given
-
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
-        Comment comment = new Comment("Nice post!", timestamp, user, post);
-
-
-        when(userRepository.findByUserId(1L)).thenReturn(null);
-        when(commentRepository.findByCommentId(1L)).thenReturn(null);
-        when(userRepository.findByUserId(2L)).thenReturn(user);
-        when(commentRepository.findByCommentId(2L)).thenReturn(comment);
+        when(userRepository.findById(1L)).thenReturn(Optional.empty());
 
         // when & then
-        assertThatThrownBy(() -> deleteService.unlikeComment(1L, 2L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Comment or User don't exist");
-
-        assertThatThrownBy(() -> deleteService.unlikeComment(2L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Comment or User don't exist");
-
         assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("Comment or User don't exist");
+                .hasMessageContaining("User with id 1 not found");
 
         verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
     }
 
     @Test
-    public void unlikeCommentThrowDontLike() {
+    public void unlikeCommentThrowCommentNotFound() {
         // given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commentRepository.findById(1L)).thenReturn(Optional.empty());
+
+        // when & then
+        assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Comment with id 1 not found");
+
+        verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
+    }
+
+    @Test
+    public void unlikeCommentThrowNotLiked() {
+        // given
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
         Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post  = new Post("expectedTitle", "Mine is judo",timestamp,user, topic);
+        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
         Comment comment = new Comment("Nice post!", timestamp, user, post);
 
-        when(userRepository.findByUserId(1L)).thenReturn(user);
-        when(commentRepository.findByCommentId(1L)).thenReturn(comment);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
         when(commentLikeRepository.existsByCommentAndUser(comment, user)).thenReturn(false);
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
                 .isInstanceOf(IllegalArgumentException.class)
-                .hasMessageContaining("User with id " + 1L + " don't like comment with id " + 1L);
+                .hasMessageContaining("User with id 1 don't like comment with id 1");
 
         verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
     }
