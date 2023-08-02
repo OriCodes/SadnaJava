@@ -23,7 +23,7 @@ public class PostLike {
             strategy = GenerationType.SEQUENCE,
             generator = "post_like_sequence"
     )
-    @Column(name = "comment_like_id")
+    @Column(name = "post_like_id")
     private Long postLikeId;
 
     @ManyToOne

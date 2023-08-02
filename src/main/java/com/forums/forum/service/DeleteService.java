@@ -4,6 +4,7 @@ import com.forums.forum.model.*;
 import com.forums.forum.repo.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -20,6 +21,7 @@ public class DeleteService {
     private final PostLikeRepository postLikeRepository;
     private final CommentLikeRepository commentLikeRepository;
 
+    @Transactional
     public void unfollow(Long followerId, Long followedId){
 
         User followed = userRepository.findById(followedId)
@@ -35,6 +37,7 @@ public class DeleteService {
         followRepository.deleteAllByFollowerAndAndFollowed(follower,followed);
     }
 
+    @Transactional
     public void unlikePost(Long postId, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -49,6 +52,7 @@ public class DeleteService {
         postLikeRepository.deleteAllByPostAndUser(post,user);
     }
 
+    @Transactional
     public void unlikeComment(Long commentId, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -63,6 +67,7 @@ public class DeleteService {
         commentLikeRepository.deleteAllByCommentAndUser(comment,user);
     }
 
+    @Transactional
     public void deleteComment(Long commentId, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -78,7 +83,7 @@ public class DeleteService {
 
         deleteComment(comment);
     }
-
+    @Transactional
     public void deletePost(Long postId, Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -86,7 +91,7 @@ public class DeleteService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
-        if (!postLikeRepository.existsByPostAndUser(post,user)){
+        if (post.getUser().getUserId() != user.getUserId()){
             throw new IllegalArgumentException("User with id " + userId + " isn't the publisher of post with id " + postId);
         }
 
@@ -94,6 +99,7 @@ public class DeleteService {
 
     }
 
+    @Transactional
     public void deleteUser(Long userId){
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -114,8 +120,10 @@ public class DeleteService {
             deletePost(post);
         }
 
-    }
+        userRepository.delete(user);
 
+    }
+    @Transactional
     public void deleteTopic(Long topicId){
        Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
@@ -123,6 +131,7 @@ public class DeleteService {
        for (Post post : postRepository.findAllByTopic(topic)){
            deletePost(post);
        }
+       topicRepository.delete(topic);
     }
 
     private void deleteComment(Comment comment){
@@ -135,6 +144,7 @@ public class DeleteService {
         for (Comment comment : commentRepository.findAllByPost(post)){
             deleteComment(comment);
         }
+        postRepository.delete(post);
     }
 
 
