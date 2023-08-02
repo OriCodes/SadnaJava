@@ -1,9 +1,6 @@
 package com.forums.forum.service;
 
-import com.forums.forum.model.Comment;
-import com.forums.forum.model.Message;
-import com.forums.forum.model.Post;
-import com.forums.forum.model.User;
+import com.forums.forum.model.*;
 import com.forums.forum.repo.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -82,8 +79,63 @@ public class DeleteService {
         deleteComment(comment);
     }
 
+    public void deletePost(Long postId, Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+
+        if (!postLikeRepository.existsByPostAndUser(post,user)){
+            throw new IllegalArgumentException("User with id " + userId + " isn't the publisher of post with id " + postId);
+        }
+
+        deletePost(post);
+
+    }
+
+    public void deleteUser(Long userId){
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+
+        postLikeRepository.deleteAllByUser(user);
+        commentLikeRepository.deleteAllByUser(user);
+        followRepository.deleteAllByFollower(user);
+        followRepository.deleteAllByFollowed(user);
+        messageRepository.deleteAllByReceiver(user);
+        messageRepository.deleteAllBySender(user);
+
+
+        for (Comment comment : commentRepository.findAllByUser(user)){
+            deleteComment(comment);
+        }
+
+        for (Post post : postRepository.findAllByUser(user)){
+            deletePost(post);
+        }
+
+    }
+
+    public void deleteTopic(Long topicId){
+       Topic topic = topicRepository.findById(topicId)
+                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+
+       for (Post post : postRepository.findAllByTopic(topic)){
+           deletePost(post);
+       }
+    }
+
     private void deleteComment(Comment comment){
         commentLikeRepository.deleteAllByComment(comment);
         commentRepository.delete(comment);
     }
+
+    private void deletePost(Post post){
+        postLikeRepository.deleteAllByPost(post);
+        for (Comment comment : commentRepository.findAllByPost(post)){
+            deleteComment(comment);
+        }
+    }
+
+
 }
