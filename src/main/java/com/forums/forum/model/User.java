@@ -40,21 +40,21 @@ public class User {
     private String auth0Id;
 
     //Foreign key constrains
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    @OneToMany(mappedBy = "sender")
+    @OneToMany(mappedBy = "sender",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> sentMessages;
-    @OneToMany(mappedBy = "receiver")
+    @OneToMany(mappedBy = "receiver",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> receivedMessages;
-    @OneToMany(mappedBy = "follower")
+    @OneToMany(mappedBy = "follower",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> following;
-    @OneToMany(mappedBy = "followed")
+    @OneToMany(mappedBy = "followed",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Follow> followers;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> commentLikes;
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> postLikes;
 
 

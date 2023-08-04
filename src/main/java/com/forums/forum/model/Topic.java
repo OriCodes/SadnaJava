@@ -32,7 +32,7 @@ public class Topic {
     private Timestamp createdTimeStamp;
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
-    @OneToMany(mappedBy = "topic")
+    @OneToMany(mappedBy = "topic",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Post> posts;
 
     public Topic(String topicName, Timestamp createdTimeStamp, String thumbnailUrl) {

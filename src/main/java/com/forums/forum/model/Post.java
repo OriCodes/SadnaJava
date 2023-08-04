@@ -39,9 +39,9 @@ public class Post {
     @JoinColumn(name = "topic_id")
     private Topic topic; // the topic
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments;
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post",  cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostLike> likes;
 
     public Post(String title, String text, Timestamp createdTimeStamp, User user, Topic topic) {
