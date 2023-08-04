@@ -64,23 +64,6 @@ class MessageRepositoryTest {
     }
 
     @Test
-    public void findByMessageId() {
-        //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Long correctId = 1L;
-        Long incorrectId = 2L;
-        messageRepository.save(message1);
-        //when
-        Message correct = messageRepository.findByMessageId(correctId);
-        Message incorrect = messageRepository.findByMessageId(incorrectId);
-        //then
-        assertThat(correct).isNotNull();
-        assertThat(correct.getMessageId()).isEqualTo(correctId);
-        assertThat(incorrect).isNull();
-
-    }
-    @Test
     public void findAllBySenderAndReceiver() {
         //given
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
@@ -152,4 +135,27 @@ class MessageRepositoryTest {
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getReceiver()).isNotEqualTo(user1);
     }
+
+    @Test
+    public void findAllByReceiverAndCreatedTimeStampGreaterThanEqual() {
+        // Given
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Message message1 = new Message("content1", timestamp, user2, user1);
+        Timestamp laterTimestamp = new Timestamp(System.currentTimeMillis() +1000); //
+        Message message2 = new Message("content2", laterTimestamp, user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
+
+        // When
+        List<Message> expectedMessages = messageRepository.findAllByReceiverAndCreatedTimeStampGreaterThanEqual(
+                user1,
+                laterTimestamp
+        );
+
+        // Then
+        assertThat(expectedMessages).isNotNull();
+        assertThat(expectedMessages.size()).isEqualTo(1);
+        assertThat(expectedMessages.get(0).getContent()).isEqualTo("content2");
+        assertThat(expectedMessages.get(0).getReceiver()).isEqualTo(user1);
+    }
+
 }
