@@ -35,7 +35,7 @@ class UserServiceTest {
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-       // userService = new UserService(userRepository);
+        userService = new UserService(userRepository);
     }
 
 
@@ -117,5 +117,28 @@ class UserServiceTest {
         //then
         assertThat(res).isNull();
     }
+
+
+    @Test
+    public void updateUserShouldThrowWhenUsernameExists() {
+        //given
+        Long userId = 1L;
+        String userName = "existing_username";
+        LocalDate dob = LocalDate.of(2000, Month.JANUARY, 15);
+        String profileUrl = "new_profile_url";
+        Gender gender = Gender.FEMALE;
+
+        User existingUser = new User(userName, LocalDate.of(1999, Month.APRIL, 7), "URL", Gender.MALE, "auth0Id");
+
+        when(userRepository.findById(any())).thenReturn(Optional.of(existingUser));
+        when(userRepository.existsByUserName(userName)).thenReturn(true);
+
+        //then
+        assertThatThrownBy(() -> userService.updateUser(userId, userName, dob, profileUrl, gender))
+                .isInstanceOf(UserNameAlreadyExistException.class);
+
+    }
+
+
 
 }
