@@ -1,7 +1,6 @@
 package com.forums.forum.service;
 
-import com.forums.forum.exception.AlreadyFollowsException;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+
 import com.forums.forum.model.Follow;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
