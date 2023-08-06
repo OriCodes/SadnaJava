@@ -33,7 +33,7 @@ public class UserService {
 
         List<User> result = new ArrayList<>();
         List<User> matchingUsers = userRepository.findAllByUserName(userName);
-        List<User> containingUsers = userRepository.findAllByUserName(userName);
+        List<User> containingUsers = userRepository.findAllByUserNameContaining(userName);
         if(matchingUsers != null) {
             result.addAll(matchingUsers);
         }
@@ -59,6 +59,8 @@ public class UserService {
     public User byId(Long id){
         return userRepository.findById(id).orElse(null);
     }
+
+    public User byUserName(String userName){return userRepository.findByUserName(userName);}
 
     @Transactional
     public void updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender) throws UserNameAlreadyExistException{
