@@ -33,7 +33,7 @@ public class UserController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam String profileUrl,
             @RequestParam Gender gender,
-            @RequestParam String auth0Id) {
+            @RequestParam String auth0Id) throws UserNameAlreadyExistException{
         try {
             userService.registerUser(userName, dob, profileUrl, gender, auth0Id);
             return ResponseEntity.ok("User registered successfully");
