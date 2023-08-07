@@ -77,7 +77,7 @@ public class PostService {
         return postRepository.findAllByTopic(topic);
     }
 
-    public Post addPost(Long userId, Long topicId, String title, String text, Timestamp timestamp)
+    public Post addPost(Long userId, Long topicId, String title, String text)
     {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -85,7 +85,7 @@ public class PostService {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
 
-        Post newPost = new Post(title,text, timestamp, user, topic);
+        Post newPost = new Post(title,text, user, topic);
         return postRepository.save(newPost);
     }
 

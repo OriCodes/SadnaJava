@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -32,8 +32,6 @@ public class Topic {
     private Timestamp createdTimeStamp;
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
-    @OneToMany(mappedBy = "topic",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
 
     public Topic(String topicName, Timestamp createdTimeStamp, String thumbnailUrl) {
         this.topicName = topicName;

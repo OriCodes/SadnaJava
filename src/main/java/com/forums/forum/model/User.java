@@ -1,5 +1,6 @@
 package com.forums.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,22 +40,9 @@ public class User {
     @Column(name = "auth0_id")
     private String auth0Id;
 
-    //Foreign key constrains
+
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Post> posts;
-    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments;
-    @OneToMany(mappedBy = "sender",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> sentMessages;
-    @OneToMany(mappedBy = "receiver",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Message> receivedMessages;
-    @OneToMany(mappedBy = "follower",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> following;
-    @OneToMany(mappedBy = "followed",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Follow> followers;
-    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentLike> commentLikes;
-    @OneToMany(mappedBy = "user",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("user")
     private List<PostLike> postLikes;
 
 

@@ -47,7 +47,7 @@ class PostRepositoryTest {
         //given
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post  = new Post(expectedTitle, "Mine is judo",user1, topic1);
         postRepository.save(post);
         //when
         boolean expectedTrue = postRepository.existsByTitle(expectedTitle);
@@ -60,9 +60,8 @@ class PostRepositoryTest {
     @Test
     public void existsByTitleAndTopic() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post  = new Post(expectedTitle, "Mine is judo",user1, topic1);
         postRepository.save(post);
         //when
         boolean expectedTrue = postRepository.existsByTitleAndTopic(expectedTitle, topic1);
@@ -79,9 +78,8 @@ class PostRepositoryTest {
     @Test
     public void findByTitleName() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post  = new Post(expectedTitle, "Mine is judo",user1, topic1);
         postRepository.save(post);
         //when
         Post expected = postRepository.findByTitle(expectedTitle);
@@ -94,11 +92,10 @@ class PostRepositoryTest {
     @Test
     public void findById() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
         Long correctId = 1L;
         Long incorrectId = 2L;
-        Post post  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
+        Post post  = new Post(expectedTitle, "Mine is judo",user1, topic1);
         postRepository.save(post);
         //when
         Post expected = postRepository.findByPostId(correctId);
@@ -113,10 +110,9 @@ class PostRepositoryTest {
     @Test
     public void findByTitleAndTopic() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post1  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic2);
+        Post post1  = new Post(expectedTitle, "Mine is judo",user1, topic1);
+        Post post2  = new Post(expectedTitle, "Mine is judo",user1, topic2);
         postRepository.saveAll(List.of(post1,post2));
         //when
         Post expected = postRepository.findByTitleAndTopic(expectedTitle,topic1);
@@ -130,10 +126,9 @@ class PostRepositoryTest {
     @Test
     public void findAllByTitle() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post1  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post1  = new Post(expectedTitle, "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
         postRepository.saveAll(List.of(post1,post2));
         //when
         List<Post> expected = postRepository.findAllByTitle(expectedTitle);
@@ -147,12 +142,11 @@ class PostRepositoryTest {
     @Test
     public void findAllByTopicAndTitle() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String expectedTitle = "What is your fav sport";
-        Post post1  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
-        Post post3  = new Post(expectedTitle, "Mine is judo",timestamp,user1, topic2);
-        Post post4  = new Post("**", "Mine is judo",timestamp,user1, topic1);
+        Post post1  = new Post(expectedTitle, "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
+        Post post3  = new Post(expectedTitle, "Mine is judo",user1, topic2);
+        Post post4  = new Post("**", "Mine is judo",user1, topic1);
         postRepository.saveAll(List.of(post1,post2,post3,post4));
         //when
         List<Post> expected = postRepository.findAllByTopicAndTitle(topic1,expectedTitle);
@@ -166,12 +160,11 @@ class PostRepositoryTest {
     @Test
     public void findAllByTopicAndTitleContaining() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String seq = "topg";
-        Post post1  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
-        Post post3  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic2);
-        Post post4  = new Post("hey", "there",timestamp,user2, topic1);
+        Post post1  = new Post("hey"+seq, "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
+        Post post3  = new Post("hey"+seq, "Mine is judo",user1, topic2);
+        Post post4  = new Post("hey", "there",user2, topic1);
         postRepository.saveAll(List.of(post1,post2,post3,post4));
         //when
         List<Post> expected = postRepository.findAllByTopicAndTitleContaining(topic1,seq);
@@ -184,10 +177,9 @@ class PostRepositoryTest {
     @Test
     public void findAllByTitleContaining() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String seq = "topg";
-        Post post1  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post1  = new Post("hey"+seq, "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
         postRepository.saveAll(List.of(post1,post2));
         //when
         List<Post> expected = postRepository.findAllByTitleContaining(seq);
@@ -199,9 +191,8 @@ class PostRepositoryTest {
     @Test
     public void findAllByUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Post post1  = new Post("jj", "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post1  = new Post("jj", "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
         postRepository.saveAll(List.of(post1,post2));
         //when
         List<Post> expected = postRepository.findAllByUser(user1);
@@ -213,9 +204,8 @@ class PostRepositoryTest {
     @Test
     public void findAllByTopic() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Post post1  = new Post("jj", "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
+        Post post1  = new Post("jj", "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
         postRepository.saveAll(List.of(post1,post2));
         //when
         List<Post> expected = postRepository.findAllByTopic(topic1);
@@ -228,10 +218,9 @@ class PostRepositoryTest {
     @Test
     public void findAllByTopicAndUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Post post1  = new Post("jj", "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
-        Post post3  = new Post("hey", "there",timestamp,user2, topic1);
+        Post post1  = new Post("jj", "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
+        Post post3  = new Post("hey", "there",user2, topic1);
         postRepository.saveAll(List.of(post1,post2,post3));
         //when
         List<Post> expected = postRepository.findAllByTopicAndUser(topic1,user2);
@@ -244,13 +233,12 @@ class PostRepositoryTest {
     @Test
     public void deleteTest() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String seq = "topg";
         User user3 = new User("Zeus", dob, "URL", Gender.MALE, "Auth");
-        Post post1  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic1);
-        Post post2  = new Post("hey", "there",timestamp,user2, topic2);
-        Post post3  = new Post("hey"+seq, "Mine is judo",timestamp,user1, topic2);
-        Post post4  = new Post("hey", "there",timestamp,user3, topic1);
+        Post post1  = new Post("hey"+seq, "Mine is judo",user1, topic1);
+        Post post2  = new Post("hey", "there",user2, topic2);
+        Post post3  = new Post("hey"+seq, "Mine is judo",user1, topic2);
+        Post post4  = new Post("hey", "there",user3, topic1);
         postRepository.saveAll(List.of(post1,post2,post3,post4));
         userRepository.save(user3);
         Long id = userRepository.findByUserName("Zeus").getUserId();
