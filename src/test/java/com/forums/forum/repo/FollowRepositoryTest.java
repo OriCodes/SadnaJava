@@ -9,8 +9,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -23,29 +21,30 @@ class FollowRepositoryTest {
     UserRepository userRepository;
     @Autowired
     FollowRepository followRepository;
-    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER, 14);
 
     private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
     private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
     private User user3 = new User("zeus", dob, "URL", Gender.MALE, "Auth");
 
     @BeforeEach
-    public void initiateDb(){
+    public void initiateDb() {
         userRepository.saveAll(List.of(user1, user2));
     }
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         followRepository.deleteAll();
         userRepository.deleteAll();
     }
+
     @Test
     public void countAllByFollower() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        Follow follow3 = new Follow(user3,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2,follow3));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        Follow follow3 = new Follow(user3, user1);
+        followRepository.saveAll(List.of(follow1, follow2, follow3));
         //then
         int expected = followRepository.countAllByFollower(user1);
         //then
@@ -55,11 +54,10 @@ class FollowRepositoryTest {
     @Test
     public void countAllByFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        Follow follow3 = new Follow(user3,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2,follow3));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        Follow follow3 = new Follow(user3, user1);
+        followRepository.saveAll(List.of(follow1, follow2, follow3));
         //then
         int expected = followRepository.countAllByFollowed(user1);
         //then
@@ -69,14 +67,13 @@ class FollowRepositoryTest {
     @Test
     public void existsByFollowerAndFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        Follow follow3 = new Follow(user3,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2,follow3));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        Follow follow3 = new Follow(user3, user1);
+        followRepository.saveAll(List.of(follow1, follow2, follow3));
         //then
-        boolean expectedTrue = followRepository.existsByFollowerAndFollowed(user1,user2);
-        boolean expectedFalse = followRepository.existsByFollowerAndFollowed(user1,user3);
+        boolean expectedTrue = followRepository.existsByFollowerAndFollowed(user1, user2);
+        boolean expectedFalse = followRepository.existsByFollowerAndFollowed(user1, user3);
         //then
         assertThat(expectedFalse).isFalse();
         assertThat(expectedTrue).isTrue();
@@ -85,11 +82,10 @@ class FollowRepositoryTest {
     @Test
     public void findAllByFollower() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        Follow follow3 = new Follow(user3,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2,follow3));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        Follow follow3 = new Follow(user3, user1);
+        followRepository.saveAll(List.of(follow1, follow2, follow3));
         //then
         List<Follow> expected = followRepository.findAllByFollower(user1);
         //then
@@ -100,11 +96,10 @@ class FollowRepositoryTest {
     @Test
     public void findAllByFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        Follow follow3 = new Follow(user3,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2,follow3));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        Follow follow3 = new Follow(user3, user1);
+        followRepository.saveAll(List.of(follow1, follow2, follow3));
         //then
         List<Follow> expected = followRepository.findAllByFollowed(user2);
         //then
@@ -113,65 +108,57 @@ class FollowRepositoryTest {
     }
 
     @Test
-    public void findByFollowerAndFollowed()
-    {
+    public void findByFollowerAndFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        followRepository.saveAll(List.of(follow1, follow2));
         //when
-        Follow res = followRepository.findByFollowerAndAndFollowed(user1,user2);
+        Follow res = followRepository.findByFollowerAndAndFollowed(user1, user2);
         //then
         assertThat(res).isNotNull();
         assertThat(res).isEqualTo(follow1);
     }
 
     @Test
-    public void deleteAllByFollowerAndFollowed()
-    {
+    public void deleteAllByFollowerAndFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        followRepository.saveAll(List.of(follow1, follow2));
         //when
-        followRepository.deleteAllByFollowerAndAndFollowed(user1,user2);
+        followRepository.deleteAllByFollowerAndAndFollowed(user1, user2);
         //then
-        List<Follow> expectedList =  followRepository.findAll();
+        List<Follow> expectedList = followRepository.findAll();
         assertThat(expectedList).isNotNull();
         assertThat(expectedList.size()).isEqualTo(1);
     }
 
     @Test
-    public void deleteAllByFollower()
-    {
+    public void deleteAllByFollower() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        followRepository.saveAll(List.of(follow1, follow2));
         //when
         followRepository.deleteAllByFollower(user1);
         //then
-        List<Follow> expectedList =  followRepository.findAll();
+        List<Follow> expectedList = followRepository.findAll();
         assertThat(expectedList).isNotNull();
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getFollower()).isNotEqualTo(user1);
     }
 
     @Test
-    public void deleteAllByFollowed()
-    {
+    public void deleteAllByFollowed() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Follow follow1 = new Follow(user1,user2,timestamp);
-        Follow follow2 = new Follow(user2,user1,timestamp);
-        followRepository.saveAll(List.of(follow1,follow2));
+        Follow follow1 = new Follow(user1, user2);
+        Follow follow2 = new Follow(user2, user1);
+        followRepository.saveAll(List.of(follow1, follow2));
         //when
         followRepository.deleteAllByFollowed(user1);
         //then
-        List<Follow> expectedList =  followRepository.findAll();
+        List<Follow> expectedList = followRepository.findAll();
         assertThat(expectedList).isNotNull();
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getFollowed()).isNotEqualTo(user1);

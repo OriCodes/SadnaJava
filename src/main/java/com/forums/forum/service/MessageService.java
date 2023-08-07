@@ -14,11 +14,11 @@ import java.util.List;
 
 @AllArgsConstructor
 @Service
-public class MessageService{
+public class MessageService {
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
 
-    public List<Message> getConversation(Long user1Id, Long user2Id){
+    public List<Message> getConversation(Long user1Id, Long user2Id) {
 
         User user1 = userRepository.findById(user1Id)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + user1Id + " not found"));
@@ -36,42 +36,43 @@ public class MessageService{
         return conversation;
     }
 
-    public Message addMessage(Long senderId, Long receiverId, String content, Timestamp timestamp){
+    public Message addMessage(Long senderId, Long receiverId, String content) {
 
         User sender = userRepository.findById(senderId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + senderId + " not found"));
         User receiver = userRepository.findById(receiverId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + receiverId + " not found"));
 
-        Message message = new Message(content,timestamp,sender,receiver);
+        Message message = new Message(content, sender, receiver);
         return messageRepository.save(message);
     }
-    public int getAmountOfMessagesSent(Long userId){
+
+    public int getAmountOfMessagesSent(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
         return messageRepository.countAllBySender(user);
     }
 
-    public boolean hasConversationBetween(Long user1Id, Long user2Id){
+    public boolean hasConversationBetween(Long user1Id, Long user2Id) {
         User user1 = userRepository.findById(user1Id)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + user1Id + " not found"));
         User user2 = userRepository.findById(user2Id)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + user2Id + " not found"));
 
-        return messageRepository.existsBySenderAndReceiver(user1, user2)||
+        return messageRepository.existsBySenderAndReceiver(user1, user2) ||
                 messageRepository.existsBySenderAndReceiver(user2, user1);
     }
 
-    public Message getById(Long messageId){
+    public Message getById(Long messageId) {
         return messageRepository.findById(messageId).orElse(null);
     }
 
-    public List<Message>newMessages(Long userId, Timestamp timestamp){
+    public List<Message> newMessages(Long userId, Timestamp timestamp) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
-        List<Message> result = messageRepository.findAllByReceiverAndCreatedTimeStampGreaterThanEqual(user,timestamp);
-        if (result.size() == 0){
+        List<Message> result = messageRepository.findAllByReceiverAndCreatedTimeStampGreaterThanEqual(user, timestamp);
+        if (result.size() == 0) {
             return null;
         }
         return result;

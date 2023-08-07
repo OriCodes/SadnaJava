@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -29,13 +30,13 @@ public class Topic {
     @Column(name = "topic_name")
     private String topicName;
     @Column(name = "created_time_stamp")
+    @CreationTimestamp
     private Timestamp createdTimeStamp;
     @Column(name = "thumbnail_url")
     private String thumbnailUrl;
 
-    public Topic(String topicName, Timestamp createdTimeStamp, String thumbnailUrl) {
+    public Topic(String topicName, String thumbnailUrl) {
         this.topicName = topicName;
-        this.createdTimeStamp = createdTimeStamp;
         this.thumbnailUrl = thumbnailUrl;
     }
 

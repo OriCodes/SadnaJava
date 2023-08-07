@@ -11,7 +11,6 @@ import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,18 +22,18 @@ public class CommentService {
     private final PostRepository postRepository;
     private final CommentLikeRepository commentLikeRepository;
 
-    public Comment byId(Long id){
+    public Comment byId(Long id) {
         return commentRepository.findById(id).orElse(null);
     }
 
-    public List<Comment> getAllCommentsForPost(Long postId){
+    public List<Comment> getAllCommentsForPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
         return commentRepository.findAllByPost(post);
     }
 
-    public List<Comment> getAllCommentsByUser(Long userId){
+    public List<Comment> getAllCommentsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
@@ -45,56 +44,56 @@ public class CommentService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
-        return  commentRepository.countAllByPost(post);
+        return commentRepository.countAllByPost(post);
     }
 
     public int getNumberOfCommentsByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
-        return  commentRepository.countAllByUser(user);
+        return commentRepository.countAllByUser(user);
     }
 
-    public Comment addComment(Long userId, Long postId, String text, Timestamp timestamp){
+    public Comment addComment(Long userId, Long postId, String text) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
-        Comment comment = new Comment(text,timestamp,user,post);
+        Comment comment = new Comment(text, user, post);
         return commentRepository.save(comment);
     }
 
-    public int getNumberOfLikes(Long commentId){
+    public int getNumberOfLikes(Long commentId) {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
 
         return commentLikeRepository.countAllByComment(comment);
     }
 
-    public boolean hasLiked(Long userId, Long commentId){
+    public boolean hasLiked(Long userId, Long commentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
 
-        return commentLikeRepository.existsByCommentAndUser(comment,user);
+        return commentLikeRepository.existsByCommentAndUser(comment, user);
     }
 
-    public void likeComment(Long userId, Long commentId, Timestamp timestamp){
+    public void likeComment(Long userId, Long commentId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
 
-        if (commentLikeRepository.existsByCommentAndUser(comment,user)){
+        if (commentLikeRepository.existsByCommentAndUser(comment, user)) {
             throw new IllegalArgumentException("User with id " + userId + " already like comment with id " + commentId);
         }
 
-        CommentLike commentLike = new CommentLike(user,comment,timestamp);
+        CommentLike commentLike = new CommentLike(user, comment);
         commentLikeRepository.save(commentLike);
     }
 }

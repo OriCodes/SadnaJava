@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -12,8 +13,7 @@ import java.util.List;
 @Data
 @Entity(name = "comments")
 @Table(name = "comments")
-public class Comment
-{
+public class Comment {
     @Id
     @SequenceGenerator(
             name = "comment_sequence",
@@ -36,12 +36,11 @@ public class Comment
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post; // the post which the comment belong to
-    @OneToMany(mappedBy = "comment",  cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CommentLike> likes;
 
-    public Comment(String text, Timestamp createdTimeStamp, User user, Post post) {
+    public Comment(String text, User user, Post post) {
         this.text = text;
-        this.createdTimeStamp = createdTimeStamp;
         this.user = user;
         this.post = post;
     }

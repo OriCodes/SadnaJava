@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -22,24 +21,25 @@ class PostLikeRepositoryTest {
     @Autowired
     private TopicRepository topicRepository;
     @Autowired
-    private  PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
     private PostLikeRepository postLikeRepository;
-    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER, 14);
     private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
     private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
-    private Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-    private Post post1 = new Post("Post1", "txt", new Timestamp(System.currentTimeMillis()),user1, topic);
-    private Post post2 = new Post("Post2", "txt", new Timestamp(System.currentTimeMillis()),user2, topic);
+    private Topic topic = new Topic("Sport", "URL");
+    private Post post1 = new Post("Post1", "txt", user1, topic);
+    private Post post2 = new Post("Post2", "txt", user2, topic);
 
     @BeforeEach
-    public void initiateDb(){
+    public void initiateDb() {
         userRepository.saveAll(List.of(user1, user2));
         topicRepository.save(topic);
-        postRepository.saveAll(List.of(post1,post2));
+        postRepository.saveAll(List.of(post1, post2));
     }
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         postLikeRepository.deleteAll();
         postRepository.deleteAll();
         topicRepository.deleteAll();
@@ -49,10 +49,9 @@ class PostLikeRepositoryTest {
     @Test
     public void countAllByPost() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
-        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
-        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        PostLike postLike1 = new PostLike(user1, post1);
+        PostLike postLike2 = new PostLike(user2, post2);
+        postLikeRepository.saveAll(List.of(postLike1, postLike2));
         //when
         int expected = postLikeRepository.countAllByPost(post1);
         //then
@@ -62,13 +61,12 @@ class PostLikeRepositoryTest {
     @Test
     public void existsByPostAndUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
-        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
-        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        PostLike postLike1 = new PostLike(user1, post1);
+        PostLike postLike2 = new PostLike(user2, post2);
+        postLikeRepository.saveAll(List.of(postLike1, postLike2));
         //when
-        boolean expectedTrue = postLikeRepository.existsByPostAndUser(post1,user1);
-        boolean expectedFalse = postLikeRepository.existsByPostAndUser(post2,user1);
+        boolean expectedTrue = postLikeRepository.existsByPostAndUser(post1, user1);
+        boolean expectedFalse = postLikeRepository.existsByPostAndUser(post2, user1);
         //then
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
@@ -77,13 +75,12 @@ class PostLikeRepositoryTest {
     @Test
     public void deleteAllByPostAndUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
-        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
-        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        PostLike postLike1 = new PostLike(user1, post1);
+        PostLike postLike2 = new PostLike(user2, post2);
+        postLikeRepository.saveAll(List.of(postLike1, postLike2));
         //when
-        postLikeRepository.deleteAllByPostAndUser(post1,user1);
-        List<PostLike>expectedList = postLikeRepository.findAll();
+        postLikeRepository.deleteAllByPostAndUser(post1, user1);
+        List<PostLike> expectedList = postLikeRepository.findAll();
         //then
         assertThat(expectedList.size()).isEqualTo(1);
     }
@@ -91,13 +88,12 @@ class PostLikeRepositoryTest {
     @Test
     public void deleteAllByPost() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
-        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
-        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        PostLike postLike1 = new PostLike(user1, post1);
+        PostLike postLike2 = new PostLike(user2, post2);
+        postLikeRepository.saveAll(List.of(postLike1, postLike2));
         //when
         postLikeRepository.deleteAllByPost(post1);
-        List<PostLike>expectedList = postLikeRepository.findAll();
+        List<PostLike> expectedList = postLikeRepository.findAll();
         //then
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getPost()).isNotEqualTo(post1);
@@ -106,13 +102,12 @@ class PostLikeRepositoryTest {
     @Test
     public void deleteAllByUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
-        PostLike postLike2 = new PostLike(user2 , post2, timestamp);
-        postLikeRepository.saveAll(List.of(postLike1,postLike2));
+        PostLike postLike1 = new PostLike(user1, post1);
+        PostLike postLike2 = new PostLike(user2, post2);
+        postLikeRepository.saveAll(List.of(postLike1, postLike2));
         //when
         postLikeRepository.deleteAllByUser(user1);
-        List<PostLike>expectedList = postLikeRepository.findAll();
+        List<PostLike> expectedList = postLikeRepository.findAll();
         //then
         assertThat(expectedList.size()).isEqualTo(1);
         assertThat(expectedList.get(0).getUser()).isNotEqualTo(user1);
@@ -122,8 +117,7 @@ class PostLikeRepositoryTest {
     @Test
     public void findByPostLikeId() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        PostLike postLike1 = new PostLike(user1 , post1, timestamp);
+        PostLike postLike1 = new PostLike(user1, post1);
         Long correctId = 1L;
         Long incorrectId = 2L;
         postLikeRepository.save(postLike1);

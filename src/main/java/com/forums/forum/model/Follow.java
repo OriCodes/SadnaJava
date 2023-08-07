@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "follows")
-@Table(name = "follows",uniqueConstraints = @UniqueConstraint(columnNames = { "follower_id", "followed_id"}))
+@Table(name = "follows", uniqueConstraints = @UniqueConstraint(columnNames = {"follower_id", "followed_id"}))
 public class Follow {
     @Id
     @SequenceGenerator(
@@ -34,12 +34,11 @@ public class Follow {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "followed_id")
     private User followed;
-    @Column(name="follow_date")
+    @Column(name = "follow_date")
     private Timestamp followDate;
 
-    public Follow(User follower, User followed, Timestamp followDate) {
+    public Follow(User follower, User followed) {
         this.follower = follower;
         this.followed = followed;
-        this.followDate = followDate;
     }
 }

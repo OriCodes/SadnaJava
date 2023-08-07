@@ -12,17 +12,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
-
-import static org.mockito.Mockito.verify;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class CommentLikeServiceTest {
     @Mock
     private CommentLikeRepository commentLikeRepository;
     private CommentLikeService commentLikeService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -36,7 +34,7 @@ class CommentLikeServiceTest {
         //then
         commentLikeService.getNumberOfLikes(comment);
         //when
-        ArgumentCaptor<Comment> commentArgumentCaptor =  ArgumentCaptor.forClass(Comment.class);
+        ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
         verify(commentLikeRepository).countAllByComment(commentArgumentCaptor.capture());
         Comment capturedComment = commentArgumentCaptor.getValue();
         assertThat(capturedComment).isEqualTo(comment);
@@ -49,11 +47,11 @@ class CommentLikeServiceTest {
         Comment comment = new Comment();
         User user = new User();
         //then
-        commentLikeService.hasLiked(user,comment);
+        commentLikeService.hasLiked(user, comment);
         //when
-        ArgumentCaptor<Comment> commentArgumentCaptor =  ArgumentCaptor.forClass(Comment.class);
-        ArgumentCaptor<User> userArgumentCaptor =  ArgumentCaptor.forClass(User.class);
-        verify(commentLikeRepository).existsByCommentAndUser(commentArgumentCaptor.capture(),userArgumentCaptor.capture());
+        ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(commentLikeRepository).existsByCommentAndUser(commentArgumentCaptor.capture(), userArgumentCaptor.capture());
 
         Comment capturedComment = commentArgumentCaptor.getValue();
         User capturedUser = userArgumentCaptor.getValue();
@@ -67,11 +65,11 @@ class CommentLikeServiceTest {
         Comment comment = new Comment();
         User user = new User();
         //then
-        commentLikeService.deleteLike(comment,user);
+        commentLikeService.deleteLike(comment, user);
         //when
-        ArgumentCaptor<Comment> commentArgumentCaptor =  ArgumentCaptor.forClass(Comment.class);
-        ArgumentCaptor<User> userArgumentCaptor =  ArgumentCaptor.forClass(User.class);
-        verify(commentLikeRepository).deleteAllByCommentAndUser(commentArgumentCaptor.capture(),userArgumentCaptor.capture());
+        ArgumentCaptor<Comment> commentArgumentCaptor = ArgumentCaptor.forClass(Comment.class);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+        verify(commentLikeRepository).deleteAllByCommentAndUser(commentArgumentCaptor.capture(), userArgumentCaptor.capture());
 
         Comment capturedComment = commentArgumentCaptor.getValue();
         User capturedUser = userArgumentCaptor.getValue();
@@ -84,16 +82,14 @@ class CommentLikeServiceTest {
         //given
         User user = new User();
         Comment comment = new Comment();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //then
-        commentLikeService.addLike(user,comment,timestamp);
+        commentLikeService.addLike(user, comment);
         //when
-        ArgumentCaptor<CommentLike> commentLikeArgumentCaptor =  ArgumentCaptor.forClass(CommentLike.class);
+        ArgumentCaptor<CommentLike> commentLikeArgumentCaptor = ArgumentCaptor.forClass(CommentLike.class);
         verify(commentLikeRepository).save(commentLikeArgumentCaptor.capture());
 
         CommentLike capturedCommentLike = commentLikeArgumentCaptor.getValue();
         assertThat(capturedCommentLike.getComment()).isEqualTo(comment);
         assertThat(capturedCommentLike.getUser()).isEqualTo(user);
-        assertThat(capturedCommentLike.getLikeTime()).isEqualTo(timestamp);
     }
 }

@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 
 @Data
 @NoArgsConstructor
@@ -37,9 +36,8 @@ public class Message {
     @JoinColumn(name = "receiver_id")
     private User receiver; // the user who posted the post
 
-    public Message(String content, Timestamp createdTimeStamp, User sender, User receiver) {
+    public Message(String content, User sender, User receiver) {
         this.content = content;
-        this.createdTimeStamp = createdTimeStamp;
         this.sender = sender;
         this.receiver = receiver;
     }

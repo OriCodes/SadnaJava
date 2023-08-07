@@ -7,28 +7,26 @@ import com.forums.forum.repo.PostLikeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
-
 @AllArgsConstructor
 @Service
 public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
 
-    public int getNumberOfLikes(Post post){
+    public int getNumberOfLikes(Post post) {
         return postLikeRepository.countAllByPost(post);
     }
 
-    public boolean hasLiked(User user, Post post){
-        return  postLikeRepository.existsByPostAndUser(post,user);
+    public boolean hasLiked(User user, Post post) {
+        return postLikeRepository.existsByPostAndUser(post, user);
     }
 
-    public void deleteLike(Post post, User user){
-        postLikeRepository.deleteAllByPostAndUser(post,user);
+    public void deleteLike(Post post, User user) {
+        postLikeRepository.deleteAllByPostAndUser(post, user);
     }
 
-    public void addLike(User user, Post post, Timestamp timestamp){
-        PostLike postLike = new PostLike(user,post,timestamp);
+    public void addLike(User user, Post post) {
+        PostLike postLike = new PostLike(user, post);
         postLikeRepository.save(postLike);
     }
 }

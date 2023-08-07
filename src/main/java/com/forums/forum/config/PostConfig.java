@@ -9,8 +9,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -30,13 +28,13 @@ public class PostConfig {
             userRepository.saveAll(List.of(user1, user2));
 
 
-            Topic topic1 = new Topic("Topic 1", Timestamp.from(Instant.now()), "thumbnail_url1");
-            Topic topic2 = new Topic("Topic 2", Timestamp.from(Instant.now()), "thumbnail_url2");
+            Topic topic1 = new Topic("Topic 1", "thumbnail_url1");
+            Topic topic2 = new Topic("Topic 2", "thumbnail_url2");
             topicRepository.saveAll(List.of(topic1, topic2));
 
 //
-//            Post post1 = new Post("Post Title 1", "Post Text 1", Timestamp.from(Instant.now()), user1, topic1);
-//            Post post2 = new Post("Post Title 2", "Post Text 2", Timestamp.from(Instant.now()), user2, topic2);
+//            Post post1 = new Post("Post Title 1", "Post Text 1", user1, topic1);
+//            Post post2 = new Post("Post Title 2", "Post Text 2", user2, topic2);
 //            postRepository.saveAll(List.of(post1, post2));
         };
     }

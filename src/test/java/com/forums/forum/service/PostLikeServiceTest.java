@@ -12,17 +12,15 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
-
-import static org.mockito.Mockito.verify;
-
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class PostLikeServiceTest {
     @Mock
     private PostLikeRepository postLikeRepository;
     private PostLikeService postLikeService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -36,7 +34,7 @@ class PostLikeServiceTest {
         //when
         postLikeService.getNumberOfLikes(post);
         //then
-        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class) ;
+        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
         verify(postLikeRepository).countAllByPost(postArgumentCaptor.capture());
 
         Post capturedPost = postArgumentCaptor.getValue();
@@ -50,10 +48,10 @@ class PostLikeServiceTest {
         Post post = new Post();
         User user = new User();
         //when
-        postLikeService.hasLiked(user,post);
+        postLikeService.hasLiked(user, post);
         //then
-        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class) ;
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class) ;
+        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(postLikeRepository).existsByPostAndUser(postArgumentCaptor.capture(), userArgumentCaptor.capture());
 
         User capturedUser = userArgumentCaptor.getValue();
@@ -68,10 +66,10 @@ class PostLikeServiceTest {
         Post post = new Post();
         User user = new User();
         //when
-        postLikeService.deleteLike(post,user);
+        postLikeService.deleteLike(post, user);
         //then
-        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class) ;
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class) ;
+        ArgumentCaptor<Post> postArgumentCaptor = ArgumentCaptor.forClass(Post.class);
+        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
         verify(postLikeRepository).deleteAllByPostAndUser(postArgumentCaptor.capture(), userArgumentCaptor.capture());
 
         User capturedUser = userArgumentCaptor.getValue();
@@ -85,15 +83,13 @@ class PostLikeServiceTest {
         //given
         User user = new User();
         Post post = new Post();
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //when
-        postLikeService.addLike(user,post,timestamp);
+        postLikeService.addLike(user, post);
         //then
-        ArgumentCaptor<PostLike> postLikeArgumentCaptor = ArgumentCaptor.forClass(PostLike.class) ;
+        ArgumentCaptor<PostLike> postLikeArgumentCaptor = ArgumentCaptor.forClass(PostLike.class);
         verify(postLikeRepository).save(postLikeArgumentCaptor.capture());
 
         PostLike capturedPostLike = postLikeArgumentCaptor.getValue();
-        assertThat(capturedPostLike.getLikeTime()).isEqualTo(timestamp);
         assertThat(capturedPostLike.getPost()).isEqualTo(post);
         assertThat(capturedPostLike.getUser()).isEqualTo(user);
     }

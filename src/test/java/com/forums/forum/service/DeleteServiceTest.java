@@ -1,6 +1,5 @@
 package com.forums.forum.service;
 
-import com.forums.forum.exception.AlreadyFollowsException;
 import com.forums.forum.model.*;
 import com.forums.forum.repo.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,23 +24,24 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class DeleteServiceTest {
     @Mock
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
     @Mock
-    private  TopicRepository topicRepository;
+    private TopicRepository topicRepository;
     @Mock
-    private  PostRepository postRepository;
+    private PostRepository postRepository;
     @Mock
-    private  CommentRepository commentRepository;
+    private CommentRepository commentRepository;
     @Mock
-    private  FollowRepository followRepository;
+    private FollowRepository followRepository;
     @Mock
-    private  MessageRepository messageRepository;
+    private MessageRepository messageRepository;
     @Mock
-    private  PostLikeRepository postLikeRepository;
+    private PostLikeRepository postLikeRepository;
     @Mock
-    private  CommentLikeRepository commentLikeRepository;
+    private CommentLikeRepository commentLikeRepository;
 
     private DeleteService deleteService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -60,15 +60,15 @@ class DeleteServiceTest {
     @Test
     public void unfollowSuccess() {
         //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
-        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
         User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        when(followRepository.existsByFollowerAndFollowed(user1,user2)).thenReturn(true);
+        when(followRepository.existsByFollowerAndFollowed(user1, user2)).thenReturn(true);
         //when
-        deleteService.unfollow(1L,2L);
+        deleteService.unfollow(1L, 2L);
         //then
         ArgumentCaptor<User> userArgCaptor = ArgumentCaptor.forClass(User.class);
         verify(followRepository).deleteAllByFollowerAndAndFollowed(userArgCaptor.capture(), userArgCaptor.capture());
@@ -87,37 +87,37 @@ class DeleteServiceTest {
         when(userRepository.findById(3L)).thenReturn(Optional.of(new User()));
         //when
         //then
-        assertThatThrownBy(()-> deleteService.unfollow(1L,2L)).
+        assertThatThrownBy(() -> deleteService.unfollow(1L, 2L)).
                 isInstanceOf(IllegalArgumentException.class);
 
-        assertThatThrownBy(()-> deleteService.unfollow(1L,3L)).
+        assertThatThrownBy(() -> deleteService.unfollow(1L, 3L)).
                 isInstanceOf(IllegalArgumentException.class);
 
-        assertThatThrownBy(()-> deleteService.unfollow(3L,2L)).
+        assertThatThrownBy(() -> deleteService.unfollow(3L, 2L)).
                 isInstanceOf(IllegalArgumentException.class);
 
-        verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(),any());
-        verify(followRepository, never()).existsByFollowerAndFollowed(any(),any());
+        verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(), any());
+        verify(followRepository, never()).existsByFollowerAndFollowed(any(), any());
     }
 
     @Test
     public void unfollowThrowNotFollowing() {
         //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER,14);
-        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER,14);
+        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
         User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
         when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        when(followRepository.existsByFollowerAndFollowed(user1,user2)).thenReturn(false);
+        when(followRepository.existsByFollowerAndFollowed(user1, user2)).thenReturn(false);
         //when
         //then
-        assertThatThrownBy(()-> deleteService.unfollow(1L,2L)).
+        assertThatThrownBy(() -> deleteService.unfollow(1L, 2L)).
                 isInstanceOf(IllegalArgumentException.class).hasMessageContaining(
                         "User with id " + 1L + " don't follow User with id " + 2L
                 );
 
-        verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(),any());
+        verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(), any());
     }
 
 
@@ -125,10 +125,10 @@ class DeleteServiceTest {
     public void unlikePostSuccess() {
         // given
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Topic topic = new Topic("Sport", "URL");
+        Timestamp timestamp;
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
+        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
@@ -174,10 +174,10 @@ class DeleteServiceTest {
     public void unlikePostThrowNotLiked() {
         // given
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Topic topic = new Topic("Sport", "URL");
+        Timestamp timestamp;
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
+        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(postRepository.findById(1L)).thenReturn(Optional.of(post));
@@ -195,11 +195,11 @@ class DeleteServiceTest {
     public void unlikeCommentSuccess() {
         // given
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Topic topic = new Topic("Sport", "URL");
+        Timestamp timestamp;
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
-        Comment comment = new Comment("Nice post!", timestamp, user, post);
+        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
+        Comment comment = new Comment("Nice post!", user, post);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
@@ -245,11 +245,11 @@ class DeleteServiceTest {
     public void unlikeCommentThrowNotLiked() {
         // given
         LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        Topic topic = new Topic("Sport", "URL");
+        Timestamp timestamp;
         User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", timestamp, user, topic);
-        Comment comment = new Comment("Nice post!", timestamp, user, post);
+        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
+        Comment comment = new Comment("Nice post!", user, post);
 
         when(userRepository.findById(1L)).thenReturn(Optional.of(user));
         when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));

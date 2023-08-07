@@ -7,8 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
-
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
@@ -22,26 +20,27 @@ class CommentRepositoryTest {
     @Autowired
     private TopicRepository topicRepository;
     @Autowired
-    private  PostRepository postRepository;
+    private PostRepository postRepository;
     @Autowired
     private CommentRepository commentRepository;
 
-    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER, 14);
 
     private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
     private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
-    private Topic topic = new Topic("Sport", new Timestamp(System.currentTimeMillis()), "URL");
-    private Post post1 = new Post("Post1", "txt", new Timestamp(System.currentTimeMillis()),user1, topic);
-    private Post post2 = new Post("Post2", "txt", new Timestamp(System.currentTimeMillis()),user2, topic);
+    private Topic topic = new Topic("Sport", "URL");
+    private Post post1 = new Post("Post1", "txt", user1, topic);
+    private Post post2 = new Post("Post2", "txt", user2, topic);
 
     @BeforeEach
-    public void initiateDb(){
+    public void initiateDb() {
         userRepository.saveAll(List.of(user1, user2));
         topicRepository.save(topic);
-        postRepository.saveAll(List.of(post1,post2));
+        postRepository.saveAll(List.of(post1, post2));
     }
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         commentRepository.deleteAll();
         postRepository.deleteAll();
         topicRepository.deleteAll();
@@ -51,8 +50,7 @@ class CommentRepositoryTest {
     @Test
     public void findByCommentId() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Comment comment1 = new Comment("Text",timestamp,user1,post1);
+        Comment comment1 = new Comment("Text", user1, post1);
         Long correctId = 1L, incorrectId = 2L;
         commentRepository.save(comment1);
         //when
@@ -68,12 +66,11 @@ class CommentRepositoryTest {
     @Test
     public void findAllByPost() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Comment comment1 = new Comment("Text",timestamp,user1,post1);
-        Comment comment2 = new Comment("Text",timestamp,user2,post2);
-        commentRepository.saveAll(List.of(comment1,comment2));
+        Comment comment1 = new Comment("Text", user1, post1);
+        Comment comment2 = new Comment("Text", user2, post2);
+        commentRepository.saveAll(List.of(comment1, comment2));
         //when
-        List<Comment>expected = commentRepository.findAllByPost(post1);
+        List<Comment> expected = commentRepository.findAllByPost(post1);
         //then
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getPost()).isEqualTo(post1);
@@ -82,12 +79,11 @@ class CommentRepositoryTest {
     @Test
     public void findAllByUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Comment comment1 = new Comment("Text",timestamp,user1,post1);
-        Comment comment2 = new Comment("Text",timestamp,user2,post2);
-        commentRepository.saveAll(List.of(comment1,comment2));
+        Comment comment1 = new Comment("Text", user1, post1);
+        Comment comment2 = new Comment("Text", user2, post2);
+        commentRepository.saveAll(List.of(comment1, comment2));
         //when
-        List<Comment>expected = commentRepository.findAllByUser(user1);
+        List<Comment> expected = commentRepository.findAllByUser(user1);
         //then
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getUser()).isEqualTo(user1);
@@ -96,10 +92,9 @@ class CommentRepositoryTest {
     @Test
     public void countAllByPost() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Comment comment1 = new Comment("Text",timestamp,user1,post1);
-        Comment comment2 = new Comment("Text",timestamp,user2,post2);
-        commentRepository.saveAll(List.of(comment1,comment2));
+        Comment comment1 = new Comment("Text", user1, post1);
+        Comment comment2 = new Comment("Text", user2, post2);
+        commentRepository.saveAll(List.of(comment1, comment2));
         //when
         int expected = commentRepository.countAllByPost(post1);
         //then
@@ -109,10 +104,9 @@ class CommentRepositoryTest {
     @Test
     public void countAllByUser() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Comment comment1 = new Comment("Text",timestamp,user1,post1);
-        Comment comment2 = new Comment("Text",timestamp,user2,post2);
-        commentRepository.saveAll(List.of(comment1,comment2));
+        Comment comment1 = new Comment("Text", user1, post1);
+        Comment comment2 = new Comment("Text", user2, post2);
+        commentRepository.saveAll(List.of(comment1, comment2));
         //when
         int expected = commentRepository.countAllByUser(user1);
         //then

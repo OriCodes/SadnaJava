@@ -12,15 +12,14 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -28,6 +27,7 @@ class TopicServiceTest {
     @Mock
     private TopicRepository topicRepository;
     private TopicService topicService;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -37,9 +37,8 @@ class TopicServiceTest {
     @Test
     public void allTopics() {
         // given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Topic topic1 = new Topic( "Topic 1", timestamp,"Content 1");
-        Topic topic2 = new Topic( "Topic 2", timestamp,"Content 2");
+        Topic topic1 = new Topic("Topic 1", "Content 1");
+        Topic topic2 = new Topic("Topic 2", "Content 2");
         List<Topic> topics = Arrays.asList(topic1, topic2);
 
         when(topicRepository.findAll()).thenReturn(topics);
@@ -56,12 +55,11 @@ class TopicServiceTest {
     @Test
     public void byIdTopicFound() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         List<Post> posts = new ArrayList<>();
         Long topicId = 1L;
-        Topic topic = new Topic(topicId,"Baseball",timestamp,"URL",posts);
+        Topic topic = new Topic("Baseball", "URL");
 
-        when(topicRepository.findById(1L)).thenReturn(Optional.of(topic));
+        when(topicRepository.findById(topicId)).thenReturn(Optional.of(topic));
 
         //when
         Topic res = topicService.byId(topicId);
@@ -126,18 +124,17 @@ class TopicServiceTest {
         try {
             //given
             when(topicRepository.existsByTopicName(anyString())).thenReturn(false);
-            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
             String topicName = "topicName";
             String thumbNailUrl = "URL";
-            Topic topic = new Topic(topicName,timestamp,thumbNailUrl);
+            Topic topic = new Topic(topicName, thumbNailUrl);
             //when
-            topicService.addTopic(topicName,timestamp,thumbNailUrl);
+            topicService.addTopic(topicName, thumbNailUrl);
             //then
             ArgumentCaptor<Topic> topicArgumentCaptor = ArgumentCaptor.forClass(Topic.class);
             verify(topicRepository).save(topicArgumentCaptor.capture());
 
             assertThat(topicArgumentCaptor.getValue()).isEqualTo(topic);
-        }catch (TopicAlreadyExistException e){
+        } catch (TopicAlreadyExistException e) {
             System.out.println(e.getStackTrace());
         }
     }
@@ -145,10 +142,9 @@ class TopicServiceTest {
     @Test
     public void addTopicShouldThrow() {
         when(topicRepository.existsByTopicName(anyString())).thenReturn(true);
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         String topicName = "topicName";
         String thumbNailUrl = "URL";
-        assertThatThrownBy(()->topicService.addTopic(topicName,timestamp,thumbNailUrl)).
+        assertThatThrownBy(() -> topicService.addTopic(topicName, thumbNailUrl)).
                 isInstanceOf(TopicAlreadyExistException.class);
         verify(topicRepository, never()).save(any());
     }

@@ -11,7 +11,6 @@ import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -24,27 +23,26 @@ public class PostService {
     private final UserRepository userRepository;
     private final TopicRepository topicRepository;
 
-    public Post byId(Long id){
+    public Post byId(Long id) {
         return postRepository.findById(id).orElse(null);
     }
 
-    public boolean isExistByTitle(String title){
+    public boolean isExistByTitle(String title) {
         return postRepository.existsByTitle(title);
     }
 
-    public boolean isExistByTitleAndTopic(String title, Long topicId){
+    public boolean isExistByTitleAndTopic(String title, Long topicId) {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
 
         return postRepository.existsByTitleAndTopic(title, topic);
     }
 
-    public List<Post> allPosts()
-    {
+    public List<Post> allPosts() {
         return postRepository.findAll();
     }
 
-    public List<Post> search(String query){
+    public List<Post> search(String query) {
         List<Post> result = new ArrayList<>();
         List<Post> perfectMatch = postRepository.findAllByTitle(query);
         List<Post> imperfectMatch = postRepository.findAllByTitleContaining(query);
@@ -52,51 +50,50 @@ public class PostService {
         return mergeSearchResult(query, result, perfectMatch, imperfectMatch);
     }
 
-    public List<Post> searchInTopic(String query, Long topicId){
+    public List<Post> searchInTopic(String query, Long topicId) {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
 
         List<Post> result = new ArrayList<>();
-        List<Post> perfectMatch = postRepository.findAllByTopicAndTitle(topic,query);
-        List<Post> imperfectMatch = postRepository.findAllByTopicAndTitleContaining(topic,query);
+        List<Post> perfectMatch = postRepository.findAllByTopicAndTitle(topic, query);
+        List<Post> imperfectMatch = postRepository.findAllByTopicAndTitleContaining(topic, query);
 
         return mergeSearchResult(query, result, perfectMatch, imperfectMatch);
     }
 
-    public List<Post> allByUser(Long userId){
+    public List<Post> allByUser(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         return postRepository.findAllByUser(user);
     }
 
-    public List<Post> allByTopic(Long topicId){
+    public List<Post> allByTopic(Long topicId) {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
 
         return postRepository.findAllByTopic(topic);
     }
 
-    public Post addPost(Long userId, Long topicId, String title, String text)
-    {
+    public Post addPost(Long userId, Long topicId, String title, String text) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
 
-        Post newPost = new Post(title,text, user, topic);
+        Post newPost = new Post(title, text, user, topic);
         return postRepository.save(newPost);
     }
 
 
-    public int getNumberOfLikes(Long postId){
+    public int getNumberOfLikes(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
         return postLikeRepository.countAllByPost(post);
     }
 
-    public boolean hasLiked(Long userId, Long postId){
+    public boolean hasLiked(Long userId, Long postId) {
 
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
@@ -104,31 +101,31 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
-        return postLikeRepository.existsByPostAndUser(post,user);
+        return postLikeRepository.existsByPostAndUser(post, user);
     }
 
-    public void likePost(Long userId, Long postId, Timestamp timestamp){
+    public void likePost(Long userId, Long postId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
 
-        if (postLikeRepository.existsByPostAndUser(post,user))
+        if (postLikeRepository.existsByPostAndUser(post, user))
             throw new IllegalArgumentException("User with id " + userId + " already like post with id " + postId);
 
 
-        PostLike postLike = new PostLike(user,post,timestamp);
+        PostLike postLike = new PostLike(user, post);
         postLikeRepository.save(postLike);
     }
 
 
     private List<Post> mergeSearchResult(String query, List<Post> result, List<Post> perfectMatch, List<Post> imperfectMatch) {
-        if(perfectMatch != null) {
+        if (perfectMatch != null) {
             result.addAll(perfectMatch);
         }
 
-        if (imperfectMatch != null){
+        if (imperfectMatch != null) {
             Iterator<Post> iterator = imperfectMatch.iterator();
             while (iterator.hasNext()) {
                 Post post = iterator.next();

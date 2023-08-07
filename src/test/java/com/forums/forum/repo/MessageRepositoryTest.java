@@ -22,28 +22,30 @@ class MessageRepositoryTest {
     UserRepository userRepository;
     @Autowired
     MessageRepository messageRepository;
-    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+    private final LocalDate dob = LocalDate.of(2003, Month.DECEMBER, 14);
     private User user1 = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
     private User user2 = new User("Venus", dob, "URL", Gender.FEMALE, "Auth");
 
     @BeforeEach
-    public void initiateDb(){
+    public void initiateDb() {
         userRepository.saveAll(List.of(user1, user2));
     }
+
     @AfterEach
-    public void tearDown(){
+    public void tearDown() {
         messageRepository.deleteAll();
         userRepository.deleteAll();
     }
+
     @Test
     public void existsBySenderAndReceiver() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message = new Message("content",timestamp,user1,user2);
+
+        Message message = new Message("content", user1, user2);
         messageRepository.save(message);
         //when
-        boolean expectedTrue = messageRepository.existsBySenderAndReceiver(user1,user2);
-        boolean expectedFalse = messageRepository.existsBySenderAndReceiver(user2,user1);
+        boolean expectedTrue = messageRepository.existsBySenderAndReceiver(user1, user2);
+        boolean expectedFalse = messageRepository.existsBySenderAndReceiver(user2, user1);
         //then
         assertThat(expectedFalse).isFalse();
         assertThat(expectedTrue).isTrue();
@@ -52,10 +54,10 @@ class MessageRepositoryTest {
     @Test
     public void countAllBySender() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
         int expected = messageRepository.countAllBySender(user1);
         //then
@@ -66,12 +68,12 @@ class MessageRepositoryTest {
     @Test
     public void findAllBySenderAndReceiver() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
-        List<Message> expected = messageRepository.findAllBySenderAndReceiver(user1,user2);
+        List<Message> expected = messageRepository.findAllBySenderAndReceiver(user1, user2);
         //then
         assertThat(expected.size()).isEqualTo(1);
         assertThat(expected.get(0).getSender()).isEqualTo(user1);
@@ -81,10 +83,10 @@ class MessageRepositoryTest {
     @Test
     public void findAllByReceiver() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
         List<Message> expected = messageRepository.findAllByReceiver(user1);
         //then
@@ -95,10 +97,10 @@ class MessageRepositoryTest {
     @Test
     public void findAllBySender() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
         List<Message> expected = messageRepository.findAllBySender(user1);
         //then
@@ -109,10 +111,10 @@ class MessageRepositoryTest {
     @Test
     public void deleteAllBySender() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
         messageRepository.deleteAllBySender(user1);
         //then
@@ -124,10 +126,10 @@ class MessageRepositoryTest {
     @Test
     public void deleteAllByReceiver() {
         //given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content",timestamp,user1,user2);
-        Message message2 = new Message("content",timestamp,user2,user1);
-        messageRepository.saveAll(List.of(message1,message2));
+
+        Message message1 = new Message("content", user1, user2);
+        Message message2 = new Message("content", user2, user1);
+        messageRepository.saveAll(List.of(message1, message2));
         //when
         messageRepository.deleteAllByReceiver(user1);
         //then
@@ -139,10 +141,16 @@ class MessageRepositoryTest {
     @Test
     public void findAllByReceiverAndCreatedTimeStampGreaterThanEqual() {
         // Given
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        Message message1 = new Message("content1", timestamp, user2, user1);
-        Timestamp laterTimestamp = new Timestamp(System.currentTimeMillis() +1000); //
-        Message message2 = new Message("content2", laterTimestamp, user2, user1);
+
+        Timestamp earlierTimestamp = new Timestamp(System.currentTimeMillis()); //
+        Timestamp laterTimestamp = new Timestamp(System.currentTimeMillis() + 1000); //
+
+        Message message1 = new Message("content1", user2, user1);
+        message1.setCreatedTimeStamp(earlierTimestamp);
+
+        Message message2 = new Message("content2", user2, user1);
+        message2.setCreatedTimeStamp(laterTimestamp);
+
         messageRepository.saveAll(List.of(message1, message2));
 
         // When

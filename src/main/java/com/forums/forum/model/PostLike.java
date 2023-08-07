@@ -11,7 +11,7 @@ import java.sql.Timestamp;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity(name = "post_like")
-@Table(name = "post_like",uniqueConstraints = @UniqueConstraint(columnNames = { "post_id", "user_id"}))
+@Table(name = "post_like", uniqueConstraints = @UniqueConstraint(columnNames = {"post_id", "user_id"}))
 public class PostLike {
     @Id
     @SequenceGenerator(
@@ -34,11 +34,11 @@ public class PostLike {
     @JoinColumn(name = "post_id")
     private Post post;
 
-    @Column(name="like_time")
+    @Column(name = "like_time")
     private Timestamp likeTime;
-    public PostLike(User user, Post post, Timestamp likeTime) {
+
+    public PostLike(User user, Post post) {
         this.user = user;
         this.post = post;
-        this.likeTime = likeTime;
     }
 }
