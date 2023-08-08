@@ -1,5 +1,7 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
+import com.forums.forum.exception.UserAlreadyLikeException;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.PostLike;
 import com.forums.forum.model.Topic;
@@ -31,9 +33,9 @@ public class PostService {
         return postRepository.existsByTitle(title);
     }
 
-    public boolean isExistByTitleAndTopic(String title, Long topicId) {
+    public boolean isExistByTitleAndTopic(String title, Long topicId) throws ResourceNotFoundException{
         Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
         return postRepository.existsByTitleAndTopic(title, topic);
     }
@@ -50,9 +52,9 @@ public class PostService {
         return mergeSearchResult(query, result, perfectMatch, imperfectMatch);
     }
 
-    public List<Post> searchInTopic(String query, Long topicId) {
+    public List<Post> searchInTopic(String query, Long topicId) throws ResourceNotFoundException {
         Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
         List<Post> result = new ArrayList<>();
         List<Post> perfectMatch = postRepository.findAllByTopicAndTitle(topic, query);
@@ -61,62 +63,61 @@ public class PostService {
         return mergeSearchResult(query, result, perfectMatch, imperfectMatch);
     }
 
-    public List<Post> allByUser(Long userId) {
+    public List<Post> allByUser(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return postRepository.findAllByUser(user);
     }
 
-    public List<Post> allByTopic(Long topicId) {
+    public List<Post> allByTopic(Long topicId) throws ResourceNotFoundException{
         Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
         return postRepository.findAllByTopic(topic);
     }
 
-    public Post addPost(Long userId, Long topicId, String title, String text) {
+    public Post addPost(Long userId, Long topicId, String title, String text) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
         Post newPost = new Post(title, text, user, topic);
         return postRepository.save(newPost);
     }
 
 
-    public int getNumberOfLikes(Long postId) {
+    public int getNumberOfLikes(Long postId) throws ResourceNotFoundException{
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
+
         return postLikeRepository.countAllByPost(post);
     }
 
-    public boolean hasLiked(Long userId, Long postId) {
+    public boolean hasLiked(Long userId, Long postId) throws ResourceNotFoundException {
 
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         return postLikeRepository.existsByPostAndUser(post, user);
     }
 
-    public void likePost(Long userId, Long postId) {
+    public PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserAlreadyLikeException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         if (postLikeRepository.existsByPostAndUser(post, user))
-            throw new IllegalArgumentException("User with id " + userId + " already like post with id " + postId);
+            throw new UserAlreadyLikeException("User with id " + userId + " already like post with id " + postId);
 
-
-        PostLike postLike = new PostLike(user, post);
-        postLikeRepository.save(postLike);
+        return postLikeRepository.save(new PostLike(user, post));
     }
 
 
@@ -133,9 +134,6 @@ public class PostService {
                     result.add(post);
                 }
             }
-        }
-        if (result.isEmpty()) {
-            return null;
         }
 
         return result;

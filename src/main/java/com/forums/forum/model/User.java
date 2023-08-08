@@ -41,10 +41,6 @@ public class User {
     private String auth0Id;
 
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonIgnoreProperties("user")
-    private List<PostLike> postLikes;
-
 
     public User(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) {
         this.userName = userName;
