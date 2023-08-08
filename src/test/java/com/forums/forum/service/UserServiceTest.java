@@ -52,10 +52,10 @@ class UserServiceTest {
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         //when
         try {
-            userService.registerUser(userName,dob2,profileUrl,gender,auth0Id);
+            User newUser = userService.registerUser(userName,dob2,profileUrl,gender,auth0Id);
             //then
             verify(userRepository, times(1)).save(any(User.class));
-            //assertThat(newUser).isEqualTo(savedUser);
+            assertThat(newUser).isEqualTo(savedUser);
         } catch (UserNameAlreadyExistException e) { // this should never happen
             System.out.println(e.getStackTrace());
         }

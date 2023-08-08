@@ -19,13 +19,13 @@ import java.util.Objects;
 public class UserService {
     private final UserRepository userRepository;
 
-    public void registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) throws UserNameAlreadyExistException
+    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) throws UserNameAlreadyExistException
     {
         if(userRepository.existsByUserName(userName)){
             throw new UserNameAlreadyExistException();
         }
         User newUser = new User(userName, dob,  profileUrl, gender,  auth0Id);
-        userRepository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public List<User> searchUserByUserName(String userName)
@@ -63,7 +63,7 @@ public class UserService {
     public User byUserName(String userName){return userRepository.findByUserName(userName);}
 
     @Transactional
-    public void updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender) throws UserNameAlreadyExistException{
+    public User updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender) throws UserNameAlreadyExistException{
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
@@ -85,6 +85,7 @@ public class UserService {
         if (gender != null && !Objects.equals(gender,user.getGender())){
             user.setGender(gender);
         }
+        return user;
     }
 
 

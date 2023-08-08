@@ -28,38 +28,24 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<String> registerUser(
+    public @ResponseBody User registerUser(
             @RequestParam String userName,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam String profileUrl,
             @RequestParam Gender gender,
             @RequestParam String auth0Id) throws UserNameAlreadyExistException{
-        try {
-            userService.registerUser(userName, dob, profileUrl, gender, auth0Id);
-            return ResponseEntity.ok("User registered successfully");
-        } catch (UserNameAlreadyExistException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User name already exists");
-        }
+            return userService.registerUser(userName, dob, profileUrl, gender, auth0Id);
     }
 
     @PutMapping(path = "{userId}")
-    public ResponseEntity<String> updateUser(
+    public @ResponseBody User updateUser(
             @PathVariable("userId") Long userId,
             @RequestParam(required = false) String userName,
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam(required = false) String profileUrl,
             @RequestParam(required = false) Gender gender
-    ) {
-        try {
-            userService.updateUser(userId, userName, dob, profileUrl, gender);
-            return ResponseEntity.ok("User updated successfully");
-        } catch (UserNameAlreadyExistException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("User name already exists.");
-        } catch (IllegalArgumentException e) {
-            // Handle IllegalArgumentException thrown when the user with the given ID is not found.
-            return ResponseEntity.notFound().build();
-        }
-
+    ) throws UserNameAlreadyExistException{
+            return userService.updateUser(userId, userName, dob, profileUrl, gender);
     }
 
     @GetMapping(path = "byId/{userId}")
