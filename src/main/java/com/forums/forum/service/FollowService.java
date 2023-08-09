@@ -1,5 +1,7 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Follow;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.FollowRepository;
@@ -20,67 +22,67 @@ public class FollowService {
         return followRepository.findById(id).orElse(null);
     }
 
-    public boolean isFollowing(Long followerId, Long followedId) {
+    public boolean isFollowing(Long followerId, Long followedId) throws ResourceNotFoundException {
         User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followedId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followedId + " not found"));
 
         User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followerId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followerId + " not found"));
 
         return followRepository.existsByFollowerAndFollowed(follower, followed);
     }
 
-    public int getNumberOfFollowers(Long userId) {
+    public int getNumberOfFollowers(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return followRepository.countAllByFollowed(user);
     }
 
-    public int getNumberOfFollowed(Long userId) {
+    public int getNumberOfFollowed(Long userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return followRepository.countAllByFollower(user);
     }
 
-    public Follow byFollowAndFollower(Long followerId, Long followedId) {
+    public Follow byFollowAndFollower(Long followerId, Long followedId) throws ResourceNotFoundException{
         User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followedId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followedId + " not found"));
 
         User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followerId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followerId + " not found"));
 
         return followRepository.findByFollowerAndAndFollowed(follower, followed);
     }
 
-    public List<Follow> getFollowers(Long userId) {
+    public List<Follow> getFollowers(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return followRepository.findAllByFollowed(user);
     }
 
-    public List<Follow> getFollowed(Long userId) {
+    public List<Follow> getFollowed(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return followRepository.findAllByFollower(user);
     }
 
-    public Follow addFollow(Long followerId, Long followedId) {
+    public Follow addFollow(Long followerId, Long followedId) throws ResourceNotFoundException, UserActionNotAllowedException {
         User followed = userRepository.findById(followedId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followedId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followedId + " not found"));
 
         User follower = userRepository.findById(followerId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + followerId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + followerId + " not found"));
 
         if (follower.equals(followed)) {
-            throw new IllegalArgumentException("Follower and followed cannot be the same user.");
+            throw new UserActionNotAllowedException("Follower and followed cannot be the same user.");
         }
 
         if (followRepository.existsByFollowerAndFollowed(follower, followed)) {
-            throw new IllegalArgumentException("User with id " + followerId + " already follow User with id " + followedId);
+            throw new UserActionNotAllowedException("User with id " + followerId + " already follow User with id " + followedId);
         }
 
         Follow newFollow = new Follow(follower, followed);

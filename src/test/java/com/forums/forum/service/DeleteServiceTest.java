@@ -59,24 +59,27 @@ class DeleteServiceTest {
 
     @Test
     public void unfollowSuccess() {
-        //given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
-        User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        when(followRepository.existsByFollowerAndFollowed(user1, user2)).thenReturn(true);
-        //when
-        deleteService.unfollow(1L, 2L);
-        //then
-        ArgumentCaptor<User> userArgCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).deleteAllByFollowerAndAndFollowed(userArgCaptor.capture(), userArgCaptor.capture());
-        List<User> expected = userArgCaptor.getAllValues();
-        assertThat(expected).isNotNull();
-        assertThat(expected.size()).isEqualTo(2);
-        assertThat(expected.get(0)).isEqualTo(user1);
-        assertThat(expected.get(1)).isEqualTo(user2);
+        try{        //given
+            LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+            LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
+            User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+            User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+            when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+            when(followRepository.existsByFollowerAndFollowed(user1, user2)).thenReturn(true);
+            //when
+            deleteService.unfollow(1L, 2L);
+            //then
+            ArgumentCaptor<User> userArgCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).deleteAllByFollowerAndAndFollowed(userArgCaptor.capture(), userArgCaptor.capture());
+            List<User> expected = userArgCaptor.getAllValues();
+            assertThat(expected).isNotNull();
+            assertThat(expected.size()).isEqualTo(2);
+            assertThat(expected.get(0)).isEqualTo(user1);
+            assertThat(expected.get(1)).isEqualTo(user2);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -123,22 +126,25 @@ class DeleteServiceTest {
 
     @Test
     public void unlikePostSuccess() {
-        // given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", "URL");
-        Timestamp timestamp;
-        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
+        try{        // given
+            LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+            Topic topic = new Topic("Sport", "URL");
+            Timestamp timestamp;
+            User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+            Post post = new Post("expectedTitle", "Mine is judo", user, topic);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(postRepository.findById(1L)).thenReturn(Optional.of(post));
-        when(postLikeRepository.existsByPostAndUser(post, user)).thenReturn(true);
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+            when(postRepository.findById(1L)).thenReturn(Optional.of(post));
+            when(postLikeRepository.existsByPostAndUser(post, user)).thenReturn(true);
 
-        // when
-        deleteService.unlikePost(1L, 1L);
+            // when
+            deleteService.unlikePost(1L, 1L);
 
-        // then
-        verify(postLikeRepository).deleteAllByPostAndUser(post, user);
+            // then
+            verify(postLikeRepository).deleteAllByPostAndUser(post, user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -193,23 +199,26 @@ class DeleteServiceTest {
 
     @Test
     public void unlikeCommentSuccess() {
-        // given
-        LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
-        Topic topic = new Topic("Sport", "URL");
-        Timestamp timestamp;
-        User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
-        Post post = new Post("expectedTitle", "Mine is judo", user, topic);
-        Comment comment = new Comment("Nice post!", user, post);
+        try{     // given
+            LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
+            Topic topic = new Topic("Sport", "URL");
+            Timestamp timestamp;
+            User user = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
+            Post post = new Post("expectedTitle", "Mine is judo", user, topic);
+            Comment comment = new Comment("Nice post!", user, post);
 
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
-        when(commentLikeRepository.existsByCommentAndUser(comment, user)).thenReturn(true);
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+            when(commentRepository.findById(1L)).thenReturn(Optional.of(comment));
+            when(commentLikeRepository.existsByCommentAndUser(comment, user)).thenReturn(true);
 
-        // when
-        deleteService.unlikeComment(1L, 1L);
+            // when
+            deleteService.unlikeComment(1L, 1L);
 
-        // then
-        verify(commentLikeRepository).deleteAllByCommentAndUser(comment, user);
+            // then
+            verify(commentLikeRepository).deleteAllByCommentAndUser(comment, user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test

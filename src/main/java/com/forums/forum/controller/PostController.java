@@ -1,7 +1,7 @@
 package com.forums.forum.controller;
 
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.UserAlreadyLikeException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.PostLike;
 import com.forums.forum.service.PostService;
@@ -28,7 +28,7 @@ public class PostController {
     }
 
     @PostMapping(path = "/likePost")
-    public @ResponseBody PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserAlreadyLikeException {
+    public @ResponseBody PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserActionNotAllowedException {
         return postService.likePost(userId,postId);
     }
 

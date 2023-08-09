@@ -1,7 +1,7 @@
 package com.forums.forum.service;
 
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.UserAlreadyLikeException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.PostLike;
 import com.forums.forum.model.Topic;
@@ -14,7 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @AllArgsConstructor
@@ -107,7 +106,7 @@ public class PostService {
         return postLikeRepository.existsByPostAndUser(post, user);
     }
 
-    public PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserAlreadyLikeException{
+    public PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserActionNotAllowedException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
@@ -115,7 +114,7 @@ public class PostService {
                 .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         if (postLikeRepository.existsByPostAndUser(post, user))
-            throw new UserAlreadyLikeException("User with id " + userId + " already like post with id " + postId);
+            throw new UserActionNotAllowedException("User with id " + userId + " already like post with id " + postId);
 
         return postLikeRepository.save(new PostLike(user, post));
     }
@@ -127,9 +126,7 @@ public class PostService {
         }
 
         if (imperfectMatch != null) {
-            Iterator<Post> iterator = imperfectMatch.iterator();
-            while (iterator.hasNext()) {
-                Post post = iterator.next();
+            for (Post post : imperfectMatch) {
                 if (!post.getTitle().equals(query)) { //not adding twice
                     result.add(post);
                 }

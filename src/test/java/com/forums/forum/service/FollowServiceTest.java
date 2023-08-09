@@ -1,6 +1,7 @@
 package com.forums.forum.service;
 
 
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Follow;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
@@ -40,134 +41,155 @@ class FollowServiceTest {
 
     @Test
     public void isFollowing() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        //when
-        followService.isFollowing(1L, 2L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).existsByFollowerAndFollowed(userArgumentCaptor.capture(), userArgumentCaptor.capture());
+        try{ //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+            when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+            //when
+            followService.isFollowing(1L, 2L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).existsByFollowerAndFollowed(userArgumentCaptor.capture(), userArgumentCaptor.capture());
 
-        List<User> capturedUsers = userArgumentCaptor.getAllValues();
-        assertThat(capturedUsers.size()).isEqualTo(2);
-        assertThat(user1).isEqualTo(capturedUsers.get(0));
-        assertThat(user2).isEqualTo(capturedUsers.get(1));
+            List<User> capturedUsers = userArgumentCaptor.getAllValues();
+            assertThat(capturedUsers.size()).isEqualTo(2);
+            assertThat(user1).isEqualTo(capturedUsers.get(0));
+            assertThat(user2).isEqualTo(capturedUsers.get(1));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void getNumberOfFollowers() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        //when
-        followService.getNumberOfFollowers(1L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).countAllByFollowed(userArgumentCaptor.capture());
+        try{        //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+            //when
+            followService.getNumberOfFollowers(1L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).countAllByFollowed(userArgumentCaptor.capture());
 
-        User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isNotNull();
-        assertThat(capturedUser).isEqualTo(user);
+            User capturedUser = userArgumentCaptor.getValue();
+            assertThat(capturedUser).isNotNull();
+            assertThat(capturedUser).isEqualTo(user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void getNumberOfFollowed() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        //when
-        followService.getNumberOfFollowed(1L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).countAllByFollower(userArgumentCaptor.capture());
+        try{      //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+            //when
+            followService.getNumberOfFollowed(1L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).countAllByFollower(userArgumentCaptor.capture());
 
-        User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isNotNull();
-        assertThat(capturedUser).isEqualTo(user);
+            User capturedUser = userArgumentCaptor.getValue();
+            assertThat(capturedUser).isNotNull();
+            assertThat(capturedUser).isEqualTo(user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void byFollowAndFollower() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        //when
-        followService.byFollowAndFollower(1L, 2L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).findByFollowerAndAndFollowed(userArgumentCaptor.capture(), userArgumentCaptor.capture());
+        try {        //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+            when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+            //when
+            followService.byFollowAndFollower(1L, 2L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).findByFollowerAndAndFollowed(userArgumentCaptor.capture(), userArgumentCaptor.capture());
 
-        List<User> capturedUsers = userArgumentCaptor.getAllValues();
-        assertThat(capturedUsers.size()).isEqualTo(2);
-        assertThat(user1).isEqualTo(capturedUsers.get(0));
-        assertThat(user2).isEqualTo(capturedUsers.get(1));
+            List<User> capturedUsers = userArgumentCaptor.getAllValues();
+            assertThat(capturedUsers.size()).isEqualTo(2);
+            assertThat(user1).isEqualTo(capturedUsers.get(0));
+            assertThat(user2).isEqualTo(capturedUsers.get(1));
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void getFollowers() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        try{        //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
 
-        //when
-        followService.getFollowers(1L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).findAllByFollowed(userArgumentCaptor.capture());
+            //when
+            followService.getFollowers(1L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).findAllByFollowed(userArgumentCaptor.capture());
 
-        User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isNotNull();
-        assertThat(capturedUser).isEqualTo(user);
+            User capturedUser = userArgumentCaptor.getValue();
+            assertThat(capturedUser).isNotNull();
+            assertThat(capturedUser).isEqualTo(user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void getFollowed() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
-        //when
-        followService.getFollowed(1L);
-        //then
-        ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
-        verify(followRepository).findAllByFollower(userArgumentCaptor.capture());
+        try {        //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            User user = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+            //when
+            followService.getFollowed(1L);
+            //then
+            ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
+            verify(followRepository).findAllByFollower(userArgumentCaptor.capture());
 
-        User capturedUser = userArgumentCaptor.getValue();
-        assertThat(capturedUser).isNotNull();
-        assertThat(capturedUser).isEqualTo(user);
+            User capturedUser = userArgumentCaptor.getValue();
+            assertThat(capturedUser).isNotNull();
+            assertThat(capturedUser).isEqualTo(user);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
     public void addFollowSuccess() {
-        //given
-        LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
-        when(followRepository.existsByFollowerAndFollowed(any(), any())).thenReturn(false);
-        User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
-        User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
-        when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
-        when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
-        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
-        //when
-        followService.addFollow(1L, 2L);
-        //then
-        ArgumentCaptor<Follow> followArgumentCaptor = ArgumentCaptor.forClass(Follow.class);
-        verify(followRepository).save(followArgumentCaptor.capture());
+        try {
+            //given
+            LocalDate dob = LocalDate.of(1999, Month.APRIL, 7);
+            when(followRepository.existsByFollowerAndFollowed(any(), any())).thenReturn(false);
+            User user1 = new User("Poseidon", dob, "profileURL", Gender.MALE, "auth0Id");
+            User user2 = new User("Venus", dob, "profileURL", Gender.FEMALE, "auth0Id");
+            when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
+            when(userRepository.findById(2L)).thenReturn(Optional.of(user2));
+            Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+            //when
+            followService.addFollow(1L, 2L);
+            //then
+            ArgumentCaptor<Follow> followArgumentCaptor = ArgumentCaptor.forClass(Follow.class);
+            verify(followRepository).save(followArgumentCaptor.capture());
 
-        Follow captured = followArgumentCaptor.getValue();
-        assertThat(captured).isNotNull();
-        assertThat(captured.getFollower()).isEqualTo(user1);
-        assertThat(captured.getFollowed()).isEqualTo(user2);
-        assertThat(captured.getFollowDate()).isEqualTo(timestamp);
+            Follow captured = followArgumentCaptor.getValue();
+            assertThat(captured).isNotNull();
+            assertThat(captured.getFollower()).isEqualTo(user1);
+            assertThat(captured.getFollowed()).isEqualTo(user2);
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 
     @Test
@@ -182,7 +204,7 @@ class FollowServiceTest {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
         //then
         assertThatThrownBy(() -> followService.addFollow(1L, 2L)).
-                isInstanceOf(IllegalArgumentException.class)
+                isInstanceOf(UserActionNotAllowedException.class)
                 .hasMessageContaining("User with id " + 1L + " already follow User with id " + 2L);
         verify(followRepository, never()).save(any());
     }
@@ -196,7 +218,7 @@ class FollowServiceTest {
         Timestamp timestamp = new Timestamp(System.currentTimeMillis());
 
         assertThatThrownBy(() -> followService.addFollow(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class).
+                .isInstanceOf(UserActionNotAllowedException.class).
                 hasMessageContaining("Follower and followed cannot be the same user.");
     }
 

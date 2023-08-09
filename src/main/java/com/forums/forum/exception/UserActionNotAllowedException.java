@@ -3,9 +3,9 @@ package com.forums.forum.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-@ResponseStatus(code = HttpStatus.CONFLICT)
-public class UserAlreadyLikeException extends Exception{
-    public UserAlreadyLikeException(String message){
+@ResponseStatus(HttpStatus.CONFLICT)
+public class UserActionNotAllowedException extends Exception{
+    public UserActionNotAllowedException(String message) {
         super(message);
     }
 }

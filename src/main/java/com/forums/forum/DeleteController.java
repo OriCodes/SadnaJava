@@ -1,5 +1,7 @@
 package com.forums.forum;
 
+import com.forums.forum.exception.ResourceNotFoundException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.service.DeleteService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,7 +17,7 @@ public class DeleteController {
     private final DeleteService deleteService;
 
     @DeleteMapping(path = "/unfollow")
-    public void unfollow(@RequestParam Long followerId, @RequestParam Long followedId)
+    public void unfollow(@RequestParam Long followerId, @RequestParam Long followedId) throws ResourceNotFoundException, UserActionNotAllowedException
     {
             try{
                 deleteService.unfollow(followerId, followedId);
@@ -26,7 +28,7 @@ public class DeleteController {
     }
 
     @DeleteMapping(path = "/unlikePost")
-    public void unlikePost(@RequestParam Long postId, @RequestParam Long userId)
+    public void unlikePost(@RequestParam Long postId, @RequestParam Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
     {
         try{
             deleteService.unlikePost(postId, userId);
@@ -37,7 +39,7 @@ public class DeleteController {
     }
 
     @DeleteMapping(path = "/unlikeComment")
-    public void unlikeComment(@RequestParam Long commentId, @RequestParam Long userId)
+    public void unlikeComment(@RequestParam Long commentId, @RequestParam Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
     {
         try{
             deleteService.unlikeComment(commentId, userId);
@@ -48,7 +50,7 @@ public class DeleteController {
     }
 
     @DeleteMapping(path = "/deleteComment")
-    public void deleteComment(@RequestParam Long commentId, @RequestParam Long userId)
+    public void deleteComment(@RequestParam Long commentId, @RequestParam Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
     {
         try{
             deleteService.deleteComment(commentId, userId);
@@ -59,7 +61,7 @@ public class DeleteController {
     }
 
     @DeleteMapping(path = "/deletePost")
-    public void deletePost(@RequestParam Long postId, @RequestParam Long userId)
+    public void deletePost(@RequestParam Long postId, @RequestParam Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
     {
         try{
             deleteService.deletePost(postId, userId);

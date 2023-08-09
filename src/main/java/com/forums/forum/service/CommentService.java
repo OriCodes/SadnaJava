@@ -1,5 +1,7 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Comment;
 import com.forums.forum.model.CommentLike;
 import com.forums.forum.model.Post;
@@ -26,71 +28,71 @@ public class CommentService {
         return commentRepository.findById(id).orElse(null);
     }
 
-    public List<Comment> getAllCommentsForPost(Long postId) {
+    public List<Comment> getAllCommentsForPost(Long postId) throws ResourceNotFoundException {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         return commentRepository.findAllByPost(post);
     }
 
-    public List<Comment> getAllCommentsByUser(Long userId) {
+    public List<Comment> getAllCommentsByUser(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return commentRepository.findAllByUser(user);
     }
 
-    public int getNumberOfCommentsForPost(Long postId) {
+    public int getNumberOfCommentsForPost(Long postId) throws ResourceNotFoundException{
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         return commentRepository.countAllByPost(post);
     }
 
-    public int getNumberOfCommentsByUser(Long userId) {
+    public int getNumberOfCommentsByUser(Long userId) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return commentRepository.countAllByUser(user);
     }
 
-    public Comment addComment(Long userId, Long postId, String text) {
+    public Comment addComment(Long userId, Long postId, String text) throws ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
 
         Comment comment = new Comment(text, user, post);
         return commentRepository.save(comment);
     }
 
-    public int getNumberOfLikes(Long commentId) {
+    public int getNumberOfLikes(Long commentId) throws ResourceNotFoundException {
         Comment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
 
         return commentLikeRepository.countAllByComment(comment);
     }
 
-    public boolean hasLiked(Long userId, Long commentId) {
+    public boolean hasLiked(Long userId, Long commentId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
 
         return commentLikeRepository.existsByCommentAndUser(comment, user);
     }
 
-    public void likeComment(Long userId, Long commentId) {
+    public void likeComment(Long userId, Long commentId) throws ResourceNotFoundException, UserActionNotAllowedException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
 
         if (commentLikeRepository.existsByCommentAndUser(comment, user)) {
-            throw new IllegalArgumentException("User with id " + userId + " already like comment with id " + commentId);
+            throw new UserActionNotAllowedException("User with id " + userId + " already like comment with id " + commentId);
         }
 
         CommentLike commentLike = new CommentLike(user, comment);
