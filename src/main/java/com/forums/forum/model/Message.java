@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -28,6 +29,7 @@ public class Message {
     @Column(name = "content")
     private String content;
     @Column(name = "created_time_stamp")
+    @CreationTimestamp
     private Timestamp createdTimeStamp;
     @ManyToOne
     @JoinColumn(name = "sender_id")

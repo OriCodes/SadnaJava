@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -35,6 +36,7 @@ public class PostLike {
     private Post post;
 
     @Column(name = "like_time")
+    @CreationTimestamp
     private Timestamp likeTime;
 
     public PostLike(User user, Post post) {

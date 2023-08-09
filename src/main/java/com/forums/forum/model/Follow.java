@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.sql.Timestamp;
 
@@ -35,6 +36,7 @@ public class Follow {
     @JoinColumn(name = "followed_id")
     private User followed;
     @Column(name = "follow_date")
+    @CreationTimestamp
     private Timestamp followDate;
 
     public Follow(User follower, User followed) {
