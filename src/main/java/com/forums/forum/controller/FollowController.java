@@ -41,5 +41,20 @@ public class FollowController {
         return followService.getNumberOfFollowed(userId);
     }
 
+    @GetMapping(path = "/isFollowing")
+    public @ResponseBody boolean isFollowing(Long followerId, Long followedId) throws ResourceNotFoundException{
+        return followService.isFollowing(followerId, followedId);
+    }
+
+    @GetMapping(path = "/byFollowerAndFollowed")
+    public @ResponseBody Follow byFollowAndFollower(Long followerId, Long followedId)throws ResourceNotFoundException{
+        return followService.byFollowAndFollower(followerId, followedId);
+    }
+
+    @GetMapping(path = "/byId/{followId}")
+    public @ResponseBody Follow byId(@PathVariable("followId")Long followId){
+        return followService.byId(followId);
+    }
+
 
 }

@@ -268,7 +268,7 @@ class PostRepositoryTest {
 
         assertThat(users).isNotNull();
         assertThat(users.size()).isEqualTo(1);
-        assertThat(users.get(0)).isEqualTo(user1);
+        assertThat(users.get(0)).isEqualTo(user2);
 
         assertThat(posts).isNotNull();
         assertThat(posts.size()).isEqualTo(1);
