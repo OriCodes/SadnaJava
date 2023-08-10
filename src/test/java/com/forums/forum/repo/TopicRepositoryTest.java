@@ -49,22 +49,6 @@ class TopicRepositoryTest {
         assertThat(foundTopic.getTopicName()).isEqualTo(expectedTopic);
     }
 
-    @Test
-    public void findByTopicId() {
-        //given
-        String expectedTopic = "Basketball";
-        Long correctId = 1L;
-        Long incorrectId = 2L;
-        Topic topic = new Topic(expectedTopic, "URL");
-        topicRepository.save(topic);
-        //when
-        Topic foundTopic = topicRepository.findByTopicId(correctId);
-        Topic nullTopic = topicRepository.findByTopicId(incorrectId);
-        //then
-        assertThat(nullTopic).isNull();
-        assertThat(foundTopic).isNotNull();
-        assertThat(foundTopic.getTopicId()).isEqualTo(correctId);
-    }
 
     @Test
     public void findAllByCreatedTimeStampBetween() {

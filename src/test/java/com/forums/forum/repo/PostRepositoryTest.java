@@ -90,23 +90,6 @@ class PostRepositoryTest {
 
     }
 
-    @Test
-    public void findById() {
-        //given
-        String expectedTitle = "What is your fav sport";
-        Long correctId = 1L;
-        Long incorrectId = 2L;
-        Post post = new Post(expectedTitle, "Mine is judo", user1, topic1);
-        postRepository.save(post);
-        //when
-        Post expected = postRepository.findByPostId(correctId);
-        Post nullPost = postRepository.findByPostId(incorrectId);
-        //then
-        assertThat(nullPost).isNull();
-        assertThat(expected).isNotNull();
-        assertThat(expected.getPostId()).isEqualTo(correctId);
-
-    }
 
     @Test
     public void findByTitleAndTopic() {

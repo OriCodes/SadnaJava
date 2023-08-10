@@ -14,7 +14,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     boolean existsByTitle(String title);
     boolean existsByTitleAndTopic(String title, Topic topic);
 
-    Post findByPostId(Long postId);
     Post findByTitle(String title);
     Post findByTitleAndTopic(String title, Topic topic);
 

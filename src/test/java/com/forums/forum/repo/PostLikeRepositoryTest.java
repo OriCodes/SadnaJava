@@ -113,21 +113,4 @@ class PostLikeRepositoryTest {
         assertThat(expectedList.get(0).getUser()).isNotEqualTo(user1);
     }
 
-
-    @Test
-    public void findByPostLikeId() {
-        //given
-        PostLike postLike1 = new PostLike(user1, post1);
-        Long correctId = 1L;
-        Long incorrectId = 2L;
-        postLikeRepository.save(postLike1);
-        //when
-        PostLike correct = postLikeRepository.findByPostLikeId(correctId);
-        PostLike incorrect = postLikeRepository.findByPostLikeId(incorrectId);
-        //then
-        assertThat(incorrect).isNull();
-        assertThat(correct).isNotNull();
-        assertThat(correct.getPostLikeId()).isEqualTo(correctId);
-
-    }
 }
