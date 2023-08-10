@@ -84,7 +84,7 @@ public class CommentService {
         return commentLikeRepository.existsByCommentAndUser(comment, user);
     }
 
-    public void likeComment(Long userId, Long commentId) throws ResourceNotFoundException, UserActionNotAllowedException {
+    public CommentLike likeComment(Long userId, Long commentId) throws ResourceNotFoundException, UserActionNotAllowedException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
@@ -96,6 +96,6 @@ public class CommentService {
         }
 
         CommentLike commentLike = new CommentLike(user, comment);
-        commentLikeRepository.save(commentLike);
+        return commentLikeRepository.save(commentLike);
     }
 }

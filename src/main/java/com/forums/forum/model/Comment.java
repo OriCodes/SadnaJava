@@ -38,8 +38,7 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post; // the post which the comment belong to
-    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CommentLike> likes;
+
 
     public Comment(String text, User user, Post post) {
         this.text = text;
