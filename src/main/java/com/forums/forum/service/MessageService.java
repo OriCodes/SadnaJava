@@ -77,4 +77,29 @@ public class MessageService {
         return result;
     }
 
+    public List<User> getUsersInMessages(Long userId) throws ResourceNotFoundException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
+
+        List<User> usersInMessages = new ArrayList<>();
+
+        List<Message> sentMessages = messageRepository.findAllBySender(user);
+        for (Message message : sentMessages) {
+            User receiver = message.getReceiver();
+            if (!usersInMessages.contains(receiver)) {
+                usersInMessages.add(receiver);
+            }
+        }
+
+        List<Message> receivedMessages = messageRepository.findAllByReceiver(user);
+        for (Message message : receivedMessages) {
+            User sender = message.getSender();
+            if (!usersInMessages.contains(sender)) {
+                usersInMessages.add(sender);
+            }
+        }
+
+        return usersInMessages;
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.Message;
 import com.forums.forum.model.User;
@@ -19,8 +20,7 @@ import java.time.Month;
 import java.util.*;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class MessageServiceTest {
@@ -212,4 +212,47 @@ class MessageServiceTest {
         //then
         assertThat(res).isEqualTo(message);
     }
+
+    @Test
+    void getUsersInMessageInteractions_ShouldReturnListOfUsers() throws ResourceNotFoundException {
+        // Given
+        Long userId = 1L;
+        LocalDate dob1 = LocalDate.of(1999, Month.APRIL, 7);
+        User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "auth0Id");
+        User bob = new User("Bob", dob1, "URL", Gender.MALE, "auth0Id");
+        User charlie = new User("Charlie", dob1, "URL", Gender.MALE, "auth0Id");
+        User dave = new User("Dave", dob1, "URL", Gender.MALE, "auth0Id");
+        User eve = new User("Eve", dob1, "URL", Gender.MALE, "auth0Id");
+
+        List<Message> sentMessages = new ArrayList<>();
+        sentMessages.add(new Message("Hello", user1, bob));
+        sentMessages.add(new Message("How are you?", user1, charlie));
+        sentMessages.add(new Message("Are you okay?", user1, charlie));
+
+        List<Message> receivedMessages = new ArrayList<>();
+        receivedMessages.add(new Message("Hi", dave, user1));
+        receivedMessages.add(new Message("I'm good, thanks!", eve, user1));
+        receivedMessages.add(new Message("Yoo", eve, user1));
+
+        when(userRepository.findById(userId)).thenReturn(java.util.Optional.of(user1));
+        when(messageRepository.findAllBySender(user1)).thenReturn(sentMessages);
+        when(messageRepository.findAllByReceiver(user1)).thenReturn(receivedMessages);
+
+        // When
+        List<User> usersInMessageInteractions = messageService.getUsersInMessages(userId);
+
+        // Then
+        assertThat(usersInMessageInteractions).isNotNull();
+        assertThat(usersInMessageInteractions.size()).isEqualTo(4);
+        assertThat(usersInMessageInteractions.get(0)).isEqualTo(bob);
+        assertThat(usersInMessageInteractions.get(1)).isEqualTo(charlie);
+        assertThat(usersInMessageInteractions.get(2)).isEqualTo(dave);
+        assertThat(usersInMessageInteractions.get(3)).isEqualTo(eve);
+
+        verify(userRepository, times(1)).findById(userId);
+        verify(messageRepository, times(1)).findAllBySender(user1);
+        verify(messageRepository, times(1)).findAllByReceiver(user1);
+        verifyNoMoreInteractions(userRepository, messageRepository);
+    }
 }
+
