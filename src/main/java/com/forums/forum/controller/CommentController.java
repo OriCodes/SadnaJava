@@ -5,6 +5,7 @@ import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Comment;
 import com.forums.forum.model.CommentLike;
 import com.forums.forum.service.CommentService;
+import com.forums.forum.service.DeleteService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +17,19 @@ import java.util.List;
 public class CommentController {
 
     private final CommentService commentService;
+    private final DeleteService deleteService;
+
+    @DeleteMapping(path = "/deleteComment")
+    public void deleteComment(Long commentId, Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
+    {
+        deleteService.deleteComment(commentId, userId);
+    }
+
+    @DeleteMapping(path = "/unlikeComment")
+    public void unlikeComment(Long commentId,Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
+    {
+        deleteService.unlikeComment(commentId, userId);
+    }
 
     @PostMapping(path = "/addComment")
     public @ResponseBody Comment addComment(Long userId,Long postId,String text) throws ResourceNotFoundException{

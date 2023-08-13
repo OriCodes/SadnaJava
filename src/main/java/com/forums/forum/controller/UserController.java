@@ -1,8 +1,10 @@
 package com.forums.forum.controller;
 
+import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
+import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -19,10 +21,12 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService ;
+    private final DeleteService deleteService;
 
-    @GetMapping(path = "/allUsers")
-    public @ResponseBody List<User> getUsers(){
-        return userService.allUsers();
+    @DeleteMapping(path = "/deleteUser/{userId}")
+    public void deleteUser(@PathVariable("userId") Long userId) throws ResourceNotFoundException
+    {
+      deleteService.deleteUser(userId);
     }
 
     @PostMapping("/register")
@@ -44,6 +48,12 @@ public class UserController {
             @RequestParam(required = false) Gender gender
     ) throws UserNameAlreadyExistException{
             return userService.updateUser(userId, userName, dob, profileUrl, gender);
+    }
+
+
+    @GetMapping(path = "/allUsers")
+    public @ResponseBody List<User> getUsers(){
+        return userService.allUsers();
     }
 
     @GetMapping(path = "byId/{userId}")

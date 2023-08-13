@@ -3,6 +3,7 @@ package com.forums.forum.controller;
 import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Follow;
+import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.FollowService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,13 @@ import java.util.List;
 @AllArgsConstructor
 public class FollowController {
     private final FollowService followService;
+    private final DeleteService deleteService;
 
+    @DeleteMapping(path = "/unfollow")
+    public void unfollow(Long followerId, Long followedId) throws ResourceNotFoundException, UserActionNotAllowedException
+    {
+        deleteService.unfollow(followerId, followedId);
+    }
 
     @PostMapping(path="/follow")
     public @ResponseBody Follow follow(Long followerId, Long followedId) throws ResourceNotFoundException, UserActionNotAllowedException {

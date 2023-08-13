@@ -4,6 +4,7 @@ import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.PostLike;
+import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.PostService;
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +16,19 @@ import java.util.List;
 @AllArgsConstructor
 public class PostController {
     private final PostService postService;
+    private final DeleteService deleteService;
 
+    @DeleteMapping(path = "/deletePost")
+    public void deletePost(Long postId, Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
+    {
+        deleteService.deletePost(postId, userId);
+    }
+
+    @DeleteMapping(path = "/unlikePost")
+    public void unlikePost(Long postId,Long userId) throws ResourceNotFoundException, UserActionNotAllowedException
+    {
+        deleteService.unlikePost(postId, userId);
+    }
 
     @PostMapping(path = "/addPost")
     public @ResponseBody Post addPost(

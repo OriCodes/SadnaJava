@@ -100,9 +100,9 @@ public class DeleteService {
     }
 
     @Transactional
-    public void deleteUser(Long userId){
+    public void deleteUser(Long userId) throws  ResourceNotFoundException{
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         postLikeRepository.deleteAllByUser(user);
         commentLikeRepository.deleteAllByUser(user);
