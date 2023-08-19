@@ -28,9 +28,14 @@ public class PostConfig {
             userRepository.saveAll(List.of(user1, user2));
 
 
-            Topic topic1 = new Topic("Topic 1", "thumbnail_url1");
-            Topic topic2 = new Topic("Topic 2", "thumbnail_url2");
-            topicRepository.saveAll(List.of(topic1, topic2));
+            Topic topic1 = new Topic("Football", "./assets/images/football.jpg");
+            Topic topic2 = new Topic("Gaming", "./assets/images/gaming.jpg");
+            Topic topic3 = new Topic("Gaming 2", "./assets/images/gaming.jpg");
+            Topic topic4 = new Topic("Gaming 3", "./assets/images/gaming.jpg");
+            Topic topic5 = new Topic("Gaming 4", "./assets/images/gaming.jpg");
+            Topic topic6 = new Topic("Gaming 4", "./assets/images/gaming.jpg");
+
+            topicRepository.saveAll(List.of(topic1, topic2, topic3, topic4, topic5, topic6));
 
 //
 //            Post post1 = new Post("Post Title 1", "Post Text 1", user1, topic1);
