@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Formula;
 
 import java.sql.Timestamp;
 import java.util.Collections;
@@ -51,6 +52,9 @@ public class Post {
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("post")
     private List<PostLike> likes;
+
+    @Formula("(SELECT COUNT(pl.post_like_id) FROM post_like pl WHERE pl.post_id = post_id)")
+    private int likesCount;
 
     public Post(String title, String text, User user, Topic topic) {
         this.title = title;

@@ -69,4 +69,81 @@ export async function getPostById(postId: number): Promise<Post> {
   return await api<Post>(`byId/${postId}`);
 }
 
-// Add more functions for other endpoints
+export async function hasLiked(
+  postId: number,
+  userId: number
+): Promise<boolean> {
+  return await api<boolean>("hasLiked", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ postId, userId }),
+  });
+}
+
+export async function getAllPostsByTopic(topicId: number): Promise<Post[]> {
+  return await api<Post[]>("allByTopic", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ topicId }),
+  });
+}
+
+export async function getAllPostsByUser(userId: number): Promise<Post[]> {
+  return await api<Post[]>("allByUser", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ userId }),
+  });
+}
+
+export async function searchPostByTitle(title: string): Promise<Post[]> {
+  return await api<Post[]>("searchPost", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title }),
+  });
+}
+
+export async function searchPostByTitleAndTopic(
+  title: string,
+  topicId: number
+): Promise<Post[]> {
+  return await api<Post[]>("searchPost", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, topicId }),
+  });
+}
+
+export async function existPostByTitle(title: string): Promise<boolean> {
+  return await api<boolean>("existByTitle", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title }),
+  });
+}
+
+export async function existPostByTitleAndTopic(
+  title: string,
+  topicId: number
+): Promise<boolean> {
+  return await api<boolean>("existByTitle", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ title, topicId }),
+  });
+}

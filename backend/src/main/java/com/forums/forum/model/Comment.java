@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.Formula;
 
 import java.sql.Timestamp;
 
@@ -39,6 +40,8 @@ public class Comment {
     @JoinColumn(name = "post_id")
     private Post post; // the post which the comment belong to
 
+    @Formula("(SELECT COUNT(cl.comment_like_id) FROM comment_like cl WHERE cl.comment_id = comment_id)")
+    private int likesCount;
 
     public Comment(String text, User user, Post post) {
         this.text = text;

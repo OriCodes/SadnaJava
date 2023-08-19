@@ -32,7 +32,7 @@ public class PostService {
         return postRepository.existsByTitle(title);
     }
 
-    public boolean isExistByTitleAndTopic(String title, Long topicId) throws ResourceNotFoundException{
+    public boolean isExistByTitleAndTopic(String title, Long topicId) throws ResourceNotFoundException {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
@@ -62,14 +62,14 @@ public class PostService {
         return mergeSearchResult(query, result, perfectMatch, imperfectMatch);
     }
 
-    public List<Post> allByUser(Long userId) throws ResourceNotFoundException{
+    public List<Post> allByUser(Long userId) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         return postRepository.findAllByUser(user);
     }
 
-    public List<Post> allByTopic(Long topicId) throws ResourceNotFoundException{
+    public List<Post> allByTopic(Long topicId) throws ResourceNotFoundException {
         Topic topic = topicRepository.findById(topicId)
                 .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
@@ -87,13 +87,6 @@ public class PostService {
         return postRepository.save(newPost);
     }
 
-
-    public int getNumberOfLikes(Long postId) throws ResourceNotFoundException{
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new ResourceNotFoundException("Post with id " + postId + " not found"));
-
-        return postLikeRepository.countAllByPost(post);
-    }
 
     public boolean hasLiked(Long userId, Long postId) throws ResourceNotFoundException {
 
