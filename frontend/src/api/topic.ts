@@ -1,28 +1,26 @@
-import { api } from ".";
-import Topic from "../interfaces/topic";
+import Topic from "@/interfaces/topic";
+import { routedApi } from ".";
 
-function topicApi<T>(endpoint: string): Promise<T> {
-  return api<T>(`topic/${endpoint}`);
-}
+const api = routedApi("topics");
 
 const fetchAllTopics = (): Promise<Topic[]> => {
-  return topicApi<Topic[]>(`allTopics`);
+  return api<Topic[]>(`allTopics`);
 };
 
 const fetchTopicsBySeq = (seq: string): Promise<Topic[]> => {
-  return topicApi<Topic[]>(`allTopics?seq=${seq}`);
+  return api<Topic[]>(`allTopics?seq=${seq}`);
 };
 
 const fetchTopicById = (topicId: number): Promise<Topic> => {
-  return topicApi<Topic>(`byId/${topicId}`);
+  return api<Topic>(`byId/${topicId}`);
 };
 
 const fetchTopicByTitle = (topicName: string): Promise<Topic> => {
-  return topicApi<Topic>(`${topicName}`);
+  return api<Topic>(`${topicName}`);
 };
 
 const checkTopicExistByTitle = (title: string): Promise<boolean> => {
-  return topicApi<boolean>(`existByTitle?title=${title}`);
+  return api<boolean>(`existByTitle?title=${title}`);
 };
 
 export {
