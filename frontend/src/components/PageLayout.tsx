@@ -6,7 +6,7 @@ import { Outlet } from "react-router-dom";
 interface PageLayoutProps {}
 
 const PageLayout: FunctionComponent<PageLayoutProps> = () => {
-  const { isAuthenticated, loginWithPopup } = useAuth0();
+  const { isAuthenticated, loginWithPopup, logout } = useAuth0();
   return (
     <Box p={4}>
       <Flex justifyContent="space-between" alignItems="center">
@@ -14,7 +14,7 @@ const PageLayout: FunctionComponent<PageLayoutProps> = () => {
           TALKSphere
         </Heading>
         {isAuthenticated ? (
-          <p>Logged in</p>
+          <Button onClick={() => logout()}>Logout</Button>
         ) : (
           <Button onClick={() => loginWithPopup()}>Login</Button>
         )}
