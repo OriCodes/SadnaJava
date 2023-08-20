@@ -37,16 +37,16 @@ public class User {
     private String profileUrl;
     @Column(name = "gender")
     private Gender gender;
-    @Column(name = "auth0_id")
-    private String auth0Id;
+    @Column(name = "password")
+    private String password;
 
 
 
-    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) {
+    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String password) {
         this.userName = userName;
         this.dob = dob;
         this.profileUrl = profileUrl;
         this.gender = gender;
-        this.auth0Id = auth0Id;
+        this.password = password;
     }
 }

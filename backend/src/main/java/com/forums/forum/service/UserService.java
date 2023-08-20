@@ -19,12 +19,12 @@ import java.util.Objects;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String auth0Id) throws UserNameAlreadyExistException
+    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException
     {
         if(userRepository.existsByUserName(userName)){
             throw new UserNameAlreadyExistException();
         }
-        User newUser = new User(userName, dob,  profileUrl, gender,  auth0Id);
+        User newUser = new User(userName, dob,  profileUrl, gender, password);
         return userRepository.save(newUser);
     }
 
