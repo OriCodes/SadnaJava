@@ -7,7 +7,6 @@ import com.forums.forum.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -18,11 +17,10 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,12 +45,13 @@ class UserServiceTest {
         LocalDate dob2 = LocalDate.of(1999, Month.APRIL,7);
         String profileUrl = "Profile_URL";
         Gender gender = Gender.MALE;
-        String auth0Id= "auth0Id";
-        User savedUser = new User(userName, dob2, profileUrl, gender, auth0Id);
+        String email= "email.gmail.com";
+        User savedUser = new User(userName, dob2, profileUrl, gender, email);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
         //when
+
         try {
-            User newUser = userService.registerUser(userName,dob2,profileUrl,gender,auth0Id);
+            User newUser = userService.registerUser(userName,dob2,profileUrl,gender,email);
             //then
             verify(userRepository, times(1)).save(any(User.class));
             assertThat(newUser).isEqualTo(savedUser);
@@ -138,7 +137,5 @@ class UserServiceTest {
                 .isInstanceOf(UserNameAlreadyExistException.class);
 
     }
-
-
 
 }

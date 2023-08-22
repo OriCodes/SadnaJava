@@ -10,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
@@ -50,7 +51,7 @@ class UserRepositoryTest {
         User foundUser = userRepository.findByUserName(userName);
         //then
         assertThat(foundUser).isNotNull();
-        assertThat(foundUser.getUserName()).isEqualTo(userName);
+        assertThat(foundUser.getUsername()).isEqualTo(userName);
     }
 
     @Test
@@ -66,7 +67,7 @@ class UserRepositoryTest {
         List<User> expected = userRepository.findAllByUserName(userName);
         //then
         assertThat(expected.size()).isEqualTo(1);
-        assertThat(expected.get(0).getUserName()).isEqualTo(userName);
+        assertThat(expected.get(0).getUsername()).isEqualTo(userName);
     }
 
     @Test
@@ -82,7 +83,7 @@ class UserRepositoryTest {
         List<User> expected = userRepository.findAllByUserNameContaining(seq);
         //then
         assertThat(expected.size()).isEqualTo(1);
-        assertThat(expected.get(0).getUserName().contains(seq)).isTrue();
+        assertThat(expected.get(0).getUsername().contains(seq)).isTrue();
     }
 
     @Test
@@ -116,7 +117,28 @@ class UserRepositoryTest {
         //then
         List<User> expected = userRepository.findAll();
         assertThat(expected.size()).isEqualTo(1);
-        assertThat(expected.get(0).getUserName()).isEqualTo("Venus");
+        assertThat(expected.get(0).getUsername()).isEqualTo("Venus");
+    }
+
+    @Test
+    public void byEmailTest(){
+        //given
+        LocalDate dob = LocalDate.of(2003, Month.DECEMBER,14);
+        String userName = "Poseidon";
+        String email = "random.@gmail.com";
+        User user = new User(userName, dob, "URL", Gender.MALE, email);
+        userRepository.save(user);
+        //when
+        Optional<User> foundUser = userRepository.findByEmail(email);
+        Optional<User> notFoundUser = userRepository.findByEmail(email+"#");
+        //then
+        assertThat(foundUser).isNotNull();
+        assertThat(foundUser.isPresent()).isTrue();
+        assertThat(foundUser.get().getUsername()).isEqualTo(userName);
+
+        assertThat(notFoundUser).isNotNull();
+        assertThat(notFoundUser.isPresent()).isFalse();
+
     }
 
 

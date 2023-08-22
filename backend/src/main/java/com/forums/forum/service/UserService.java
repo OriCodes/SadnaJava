@@ -19,12 +19,12 @@ import java.util.Objects;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException
+    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String email) throws UserNameAlreadyExistException
     {
         if(userRepository.existsByUserName(userName)){
             throw new UserNameAlreadyExistException();
         }
-        User newUser = new User(userName, dob,  profileUrl, gender, password);
+        User newUser = new User(userName, dob,  profileUrl, gender, email);
         return userRepository.save(newUser);
     }
 
@@ -40,7 +40,7 @@ public class UserService {
 
         if (containingUsers != null){
             for (User user : containingUsers) {
-                if (!user.getUserName().equals(userName)) { //not adding twice
+                if (!user.getUsername().equals(userName)) { //not adding twice
                     result.add(user);
                 }
             }
@@ -67,7 +67,7 @@ public class UserService {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
-        if(userName != null && userName.length() > 0 && !Objects.equals(userName,user.getUserName())){
+        if(userName != null && userName.length() > 0 && !Objects.equals(userName,user.getUsername())){
             if(userRepository.existsByUserName(userName)){
                 throw new UserNameAlreadyExistException();
             }
