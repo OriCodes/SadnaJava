@@ -34,7 +34,7 @@ public class PostController {
             @RequestParam Long topicId,
             @RequestParam String title,
             @RequestParam String text) throws ResourceNotFoundException {
-
+        
         return postService.addPost(userId, topicId, title, text);
     }
 
