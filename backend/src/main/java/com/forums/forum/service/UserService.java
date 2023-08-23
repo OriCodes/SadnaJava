@@ -6,6 +6,9 @@ import com.forums.forum.model.Role;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +19,7 @@ import java.util.Objects;
 
 @AllArgsConstructor
 @Service
-public class UserService{
+public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
 
     public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException
@@ -89,4 +92,12 @@ public class UserService{
         return user;
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        User user = userRepository.findByUserName(username);
+        if (user == null){
+            throw new UsernameNotFoundException("User with user name "+ username + " Not found");
+        }
+        return user;
+    }
 }
