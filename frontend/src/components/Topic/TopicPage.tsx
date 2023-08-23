@@ -12,11 +12,12 @@ const TopicPage: FunctionComponent<TopicPageProps> = () => {
     data: topics,
     isLoading,
     isError,
+    error,
   } = useQuery(["topics"], fetchAllTopics);
 
   if (isLoading) return <Loader />;
 
-  if (isError || !topics) return <Error />;
+  if (isError || !topics) return <Error error={error} />;
 
   return <TopicList topics={topics} />;
 };

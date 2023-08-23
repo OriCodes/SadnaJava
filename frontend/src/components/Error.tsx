@@ -2,10 +2,11 @@ import { Alert, AlertDescription, AlertIcon } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 interface ErrorProps {
-  message?: string;
+  error: unknown;
 }
 
-const Error: FunctionComponent<ErrorProps> = ({ message }) => {
+const Error: FunctionComponent<ErrorProps> = ({ error }) => {
+  const message = (error as { message: string })?.message;
   return (
     <Alert
       status="error"

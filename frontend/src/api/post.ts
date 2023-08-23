@@ -12,7 +12,7 @@ export async function deletePost(
 ): Promise<void> {
   await api<void>("deletePost", {
     method: "DELETE",
-    body: JSON.stringify({ postId, userId }),
+    data: { postId, userId },
     headers: {
       "Content-Type": "application/json",
     },
@@ -25,7 +25,7 @@ export async function unlikePost(
 ): Promise<void> {
   await api<void>("unlikePost", {
     method: "DELETE",
-    body: JSON.stringify({ postId, userId }),
+    data: { postId, userId },
     headers: {
       "Content-Type": "application/json",
     },
@@ -41,7 +41,7 @@ export async function addPost(
   const requestData = { userId, topicId, title, text };
   return await api<Post>("addPost", {
     method: "POST",
-    body: JSON.stringify(requestData),
+    data: requestData,
     headers: {
       "Content-Type": "application/json",
     },
@@ -54,7 +54,7 @@ export async function likePost(
 ): Promise<PostLike> {
   return await api<PostLike>("likePost", {
     method: "POST",
-    body: JSON.stringify({ userId, postId }),
+    data: { userId, postId },
     headers: {
       "Content-Type": "application/json",
     },
@@ -78,7 +78,7 @@ export async function hasLiked(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ postId, userId }),
+    data: { postId, userId },
   });
 }
 
@@ -88,7 +88,7 @@ export async function getAllPostsByTopic(topicId: number): Promise<Post[]> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ topicId }),
+    data: { topicId },
   });
 }
 
@@ -98,7 +98,7 @@ export async function getAllPostsByUser(userId: number): Promise<Post[]> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ userId }),
+    data: { userId },
   });
 }
 
@@ -108,7 +108,7 @@ export async function searchPostByTitle(title: string): Promise<Post[]> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title }),
+    data: { title },
   });
 }
 
@@ -121,7 +121,7 @@ export async function searchPostByTitleAndTopic(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, topicId }),
+    data: { title, topicId },
   });
 }
 
@@ -131,7 +131,7 @@ export async function existPostByTitle(title: string): Promise<boolean> {
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title }),
+    data: { title },
   });
 }
 
@@ -144,6 +144,6 @@ export async function existPostByTitleAndTopic(
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title, topicId }),
+    data: { title, topicId },
   });
 }

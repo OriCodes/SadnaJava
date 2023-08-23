@@ -1,3 +1,5 @@
+import { authenticate } from "@/api/auth";
+import useAuthStore from "@/store/auth";
 import {
   Box,
   Button,
@@ -5,16 +7,38 @@ import {
   FormLabel,
   Input,
   Stack,
+  useToast,
 } from "@chakra-ui/react";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const LoginPage: React.FC = () => {
-  const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = () => {
-    // Handle login logic here
-    console.log("Login button clicked");
+  const toast = useToast();
+  const navigate = useNavigate();
+
+  const authStore = useAuthStore();
+
+  const handleLogin = async () => {
+    try {
+      const { token } = await authenticate({ userName: name, password });
+
+      localStorage.setItem("token", token);
+      authStore.login(token);
+
+      navigate("/", { replace: true });
+    } catch (error) {
+      console.error(error);
+      const errorMessage = (error as { message: string })?.message;
+      toast({
+        title: errorMessage || "An error occurred.",
+        status: "error",
+        duration: 3000,
+        isClosable: true,
+      });
+    }
   };
 
   return (
@@ -34,12 +58,12 @@ const LoginPage: React.FC = () => {
         w="full"
       >
         <Stack spacing={4}>
-          <FormControl id="email">
-            <FormLabel>Email address</FormLabel>
+          <FormControl id="name">
+            <FormLabel>Username</FormLabel>
             <Input
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
             />
           </FormControl>
           <FormControl id="password">
@@ -50,7 +74,7 @@ const LoginPage: React.FC = () => {
               onChange={(e) => setPassword(e.target.value)}
             />
           </FormControl>
-          <Button colorScheme="blue" onClick={handleLogin}>
+          <Button colorScheme="orange" onClick={handleLogin}>
             Log in
           </Button>
         </Stack>

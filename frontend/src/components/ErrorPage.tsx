@@ -14,7 +14,7 @@ const ErrorPage = () => {
       bgGradient="linear(to bottom, teal.500, teal.800)"
     >
       <Heading size="xl" color="white">
-        Oops, something went wrong!
+        404 - Oops, something went wrong!
       </Heading>
       <Text color="white" mt={4} textAlign="center">
         {error.message}

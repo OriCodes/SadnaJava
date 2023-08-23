@@ -1,19 +1,37 @@
-const BASE_URL = "http://localhost:8080/api";
+import axios, { AxiosRequestConfig } from "axios";
 
 export async function api<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: AxiosRequestConfig
 ): Promise<T> {
-  return fetch(`${BASE_URL}/${endpoint}`, options).then((response) => {
-    if (!response.ok) {
-      throw new Error(response.statusText);
+  try {
+    const response = await axiosInstance(`${endpoint}`, options);
+    return response.data as T;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      if (error.response?.status === 401) {
+        throw new Error("Unauthorized.");
+      }
+
+      if (error.response?.status === 403) {
+        throw new Error("Forbidden.");
+      }
+      const message = error.response?.data?.message || "An error occurred.";
+      throw new Error(message);
     }
-    return response.json() as Promise<T>;
-  });
+    throw error;
+  }
 }
 
 export function routedApi(route: string) {
-  return async <R>(endpoint: string, options?: RequestInit): Promise<R> => {
+  return async <R>(
+    endpoint: string,
+    options?: AxiosRequestConfig
+  ): Promise<R> => {
     return api<R>(`${route}/${endpoint}`, options);
   };
 }
+
+export const axiosInstance = axios.create({
+  baseURL: "http://localhost:8080/api",
+});
