@@ -2,32 +2,30 @@ package com.forums.forum.service;
 
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
+import com.forums.forum.model.Role;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
 @Service
-public class UserService implements UserDetailsService {
+public class UserService{
     private final UserRepository userRepository;
 
-    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String email) throws UserNameAlreadyExistException
+    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException
     {
         if(userRepository.existsByUserName(userName)){
             throw new UserNameAlreadyExistException();
         }
-        User newUser = new User(userName, dob,  profileUrl, gender, email);
+        User newUser = new User(userName, dob,  profileUrl, gender, password);
+        newUser.setRole(Role.USER);
         return userRepository.save(newUser);
     }
 
@@ -91,12 +89,4 @@ public class UserService implements UserDetailsService {
         return user;
     }
 
-
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByEmail(username).orElseThrow(
-                ()->new UsernameNotFoundException("User not found with email: " + username)
-        );
-        return user;
-    }
 }

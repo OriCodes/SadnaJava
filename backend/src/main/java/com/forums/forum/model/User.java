@@ -41,8 +41,8 @@ public class User implements UserDetails {
     @Column(name = "gender")
     @Enumerated(EnumType.STRING)
     private Gender gender;
-    @Column(name = "email")
-    private String email;
+    @Column(name = "password")
+    private String password;
     @Column(name="rule")
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -50,22 +50,17 @@ public class User implements UserDetails {
 
 
 
-    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String email) {
+    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String password) {
         this.userName = userName;
         this.dob = dob;
         this.profileUrl = profileUrl;
         this.gender = gender;
-        this.email = email;
+        this.password = password;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
-    }
-
-    @Override
-    public String getPassword() {
-        return null;
     }
 
     @Override

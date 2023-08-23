@@ -1,6 +1,7 @@
 package com.forums.forum.config;
 
 import com.forums.forum.model.Gender;
+import com.forums.forum.model.Role;
 import com.forums.forum.model.Topic;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.TopicRepository;
@@ -25,6 +26,8 @@ public class PostConfig {
             LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
             User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
             User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
+            user1.setRole(Role.USER);
+            user2.setRole(Role.USER);
             userRepository.saveAll(List.of(user1, user2));
 
 

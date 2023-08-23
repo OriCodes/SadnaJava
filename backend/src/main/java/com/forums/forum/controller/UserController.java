@@ -35,8 +35,8 @@ public class UserController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam String profileUrl,
             @RequestParam Gender gender,
-            @RequestParam String email) throws UserNameAlreadyExistException{
-            return userService.registerUser(userName, dob, profileUrl, gender, email);
+            @RequestParam String password) throws UserNameAlreadyExistException{
+            return userService.registerUser(userName, dob, profileUrl, gender, password);
     }
 
     @PutMapping(path = "{userId}")
