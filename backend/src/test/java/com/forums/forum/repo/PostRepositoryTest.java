@@ -225,7 +225,7 @@ class PostRepositoryTest {
         Post post4 = new Post("hey", "there", user3, topic1);
         postRepository.saveAll(List.of(post1, post2, post3, post4));
         userRepository.save(user3);
-        Long id = userRepository.findByUserName("Zeus").getUserId();
+        Long id = userRepository.findByUserName("Zeus").get().getUserId();
         //when
         userRepository.deleteById(id);
         //then

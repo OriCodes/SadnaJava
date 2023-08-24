@@ -39,11 +39,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUserName(),request.getPassword())
         );
-        var user = userRepository.findByUserName(request.getUserName());
-        if (user == null)
-        {
-            throw new RuntimeException(); //todo add the correct exception
-        }
+        var user = userRepository.findByUserName(request.getUserName()).orElseThrow(); //todo add correct exception
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

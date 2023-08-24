@@ -61,7 +61,7 @@ public class UserService{
         return userRepository.findById(id).orElse(null);
     }
 
-    public User byUserName(String userName){return userRepository.findByUserName(userName);}
+    public User byUserName(String userName){return userRepository.findByUserName(userName).orElse(null);}
 
     @Transactional
     public User updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender) throws UserNameAlreadyExistException{
