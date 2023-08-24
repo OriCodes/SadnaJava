@@ -11,7 +11,7 @@ public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
 
-    @PostMapping(path="/register")
+    @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse>register(
             @RequestBody RegisterRequest request
     ){
@@ -25,8 +25,4 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.authenticate(request));
     }
 
-    @GetMapping(path = "/hello")
-    public ResponseEntity<String> helloWorld(){
-        return ResponseEntity.ok("Hello World");
-    }
 }
