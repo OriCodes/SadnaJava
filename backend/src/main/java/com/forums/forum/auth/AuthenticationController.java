@@ -1,5 +1,6 @@
 package com.forums.forum.auth;
 
+import com.forums.forum.exception.UserNameAlreadyExistException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,7 +15,7 @@ public class AuthenticationController {
     @PostMapping("/register")
     public ResponseEntity<AuthenticationResponse>register(
             @RequestBody RegisterRequest request
-    ){
+    ) throws UserNameAlreadyExistException {
         return ResponseEntity.ok(authenticationService.register(request));
     }
 
