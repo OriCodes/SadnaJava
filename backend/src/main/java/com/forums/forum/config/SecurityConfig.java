@@ -3,6 +3,7 @@ package com.forums.forum.config;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -24,12 +25,13 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                                .requestMatchers("/api/auth/**",
-                                        "/api/topics/allTopics")
-                                .permitAll()
-                                .anyRequest()
-//                        .authenticated()
-                                .permitAll()
+                        .requestMatchers("/api/auth/**",
+                                "/api/topics/allTopics")
+                        .permitAll()
+                        .requestMatchers(HttpMethod.OPTIONS, "/**")
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated()
                 )
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
