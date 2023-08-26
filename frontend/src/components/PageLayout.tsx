@@ -6,7 +6,12 @@ import { Link, Outlet } from "react-router-dom";
 interface PageLayoutProps {}
 
 const PageLayout: FunctionComponent<PageLayoutProps> = () => {
-  const { isLoggedIn } = useAuthStore();
+  const { isLoggedIn, logout } = useAuthStore();
+
+  const handleLogout = () => {
+    logout();
+    localStorage.setItem("token", "");
+  };
 
   return (
     <Box p={4}>
@@ -18,7 +23,7 @@ const PageLayout: FunctionComponent<PageLayoutProps> = () => {
         </Link>
         <Flex>
           {isLoggedIn ? (
-            <Button colorScheme="teal" as={Link} to="/login">
+            <Button onClick={handleLogout} colorScheme="teal" as={Link} to="/">
               Logout
             </Button>
           ) : (
