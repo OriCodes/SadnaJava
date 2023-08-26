@@ -44,7 +44,7 @@ public class Comment {
 
     @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonIgnoreProperties("comment")
-    private List<CommentLike> likes;
+    private List<CommentLike> likes = List.of();
 
     @Formula("(SELECT COUNT(cl.comment_like_id) FROM comment_like cl WHERE cl.comment_id = comment_id)")
     private int likesCount;

@@ -1,4 +1,5 @@
 import usePost from "@/hooks/usePost";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Badge,
@@ -12,7 +13,7 @@ import {
 import { toNumber } from "lodash";
 import React from "react";
 import { AiOutlineComment } from "react-icons/ai";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Error from "../Error";
 import Loader from "../Loader";
 import CommentBox from "./Comment/CommentBox";
@@ -25,6 +26,8 @@ const PostPage: React.FC = () => {
 
   const { post, isLoading, isError, error } = usePost(toNumber(postId));
 
+  const navigate = useNavigate();
+
   if (isError) {
     return <Error error={error} />;
   }
@@ -36,9 +39,18 @@ const PostPage: React.FC = () => {
   return (
     <Container>
       <Box borderWidth="1px" borderRadius="lg" p="4" boxShadow="md" w="full">
-        <Text fontSize="xl" fontWeight="bold">
-          {post.title}
-        </Text>
+        <Flex alignItems={"center"}>
+          <IconButton
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Text p={4} fontSize="xl" fontWeight="bold">
+            {post.title}
+          </Text>
+        </Flex>
         <Flex mt="2" align="center">
           <Avatar name={post.user.username} src={post.user.profileUrl} />
           <Text ml="2" fontSize="md" fontWeight="semibold">

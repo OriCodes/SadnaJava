@@ -8,8 +8,7 @@ import com.forums.forum.model.User;
 import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.PostService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,31 +21,32 @@ public class PostController {
     private final DeleteService deleteService;
 
     @DeleteMapping(path = "/deletePost")
-    public void deletePost(Long postId, Long userId) throws ResourceNotFoundException, UserActionNotAllowedException {
-        deleteService.deletePost(postId, userId);
+    public void deletePost(Long postId, @AuthenticationPrincipal User user) throws ResourceNotFoundException, UserActionNotAllowedException {
+        deleteService.deletePost(postId, user.getUserId());
     }
 
     @DeleteMapping(path = "/unlikePost")
-    public void unlikePost(Long postId, Long userId) throws ResourceNotFoundException, UserActionNotAllowedException {
-        deleteService.unlikePost(postId, userId);
+    public void unlikePost(Long postId, @AuthenticationPrincipal User user) throws ResourceNotFoundException, UserActionNotAllowedException {
+
+
+        deleteService.unlikePost(postId, user.getUserId());
     }
 
     @PostMapping(path = "/addPost")
     public @ResponseBody Post addPost(
-            @RequestParam Long userId,
             @RequestParam Long topicId,
             @RequestParam String title,
-            @RequestParam String text) throws ResourceNotFoundException {
+            @RequestParam String text, @AuthenticationPrincipal User user) throws ResourceNotFoundException {
 
-        return postService.addPost(userId, topicId, title, text);
+
+        return postService.addPost(user.getUserId(), topicId, title, text);
     }
 
     @PostMapping(path = "/likePost")
-    public @ResponseBody PostLike likePost(Long postId) throws ResourceNotFoundException, UserActionNotAllowedException {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        Long userId = ((User) authentication.getPrincipal()).getUserId();
+    public @ResponseBody PostLike likePost(Long postId, @AuthenticationPrincipal User user) throws ResourceNotFoundException, UserActionNotAllowedException {
 
-        return postService.likePost(userId, postId);
+
+        return postService.likePost(user.getUserId(), postId);
     }
 
     @GetMapping(path = "/allPosts")

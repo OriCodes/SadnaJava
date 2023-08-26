@@ -8,8 +8,7 @@ import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -72,9 +71,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/currentUser")
-    public @ResponseBody User currentUser() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        return userService.byUserName(authentication.getName());
+    public @ResponseBody User currentUser(@AuthenticationPrincipal User user) {
+        return userService.byUserName(user.getUsername());
     }
 
 

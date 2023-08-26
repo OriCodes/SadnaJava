@@ -19,26 +19,18 @@ export async function deletePost(
   });
 }
 
-export async function unlikePost(
-  postId: number,
-  userId: number
-): Promise<void> {
-  await api<void>("unlikePost", {
+export async function unlikePost(postId: number): Promise<void> {
+  await api<void>(`unlikePost?postId=${postId}`, {
     method: "DELETE",
-    data: { postId, userId },
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 }
 
 export async function addPost(
-  userId: number,
   topicId: number,
   title: string,
   text: string
 ): Promise<Post> {
-  const requestData = { userId, topicId, title, text };
+  const requestData = { topicId, title, text };
   return await api<Post>("addPost", {
     method: "POST",
     data: requestData,
@@ -48,16 +40,9 @@ export async function addPost(
   });
 }
 
-export async function likePost(
-  userId: number,
-  postId: number
-): Promise<PostLike> {
-  return await api<PostLike>("likePost", {
+export async function likePost(postId: number): Promise<PostLike> {
+  return await api<PostLike>(`likePost?postId=${postId}`, {
     method: "POST",
-    data: { userId, postId },
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 }
 

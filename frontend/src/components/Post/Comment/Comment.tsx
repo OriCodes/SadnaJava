@@ -6,9 +6,10 @@ import CommentLike from "./CommentLike";
 
 interface CommentProps {
   comment: Comment;
+  postId: number;
 }
 
-const Comment: FunctionComponent<CommentProps> = ({ comment }) => {
+const Comment: FunctionComponent<CommentProps> = ({ comment, postId }) => {
   const formattedTimestamp = formatDistanceToNow(
     new Date(comment.createdTimeStamp),
     {
@@ -30,7 +31,7 @@ const Comment: FunctionComponent<CommentProps> = ({ comment }) => {
           </Text>
         </Box>
         <Flex mt="4" align="center" justify="space-between">
-          <CommentLike comment={comment} />
+          <CommentLike comment={comment} postId={postId} />
         </Flex>
       </Flex>
     </Box>

@@ -3,8 +3,6 @@ package com.forums.forum.controller;
 import com.forums.forum.model.Topic;
 import com.forums.forum.service.TopicService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,9 +15,6 @@ public class TopicController {
 
     @GetMapping(path = "/allTopics")
     public @ResponseBody List<Topic> allTopics() {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        System.out.println(authentication.getPrincipal());
         return topicService.allTopics();
     }
 

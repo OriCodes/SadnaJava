@@ -12,16 +12,18 @@ import PostCard from "../Post/PostCard";
 interface TopicPostsProps {}
 
 const TopicPosts: FunctionComponent<TopicPostsProps> = () => {
-  const { topicId } = useParams<{ topicId: string }>();
+  const { topicId: paramTopicId } = useParams<{ topicId: string }>();
 
-  const { topic } = useTopic(toNumber(topicId));
+  const topicId = toNumber(paramTopicId);
+
+  const { topic } = useTopic(topicId);
 
   const {
     data: posts,
     error,
     isLoading,
     isError,
-  } = useQuery(["posts", topicId], () => getAllPostsByTopic(toNumber(topicId)));
+  } = useQuery(["posts", topicId], () => getAllPostsByTopic(topicId));
 
   if (isError) {
     return <Error error={error} />;
