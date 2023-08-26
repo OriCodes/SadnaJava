@@ -1,5 +1,6 @@
 package com.forums.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,6 +9,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.Formula;
 
 import java.sql.Timestamp;
+import java.util.List;
 
 
 @AllArgsConstructor
@@ -39,6 +41,10 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "post_id")
     private Post post; // the post which the comment belong to
+
+    @OneToMany(mappedBy = "comment", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("comment")
+    private List<CommentLike> likes;
 
     @Formula("(SELECT COUNT(cl.comment_like_id) FROM comment_like cl WHERE cl.comment_id = comment_id)")
     private int likesCount;

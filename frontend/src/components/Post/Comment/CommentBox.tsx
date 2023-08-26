@@ -1,5 +1,5 @@
 import Post from "@/interfaces/post"; // Adjust the import path as needed
-import { Box, Button, Input, Stack } from "@chakra-ui/react";
+import { Box, Button, Stack, Textarea } from "@chakra-ui/react";
 import { FunctionComponent, useState } from "react";
 import Comment from "./Comment";
 
@@ -18,7 +18,7 @@ const CommentBox: FunctionComponent<CommentBoxProps> = ({ post }) => {
 
   return (
     <Box p="4" borderWidth="1px" borderRadius="md" boxShadow="md">
-      <Input
+      <Textarea
         value={commentText}
         onChange={(e) => setCommentText(e.target.value)}
         placeholder="Write a comment..."

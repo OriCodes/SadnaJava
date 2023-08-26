@@ -1,5 +1,5 @@
-import PostLike from "@/interfaces/like";
 import Post from "@/interfaces/post";
+import PostLike from "@/interfaces/postLike";
 import { routedApi } from ".";
 
 const BASE_URL = "posts"; // Adjust the URL path as needed

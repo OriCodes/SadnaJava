@@ -1,5 +1,5 @@
 import Comment from "./comment";
-import PostLike from "./like";
+import PostLike from "./postLike";
 import Topic from "./topic";
 import User from "./user";
 
