@@ -7,27 +7,31 @@ import {
   FormLabel,
   Input,
   Select,
+  Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
 interface RegisterFormProps {}
 
 const RegisterForm: React.FC<RegisterFormProps> = () => {
-  const [formData, setFormData] = useState<RegisterRequest>({
+  const [formData, setFormData] = useState({
     userName: "",
     password: "",
     dob: new Date(),
-    profileUrl: "",
-    gender: "MALE",
+    gender: "MALE" as RegisterRequest["gender"],
   });
 
   const authStore = useAuthStore();
+  const navigate = useNavigate();
 
   const onSubmit = async (data: RegisterRequest) => {
     const token = await register(data);
 
     localStorage.setItem("token", token.token);
     authStore.login(token.token);
+
+    navigate("/");
   };
 
   const handleChange = <T extends keyof RegisterRequest>(
@@ -38,7 +42,14 @@ const RegisterForm: React.FC<RegisterFormProps> = () => {
   };
 
   const handleSubmit = () => {
-    onSubmit(formData);
+    const avatar = `https://api.dicebear.com/6.x/open-peeps/svg?seed=${formData.userName}`;
+
+    const newOptions: RegisterRequest = {
+      profileUrl: avatar,
+      ...formData,
+    };
+
+    onSubmit(newOptions);
   };
 
   return (
@@ -69,14 +80,6 @@ const RegisterForm: React.FC<RegisterFormProps> = () => {
       </FormControl>
 
       <FormControl mt={4}>
-        <FormLabel>Profile URL</FormLabel>
-        <Input
-          value={formData.profileUrl}
-          onChange={(e) => handleChange("profileUrl", e.target.value)}
-        />
-      </FormControl>
-
-      <FormControl mt={4}>
         <FormLabel>Gender</FormLabel>
         <Select
           value={formData.gender}
@@ -93,6 +96,9 @@ const RegisterForm: React.FC<RegisterFormProps> = () => {
       <Button mt={6} colorScheme="blue" onClick={handleSubmit}>
         Register
       </Button>
+      <Text mt={2}>
+        Already have an account? <Link to="/login">Login</Link>
+      </Text>
     </Box>
   );
 };

@@ -1,5 +1,6 @@
 package com.forums.forum.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -44,12 +45,12 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     @Column(name = "password")
+
+    @JsonIgnore
     private String password;
-    @Column(name="rule")
+    @Column(name = "rule")
     @Enumerated(EnumType.STRING)
     private Role role;
-
-
 
 
     public User(String userName, LocalDate dob, String profileUrl, Gender gender, String password) {
@@ -61,6 +62,7 @@ public class User implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
     }

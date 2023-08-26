@@ -1,9 +1,8 @@
+import User from "@/interfaces/user";
 import { routedApi } from ".";
 
 const api = routedApi("users");
 
-export function register() {
-  return api<void>("register", {
-    method: "POST",
-  });
+export function currentUser() {
+  return api<User>("currentUser");
 }

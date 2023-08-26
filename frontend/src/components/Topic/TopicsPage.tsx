@@ -7,7 +7,7 @@ import TopicList from "./TopicList";
 
 interface TopicPageProps {}
 
-const TopicPage: FunctionComponent<TopicPageProps> = () => {
+const TopicsPage: FunctionComponent<TopicPageProps> = () => {
   const {
     data: topics,
     isLoading,
@@ -22,4 +22,4 @@ const TopicPage: FunctionComponent<TopicPageProps> = () => {
   return <TopicList topics={topics} />;
 };
 
-export default TopicPage;
+export default TopicsPage;

@@ -6,7 +6,7 @@ enum Gender {
 
 interface User {
   userId: number;
-  userName: string;
+  username: string;
   dob: string;
   profileUrl: string;
   gender: Gender;

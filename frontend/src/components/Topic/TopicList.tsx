@@ -1,5 +1,5 @@
+import Topic from "@/interfaces/topic";
 import { Box, SimpleGrid } from "@chakra-ui/react";
-import Topic from "../interfaces/topic";
 import TopicCard from "./TopicCard";
 
 interface TopicListProps {

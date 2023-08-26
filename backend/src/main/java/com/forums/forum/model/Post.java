@@ -30,9 +30,9 @@ public class Post {
     )
     @Column(name = "post_id")
     private long postId;
-    @Column(name = "title")
+    @Column(name = "title", columnDefinition = "TEXT")
     private String title;
-    @Column(name = "text")
+    @Column(name = "text", columnDefinition = "TEXT")
     private String text;
 
     @Column(name = "created_time_stamp")
@@ -55,6 +55,7 @@ public class Post {
 
     @Formula("(SELECT COUNT(pl.post_like_id) FROM post_like pl WHERE pl.post_id = post_id)")
     private int likesCount;
+
 
     public Post(String title, String text, User user, Topic topic) {
         this.title = title;

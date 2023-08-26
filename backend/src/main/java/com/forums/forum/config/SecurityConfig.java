@@ -24,12 +24,14 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/api/auth/**",
-                                "/api/topics/allTopics")
-                        .permitAll()
-                        .anyRequest()
-                        .authenticated()
+                                .requestMatchers("/api/auth/**",
+                                        "/api/topics/allTopics")
+                                .permitAll()
+                                .anyRequest()
+//                        .authenticated()
+                                .permitAll()
                 )
+                .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)

@@ -4,9 +4,12 @@ import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.PostLike;
+import com.forums.forum.model.User;
 import com.forums.forum.service.DeleteService;
 import com.forums.forum.service.PostService;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,12 +37,15 @@ public class PostController {
             @RequestParam Long topicId,
             @RequestParam String title,
             @RequestParam String text) throws ResourceNotFoundException {
-        
+
         return postService.addPost(userId, topicId, title, text);
     }
 
     @PostMapping(path = "/likePost")
-    public @ResponseBody PostLike likePost(Long userId, Long postId) throws ResourceNotFoundException, UserActionNotAllowedException {
+    public @ResponseBody PostLike likePost(Long postId) throws ResourceNotFoundException, UserActionNotAllowedException {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        Long userId = ((User) authentication.getPrincipal()).getUserId();
+
         return postService.likePost(userId, postId);
     }
 

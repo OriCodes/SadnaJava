@@ -83,48 +83,41 @@ export async function hasLiked(
 }
 
 export async function getAllPostsByTopic(topicId: number): Promise<Post[]> {
-  return await api<Post[]>("allByTopic", {
+  return await api<Post[]>(`allByTopic?topicId=${topicId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    data: { topicId },
   });
 }
 
 export async function getAllPostsByUser(userId: number): Promise<Post[]> {
-  return await api<Post[]>("allByUser", {
+  return await api<Post[]>(`allByUser?userId=${userId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    data: { userId },
   });
 }
-
 export async function searchPostByTitle(title: string): Promise<Post[]> {
-  return await api<Post[]>("searchPost", {
+  return await api<Post[]>(`searchPost?title=${title}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    data: { title },
   });
 }
-
 export async function searchPostByTitleAndTopic(
   title: string,
   topicId: number
 ): Promise<Post[]> {
-  return await api<Post[]>("searchPost", {
+  return await api<Post[]>(`searchPost?title=${title}&topicId=${topicId}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
     },
-    data: { title, topicId },
   });
 }
-
 export async function existPostByTitle(title: string): Promise<boolean> {
   return await api<boolean>("existByTitle", {
     method: "GET",
