@@ -36,7 +36,7 @@ public class User implements UserDetails {
     @Column(name = "user_id")
     private long userId;
     @Column(name = "user_name")
-    private String userName;
+    private String username;
     @Column(name = "dob")
     private LocalDate dob;
     @Column(name = "profile_url")
@@ -52,9 +52,16 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @JsonIgnore
+    @OneToMany(mappedBy = "follower")
+    private List<Follow> followers;
 
-    public User(String userName, LocalDate dob, String profileUrl, Gender gender, String password) {
-        this.userName = userName;
+    @JsonIgnore
+    @OneToMany(mappedBy = "followed")
+    private List<Follow> followed;
+
+    public User(String username, LocalDate dob, String profileUrl, Gender gender, String password) {
+        this.username = username;
         this.dob = dob;
         this.profileUrl = profileUrl;
         this.gender = gender;
@@ -69,7 +76,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return userName;
+        return username;
     }
 
     @Override

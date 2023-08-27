@@ -1,6 +1,8 @@
 package com.forums.forum.service;
 
 import com.forums.forum.dto.UserProfile;
+import com.forums.forum.dto.UserWithStats;
+import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.Post;
@@ -24,6 +26,8 @@ import java.util.Objects;
 public class UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+
+    private final FollowService followService;
 
     public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException {
         if (userRepository.existsByUserName(userName)) {
@@ -78,7 +82,7 @@ public class UserService {
             if (userRepository.existsByUserName(userName)) {
                 throw new UserNameAlreadyExistException();
             }
-            user.setUserName(userName);
+            user.setUsername(userName);
         }
 
         if (dob != null && !Objects.equals(dob, user.getDob())) {
@@ -95,7 +99,7 @@ public class UserService {
         return user;
     }
 
-    public UserProfile getUserProfile(Long userId, int page) {
+    public UserProfile getUserProfile(Long userId, int page) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
 
@@ -103,7 +107,15 @@ public class UserService {
 
         List<Post> posts = postRepository.findAllByUser(user, PageRequest.of(page, 10, Sort.by("createdTimeStamp").descending()));
 
-        userProfile.setUser(user);
+        UserWithStats userWithStats = new UserWithStats();
+        userWithStats.setUserId(user.getUserId());
+        userWithStats.setUsername(user.getUsername());
+        userWithStats.setDob(user.getDob());
+        userWithStats.setProfileUrl(user.getProfileUrl());
+        userWithStats.setGender(user.getGender());
+        userWithStats.setFollowerCount(followService.getNumberOfFollowers(userId));
+
+        userProfile.setUser(userWithStats);
         userProfile.setPagePosts(posts);
         userProfile.setPage(page);
 

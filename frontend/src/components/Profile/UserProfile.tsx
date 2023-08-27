@@ -7,9 +7,11 @@ import {
   Heading,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
-import { toNumber } from "lodash";
+import { capitalize, toNumber } from "lodash";
 import { FunctionComponent } from "react";
+import { BiFemale, BiMale } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import Error from "../Error";
 import Loader from "../Loader";
@@ -32,6 +34,8 @@ const UserProfile: FunctionComponent = () => {
 
   const { user, pagePosts, page } = userProfile;
 
+  const { gender } = user;
+
   return (
     <Container maxW="container.md" mt="4">
       <Box p="4" borderWidth="1px" borderRadius="md" boxShadow="md">
@@ -44,7 +48,18 @@ const UserProfile: FunctionComponent = () => {
             m={4}
           />
           <Heading as="h1" size="lg" mb="2">
-            {user.username}
+            <Flex alignItems="center">
+              {user.username}
+              <Tooltip title={capitalize(gender)}>
+                {gender === "MALE" ? (
+                  <BiMale />
+                ) : gender === "FEMALE" ? (
+                  <BiFemale />
+                ) : (
+                  <></>
+                )}
+              </Tooltip>
+            </Flex>
           </Heading>
         </Flex>
       </Box>
