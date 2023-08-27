@@ -1,10 +1,11 @@
-import useUser from "@/hooks/useUser";
+import { useCurrentUser } from "@/hooks/useUser";
+import { Image } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 
 interface UserIconProps {}
 
 const UserIcon: FunctionComponent<UserIconProps> = () => {
-  const { user, isLoading, isError } = useUser();
+  const { user, isLoading, isError } = useCurrentUser();
 
   const profileUrl = user?.profileUrl;
 
@@ -17,9 +18,11 @@ const UserIcon: FunctionComponent<UserIconProps> = () => {
   }
 
   return (
-    <img
+    <Image
       src={profileUrl || "assets/svg/TALKSphere.svg"}
-      style={{ width: "40px", height: "40px", borderRadius: "50%" }}
+      borderRadius="50%"
+      width="40px"
+      height="40px"
     />
   );
 };

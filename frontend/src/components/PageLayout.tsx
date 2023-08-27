@@ -2,21 +2,16 @@ import useAuthStore from "@/store/auth";
 import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { Link, Outlet } from "react-router-dom";
-import UserIcon from "./UserIcon";
+import UserMenu from "./Profile/UserMenu";
 
 interface PageLayoutProps {}
 
 const PageLayout: FunctionComponent<PageLayoutProps> = () => {
-  const { isLoggedIn, logout } = useAuthStore();
-
-  const handleLogout = () => {
-    logout();
-    localStorage.setItem("token", "");
-  };
+  const { isLoggedIn } = useAuthStore();
 
   return (
     <Box p={4}>
-      <Flex justifyContent="space-between" alignItems="center">
+      <Flex p={2} justifyContent="space-between" alignItems="center">
         <Link to="/">
           <Heading as="h1" size="lg">
             <img src="/assets/svg/TALKSphere.svg" />
@@ -25,15 +20,7 @@ const PageLayout: FunctionComponent<PageLayoutProps> = () => {
         <Flex>
           {isLoggedIn ? (
             <>
-              <Button
-                onClick={handleLogout}
-                colorScheme="teal"
-                as={Link}
-                to="/"
-              >
-                Logout
-              </Button>
-              <UserIcon />
+              <UserMenu />
             </>
           ) : (
             <>

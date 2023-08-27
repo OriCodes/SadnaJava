@@ -1,5 +1,5 @@
 import { likeComment, unlikeComment } from "@/api/comment";
-import useUser from "@/hooks/useUser";
+import { useCurrentUser } from "@/hooks/useUser";
 import Comment from "@/interfaces/comment";
 import CommentLike from "@/interfaces/commentLike";
 import Post from "@/interfaces/post";
@@ -17,7 +17,7 @@ const CommentLike: FunctionComponent<CommentLikeProps> = ({
   comment,
   postId,
 }) => {
-  const { user, loggedIn } = useUser();
+  const { user, loggedIn } = useCurrentUser();
 
   const hasLiked =
     loggedIn && comment.likes.some((like) => like.user.userId === user?.userId);

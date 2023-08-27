@@ -41,6 +41,7 @@ const PostPage: React.FC = () => {
       <Box borderWidth="1px" borderRadius="lg" p="4" boxShadow="md" w="full">
         <Flex alignItems={"center"}>
           <IconButton
+            aria-label="Back"
             onClick={() => {
               navigate(-1);
             }}

@@ -1,17 +1,28 @@
-import { currentUser } from "@/api/user";
+import { currentUser, getUserProfile } from "@/api/user";
 import useAuthStore from "@/store/auth";
 import { useQuery } from "@tanstack/react-query";
 
-const useUser = () => {
+export const useCurrentUser = () => {
   const authStore = useAuthStore();
 
-  const query = useQuery(["user", authStore.token], currentUser, {
+  const query = useQuery(["currentUser", authStore.token], currentUser, {
     enabled: authStore.isLoggedIn,
   });
 
   return {
     ...query,
     user: query.data,
+    loggedIn: authStore.isLoggedIn,
+  };
+};
+
+const useUser = (userId: number) => {
+  const authStore = useAuthStore();
+  const query = useQuery(["userProfile", userId], () => getUserProfile(userId));
+
+  return {
+    ...query,
+    userProfile: query.data,
     loggedIn: authStore.isLoggedIn,
   };
 };

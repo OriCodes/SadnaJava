@@ -7,6 +7,7 @@ interface ErrorProps {
 
 const Error: FunctionComponent<ErrorProps> = ({ error }) => {
   const message = (error as { message: string })?.message;
+
   return (
     <Alert
       status="error"

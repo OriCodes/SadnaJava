@@ -1,10 +1,18 @@
 import { getAllPostsByTopic } from "@/api/post";
 import useTopic from "@/hooks/useTopic";
-import { Box, Image, SimpleGrid, Text } from "@chakra-ui/react";
+import { ArrowBackIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Image,
+  SimpleGrid,
+  Text,
+} from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { map, toNumber } from "lodash";
 import { FunctionComponent } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import Error from "../Error";
 import Loader from "../Loader";
 import PostCard from "../Post/PostCard";
@@ -25,6 +33,8 @@ const TopicPosts: FunctionComponent<TopicPostsProps> = () => {
     isError,
   } = useQuery(["posts", topicId], () => getAllPostsByTopic(topicId));
 
+  const navigate = useNavigate();
+
   if (isError) {
     return <Error error={error} />;
   }
@@ -43,9 +53,19 @@ const TopicPosts: FunctionComponent<TopicPostsProps> = () => {
           width={"full"}
           objectFit="cover"
         />
-        <Text fontSize="xl" fontWeight="bold">
-          Posts in {topic?.topicName}
-        </Text>
+        <Flex alignItems="center">
+          <IconButton
+            aria-label="back"
+            onClick={() => {
+              navigate(-1);
+            }}
+          >
+            <ArrowBackIcon />
+          </IconButton>
+          <Text p={4} fontSize="xl" fontWeight="bold">
+            Posts in {topic?.topicName}
+          </Text>
+        </Flex>
       </Box>
       {posts.length === 0 ? (
         <Text>No posts available for this topic.</Text>

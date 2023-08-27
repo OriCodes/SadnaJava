@@ -1,5 +1,6 @@
 package com.forums.forum.controller;
 
+import com.forums.forum.dto.UserProfile;
 import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
@@ -75,5 +76,8 @@ public class UserController {
         return userService.byUserName(user.getUsername());
     }
 
-
+    @GetMapping(path = "/getUserProfile/{userId}")
+    public @ResponseBody UserProfile getUserProfile(Long userId, @RequestParam int page) throws ResourceNotFoundException {
+        return userService.getUserProfile(userId, page);
+    }
 }

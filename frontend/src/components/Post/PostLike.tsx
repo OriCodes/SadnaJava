@@ -1,5 +1,5 @@
 import { likePost, unlikePost } from "@/api/post";
-import useUser from "@/hooks/useUser";
+import { useCurrentUser } from "@/hooks/useUser";
 import Post from "@/interfaces/post";
 import PostLike from "@/interfaces/postLike";
 import { IconButton, Text, Tooltip } from "@chakra-ui/react";
@@ -12,7 +12,7 @@ interface PostLikeProps {
 }
 
 const PostLike: FunctionComponent<PostLikeProps> = ({ post }) => {
-  const { user, loggedIn } = useUser();
+  const { user, loggedIn } = useCurrentUser();
 
   const hasLiked =
     loggedIn && post.likes.some((like) => like.user.userId === user?.userId);
