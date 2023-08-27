@@ -1,5 +1,6 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.modelmapper.ModelMapper;
 
 import java.time.LocalDate;
 import java.time.Month;
@@ -30,20 +32,25 @@ class UserServiceTest {
     private UserRepository userRepository;
     @Mock
     private PostRepository postRepository;
+    @Mock
+    private FollowService followService;
+
+    @Mock
+    private ModelMapper modelMapper;
 
     private UserService userService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository,postRepository);
+        userService = new UserService(userRepository,postRepository,  modelMapper, followService);
     }
 
 
     @Test
     public void addUserSuccess() {
         //given
-        when(userRepository.existsByUserName(anyString())).thenReturn(false);
+        when(userRepository.existsByUsername(anyString())).thenReturn(false);
         String userName = "poseidon";
         LocalDate dob2 = LocalDate.of(1999, Month.APRIL,7);
         String profileUrl = "Profile_URL";
@@ -66,7 +73,7 @@ class UserServiceTest {
     @Test
     public void addUserShouldThrow() {
         //given
-        when(userRepository.existsByUserName(anyString())).thenReturn(true);
+        when(userRepository.existsByUsername(anyString())).thenReturn(true);
         String userName = "poseidon";
         LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
         String profileUrl = "Profile_URL";
@@ -133,11 +140,17 @@ class UserServiceTest {
         User existingUser = new User(userName, LocalDate.of(1999, Month.APRIL, 7), "URL", Gender.MALE, "auth0Id");
 
         when(userRepository.findById(any())).thenReturn(Optional.of(existingUser));
-        when(userRepository.existsByUserName(userName)).thenReturn(true);
+        when(userRepository.existsByUsername(userName)).thenReturn(true);
 
         //then
         assertThatThrownBy(() -> userService.updateUser(userId, userName, dob, profileUrl, gender))
                 .isInstanceOf(UserNameAlreadyExistException.class);
+
+    }
+
+    @Test
+    public void testGetUserProfile() throws ResourceNotFoundException
+    {
 
     }
 

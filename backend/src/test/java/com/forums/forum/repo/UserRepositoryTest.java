@@ -32,8 +32,8 @@ class UserRepositoryTest {
         User user = new User("Poseidon", dob, "URL", Gender.MALE, "Auth");
         userRepository.save(user);
         //when
-        boolean expectedTrue = userRepository.existsByUserName("Poseidon");
-        boolean expectedFalse = userRepository.existsByUserName("Venus");
+        boolean expectedTrue = userRepository.existsByUsername("Poseidon");
+        boolean expectedFalse = userRepository.existsByUsername("Venus");
         //then
         assertThat(expectedTrue).isTrue();
         assertThat(expectedFalse).isFalse();
@@ -48,7 +48,7 @@ class UserRepositoryTest {
         User user = new User(userName, dob, "URL", Gender.MALE, "Auth");
         userRepository.save(user);
         //when
-        Optional<User> foundUser = userRepository.findByUserName(userName);
+        Optional<User> foundUser = userRepository.findByUsername(userName);
         //then
         assertThat(foundUser.isPresent()).isTrue();
         assertThat(foundUser.get().getUsername()).isEqualTo(userName);
@@ -111,7 +111,7 @@ class UserRepositoryTest {
         User user1 = new User("Poseidon", dob1, "URL", Gender.MALE, "Auth");
         User user2 = new User("Venus", dob2, "URL", Gender.FEMALE, "Auth");
         userRepository.saveAll(List.of(user1, user2));
-        Long id = userRepository.findByUserName("Poseidon").get().getUserId();
+        Long id = userRepository.findByUsername("Poseidon").get().getUserId();
         //when
         userRepository.deleteById(id);
         //then

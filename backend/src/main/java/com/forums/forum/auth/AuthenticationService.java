@@ -22,11 +22,11 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) throws UserNameAlreadyExistException {
 
-        if (userRepository.existsByUserName(request.getUserName())) {
+        if (userRepository.existsByUsername(request.getUserName())) {
             throw new UserNameAlreadyExistException();
         }
         var user = User.builder()
-               .userName(request.getUserName())
+               .username(request.getUserName())
                .dob(request.getDob())
                .gender(request.getGender())
                .profileUrl(request.getProfileUrl())
@@ -44,7 +44,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getUserName(),request.getPassword())
         );
-        var user = userRepository.findByUserName(request.getUserName()).orElseThrow(); //todo add correct exception
+        var user = userRepository.findByUsername(request.getUserName()).orElseThrow(); //todo add correct exception
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()

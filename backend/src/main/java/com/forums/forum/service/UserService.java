@@ -3,7 +3,6 @@ package com.forums.forum.service;
 import com.forums.forum.dto.UserProfile;
 import com.forums.forum.dto.UserWithStats;
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.Post;
@@ -12,6 +11,7 @@ import com.forums.forum.model.User;
 import com.forums.forum.repo.PostRepository;
 import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -27,11 +27,11 @@ import java.util.Objects;
 public class UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-
+    private final ModelMapper modelMapper;
     private final FollowService followService;
 
     public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException {
-        if (userRepository.existsByUserName(userName)) {
+        if (userRepository.existsByUsername(userName)) {
             throw new UserNameAlreadyExistException();
         }
         User newUser = new User(userName, dob, profileUrl, gender, password);
@@ -42,8 +42,8 @@ public class UserService {
     public List<User> searchUserByUserName(String userName) {
 
         List<User> result = new ArrayList<>();
-        List<User> matchingUsers = userRepository.findAllByUserName(userName);
-        List<User> containingUsers = userRepository.findAllByUserNameContaining(userName);
+        List<User> matchingUsers = userRepository.findAllByUsername(userName);
+        List<User> containingUsers = userRepository.findAllByUsernameContaining(userName);
         if (matchingUsers != null) {
             result.addAll(matchingUsers);
         }
@@ -71,7 +71,7 @@ public class UserService {
     }
 
     public User byUserName(String userName) {
-        return userRepository.findByUserName(userName).orElse(null);
+        return userRepository.findByUsername(userName).orElse(null);
     }
 
     @Transactional
@@ -81,7 +81,7 @@ public class UserService {
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         if (userName != null && userName.length() > 0 && !Objects.equals(userName, user.getUsername())) {
-            if (userRepository.existsByUserName(userName)) {
+            if (userRepository.existsByUsername(userName)) {
                 throw new UserNameAlreadyExistException();
             }
             user.setUsername(userName);
@@ -109,13 +109,7 @@ public class UserService {
 
         List<Post> posts = postRepository.findAllByUser(user, PageRequest.of(page, 10, Sort.by("createdTimeStamp").descending()));
 
-        UserWithStats userWithStats = new UserWithStats();
-        userWithStats.setUserId(user.getUserId());
-        userWithStats.setUsername(user.getUsername());
-        userWithStats.setDob(user.getDob());
-        userWithStats.setProfileUrl(user.getProfileUrl());
-        userWithStats.setGender(user.getGender());
-        userWithStats.setFollowerCount(followService.getNumberOfFollowers(userId));
+        UserWithStats userWithStats = modelMapper.map(user, UserWithStats.class);
 
         userProfile.setUser(userWithStats);
         userProfile.setPagePosts(posts);
@@ -123,4 +117,5 @@ public class UserService {
 
         return userProfile;
     }
+
 }

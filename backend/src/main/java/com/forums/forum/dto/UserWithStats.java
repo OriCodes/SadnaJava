@@ -1,13 +1,19 @@
 package com.forums.forum.dto;
 
-import com.forums.forum.model.User;
+import com.forums.forum.model.Gender;
 import lombok.Data;
-import lombok.EqualsAndHashCode;
 
-@EqualsAndHashCode(callSuper = true)
+import java.time.LocalDate;
+
+
 @Data
-public class UserWithStats extends User {
-    int followerCount;
+public class UserWithStats{
 
-
+    private  Long userId;
+    private String username;
+    private LocalDate dob;
+    private String profileUrl;
+    private Gender gender;
+    private int followerCount;
+    private int followedCount;
 }
