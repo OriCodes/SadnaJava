@@ -69,7 +69,7 @@ public class CommentService {
 
     public int getNumberOfLikes(Long commentId) throws ResourceNotFoundException {
         Comment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Comment with id " + commentId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Comment with id " + commentId + " not found"));
 
         return commentLikeRepository.countAllByComment(comment);
     }

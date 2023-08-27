@@ -1,5 +1,7 @@
 package com.forums.forum.service;
 
+import com.forums.forum.exception.ResourceNotFoundException;
+import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.*;
 import com.forums.forum.repo.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -91,13 +93,13 @@ class DeleteServiceTest {
         //when
         //then
         assertThatThrownBy(() -> deleteService.unfollow(1L, 2L)).
-                isInstanceOf(IllegalArgumentException.class);
+                isInstanceOf(ResourceNotFoundException.class);
 
         assertThatThrownBy(() -> deleteService.unfollow(1L, 3L)).
-                isInstanceOf(IllegalArgumentException.class);
+                isInstanceOf(ResourceNotFoundException.class);
 
         assertThatThrownBy(() -> deleteService.unfollow(3L, 2L)).
-                isInstanceOf(IllegalArgumentException.class);
+                isInstanceOf(ResourceNotFoundException.class);
 
         verify(followRepository, never()).deleteAllByFollowerAndAndFollowed(any(), any());
         verify(followRepository, never()).existsByFollowerAndFollowed(any(), any());
@@ -116,7 +118,7 @@ class DeleteServiceTest {
         //when
         //then
         assertThatThrownBy(() -> deleteService.unfollow(1L, 2L)).
-                isInstanceOf(IllegalArgumentException.class).hasMessageContaining(
+                isInstanceOf(UserActionNotAllowedException.class).hasMessageContaining(
                         "User with id " + 1L + " don't follow User with id " + 2L
                 );
 
@@ -154,7 +156,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("User with id 1 not found");
 
         verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
@@ -170,7 +172,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Post with id 1 not found");
 
         verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
@@ -191,7 +193,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikePost(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(UserActionNotAllowedException.class)
                 .hasMessageContaining("User with id 1 don't like post with id 1");
 
         verify(postLikeRepository, never()).deleteAllByPostAndUser(any(), any());
@@ -228,7 +230,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("User with id 1 not found");
 
         verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
@@ -244,7 +246,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(ResourceNotFoundException.class)
                 .hasMessageContaining("Comment with id 1 not found");
 
         verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
@@ -266,7 +268,7 @@ class DeleteServiceTest {
 
         // when & then
         assertThatThrownBy(() -> deleteService.unlikeComment(1L, 1L))
-                .isInstanceOf(IllegalArgumentException.class)
+                .isInstanceOf(UserActionNotAllowedException.class)
                 .hasMessageContaining("User with id 1 don't like comment with id 1");
 
         verify(commentLikeRepository, never()).deleteAllByCommentAndUser(any(), any());
