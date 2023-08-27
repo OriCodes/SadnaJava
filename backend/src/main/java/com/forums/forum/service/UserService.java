@@ -101,7 +101,7 @@ public class UserService {
 
         UserProfile userProfile = new UserProfile();
 
-        List<Post> posts = postRepository.findAllByUser(user, PageRequest.of(page, 10, Sort.by("date").descending()));
+        List<Post> posts = postRepository.findAllByUser(user, PageRequest.of(page, 10, Sort.by("createdTimeStamp").descending()));
 
         userProfile.setUser(user);
         userProfile.setPagePosts(posts);

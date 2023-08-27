@@ -8,6 +8,6 @@ export function currentUser() {
   return api<User>("currentUser");
 }
 
-export function getUserProfile(userId: number, page: number = 1) {
+export function getUserProfile(userId: number, page: number = 0) {
   return api<UserProfile>(`getUserProfile/${userId}?page=${page}`);
 }

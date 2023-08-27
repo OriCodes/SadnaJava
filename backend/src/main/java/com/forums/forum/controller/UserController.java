@@ -77,7 +77,8 @@ public class UserController {
     }
 
     @GetMapping(path = "/getUserProfile/{userId}")
-    public @ResponseBody UserProfile getUserProfile(Long userId, @RequestParam int page) throws ResourceNotFoundException {
+    public @ResponseBody UserProfile getUserProfile(@PathVariable("userId") Long userId,
+                                                    @RequestParam(defaultValue = "0") Integer page) {
         return userService.getUserProfile(userId, page);
     }
 }

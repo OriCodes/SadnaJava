@@ -16,7 +16,7 @@ export const useCurrentUser = () => {
   };
 };
 
-const useUser = (userId: number) => {
+export const useUserProfile = (userId: number) => {
   const authStore = useAuthStore();
   const query = useQuery(["userProfile", userId], () => getUserProfile(userId));
 
@@ -26,5 +26,3 @@ const useUser = (userId: number) => {
     loggedIn: authStore.isLoggedIn,
   };
 };
-
-export default useUser;

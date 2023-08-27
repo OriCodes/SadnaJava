@@ -9,6 +9,7 @@ import {
   MenuList,
 } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
+import { Link } from "react-router-dom";
 import LogoutButton from "../LogoutButton";
 import UserIcon from "./UserIcon";
 
@@ -31,7 +32,9 @@ const UserMenu: FunctionComponent<UserMenuProps> = () => {
       <MenuList>
         <MenuGroup title="Your Stuff"></MenuGroup>
         <MenuDivider />
-        <MenuItem>{user?.username}'s Profile</MenuItem>
+        <MenuItem as={Link} to={`/user/${user?.userId}`}>
+          {user?.username}'s Profile
+        </MenuItem>
         <LogoutButton />
       </MenuList>
     </Menu>

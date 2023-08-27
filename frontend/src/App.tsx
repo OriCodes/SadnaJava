@@ -8,6 +8,7 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { axiosInstance } from "./api";
 import LoginPage from "./components/LoginPage";
 import PostPage from "./components/Post/PostPage";
+import UserProfile from "./components/Profile/UserProfile";
 import RegisterForm from "./components/RegisterForm";
 import TopicPosts from "./components/Topic/TopicPosts";
 import useAuthStore from "./store/auth";
@@ -37,6 +38,10 @@ const router = createBrowserRouter([
       {
         path: "/posts/:postId",
         element: <PostPage />,
+      },
+      {
+        path: "/user/:userId",
+        element: <UserProfile />,
       },
     ],
   },

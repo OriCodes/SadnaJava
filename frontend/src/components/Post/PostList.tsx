@@ -12,7 +12,7 @@ const PostList: FunctionComponent<PostListProps> = ({ posts }) => {
   return posts.length === 0 ? (
     <Text>No posts available</Text>
   ) : (
-    <SimpleGrid columns={[1, 2, 3, 4]} spacing={6} p={6}>
+    <SimpleGrid columns={[1, 2]} spacing={6} p={6}>
       {map(posts, (post) => (
         <PostCard key={post.postId} post={post} />
       ))}

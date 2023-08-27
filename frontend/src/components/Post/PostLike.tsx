@@ -2,6 +2,7 @@ import { likePost, unlikePost } from "@/api/post";
 import { useCurrentUser } from "@/hooks/useUser";
 import Post from "@/interfaces/post";
 import PostLike from "@/interfaces/postLike";
+import UserProfile from "@/interfaces/userProfile";
 import { IconButton, Text, Tooltip } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FunctionComponent } from "react";
@@ -47,6 +48,23 @@ const PostLike: FunctionComponent<PostLikeProps> = ({ post }) => {
                 : oldPost
             )
         );
+        queryClient.setQueryData(
+          ["userProfile", user?.userId],
+          (oldData?: UserProfile) =>
+            oldData
+              ? {
+                  ...oldData,
+                  pagePosts: oldData.pagePosts.map((oldPost) =>
+                    oldPost.postId === post.postId
+                      ? {
+                          ...oldPost,
+                          likes: [...oldPost.likes, newLike],
+                        }
+                      : oldPost
+                  ),
+                }
+              : oldData
+        );
       },
     }
   );
@@ -80,6 +98,25 @@ const PostLike: FunctionComponent<PostLikeProps> = ({ post }) => {
                   }
                 : oldPost
             )
+        );
+        queryClient.setQueryData(
+          ["userProfile", user?.userId],
+          (oldData?: UserProfile) =>
+            oldData
+              ? {
+                  ...oldData,
+                  pagePosts: oldData.pagePosts.map((oldPost) =>
+                    oldPost.postId === post.postId
+                      ? {
+                          ...oldPost,
+                          likes: oldPost.likes.filter(
+                            (like) => like.user.userId !== user?.userId
+                          ),
+                        }
+                      : oldPost
+                  ),
+                }
+              : oldData
         );
       },
     }

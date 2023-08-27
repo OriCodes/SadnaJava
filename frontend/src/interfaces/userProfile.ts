@@ -3,7 +3,7 @@ import User from "./user";
 
 interface UserProfile {
   user: User;
-  posts: Post[];
+  pagePosts: Post[];
   page: number;
 }
 
