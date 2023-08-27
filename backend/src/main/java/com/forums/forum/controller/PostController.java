@@ -1,5 +1,6 @@
 package com.forums.forum.controller;
 
+import com.forums.forum.dto.NewPostBody;
 import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserActionNotAllowedException;
 import com.forums.forum.model.Post;
@@ -34,12 +35,10 @@ public class PostController {
 
     @PostMapping(path = "/addPost")
     public @ResponseBody Post addPost(
-            @RequestParam Long topicId,
-            @RequestParam String title,
-            @RequestParam String text, @AuthenticationPrincipal User user) throws ResourceNotFoundException {
+            @RequestBody NewPostBody body, @AuthenticationPrincipal User user) throws ResourceNotFoundException {
 
 
-        return postService.addPost(user.getUserId(), topicId, title, text);
+        return postService.addPost(user.getUserId(), body.getTopicId(), body.getTitle(), body.getText());
     }
 
     @PostMapping(path = "/likePost")

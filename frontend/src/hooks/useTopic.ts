@@ -1,4 +1,4 @@
-import { fetchTopicById } from "@/api/topic";
+import { fetchAllTopics, fetchTopicById } from "@/api/topic";
 import { useQuery } from "@tanstack/react-query";
 
 const useTopic = (topicId: number) => {
@@ -11,3 +11,12 @@ const useTopic = (topicId: number) => {
 };
 
 export default useTopic;
+
+export const useTopics = () => {
+  const query = useQuery(["topics"], fetchAllTopics);
+
+  return {
+    ...query,
+    topics: query.data,
+  };
+};

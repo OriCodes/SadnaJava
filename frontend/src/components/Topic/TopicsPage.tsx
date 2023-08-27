@@ -1,6 +1,6 @@
-import { fetchAllTopics } from "@/api/topic";
 import Error from "@/components/Error";
 import Loader from "@/components/Loader";
+import { useTopics } from "@/hooks/useTopic";
 import useAuthStore from "@/store/auth";
 import {
   Box,
@@ -11,7 +11,6 @@ import {
   Image,
   Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { FunctionComponent } from "react";
 import { Link } from "react-router-dom";
 import TopicList from "./TopicList";
@@ -19,12 +18,7 @@ import TopicList from "./TopicList";
 interface TopicPageProps {}
 
 const TopicsPage: FunctionComponent<TopicPageProps> = () => {
-  const {
-    data: topics,
-    isLoading,
-    isError,
-    error,
-  } = useQuery(["topics"], fetchAllTopics);
+  const { topics, isLoading, isError, error } = useTopics();
 
   const { isLoggedIn } = useAuthStore();
 
