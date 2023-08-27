@@ -32,7 +32,7 @@ const UserMenu: FunctionComponent<UserMenuProps> = () => {
       <MenuList>
         <MenuGroup title="Your Stuff"></MenuGroup>
         <MenuDivider />
-        <MenuItem as={Link} to={`/user/${user?.userId}`}>
+        <MenuItem as={Link} to={`/profile/${user?.userId}`}>
           {user?.username}'s Profile
         </MenuItem>
         <LogoutButton />
