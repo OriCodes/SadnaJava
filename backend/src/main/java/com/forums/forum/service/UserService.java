@@ -1,6 +1,7 @@
 package com.forums.forum.service;
 
 import com.forums.forum.dto.UserProfile;
+import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.Post;
@@ -70,9 +71,10 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender) throws UserNameAlreadyExistException {
+    public User updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender)
+            throws UserNameAlreadyExistException, ResourceNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         if (userName != null && userName.length() > 0 && !Objects.equals(userName, user.getUsername())) {
             if (userRepository.existsByUserName(userName)) {
@@ -95,9 +97,9 @@ public class UserService {
         return user;
     }
 
-    public UserProfile getUserProfile(Long userId, int page) {
+    public UserProfile getUserProfile(Long userId, int page) throws ResourceNotFoundException {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User with id " + userId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         UserProfile userProfile = new UserProfile();
 

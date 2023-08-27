@@ -3,6 +3,7 @@ package com.forums.forum.service;
 import com.forums.forum.exception.UserNameAlreadyExistException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
+import com.forums.forum.repo.PostRepository;
 import com.forums.forum.repo.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -27,13 +28,15 @@ import static org.mockito.Mockito.*;
 class UserServiceTest {
     @Mock
     private UserRepository userRepository;
+    @Mock
+    private PostRepository postRepository;
 
     private UserService userService;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        userService = new UserService(userRepository);
+        userService = new UserService(userRepository,postRepository);
     }
 
 

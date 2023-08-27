@@ -124,9 +124,9 @@ public class DeleteService {
 
     }
     @Transactional
-    public void deleteTopic(Long topicId){
+    public void deleteTopic(Long topicId) throws ResourceNotFoundException{
        Topic topic = topicRepository.findById(topicId)
-                .orElseThrow(() -> new IllegalArgumentException("Topic with id " + topicId + " not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Topic with id " + topicId + " not found"));
 
        for (Post post : postRepository.findAllByTopic(topic)){
            deletePost(post);

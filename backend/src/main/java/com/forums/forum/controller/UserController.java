@@ -46,7 +46,7 @@ public class UserController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam(required = false) String profileUrl,
             @RequestParam(required = false) Gender gender
-    ) throws UserNameAlreadyExistException {
+    ) throws UserNameAlreadyExistException, ResourceNotFoundException {
         return userService.updateUser(userId, userName, dob, profileUrl, gender);
     }
 
@@ -78,7 +78,7 @@ public class UserController {
 
     @GetMapping(path = "/getUserProfile/{userId}")
     public @ResponseBody UserProfile getUserProfile(@PathVariable("userId") Long userId,
-                                                    @RequestParam(defaultValue = "0") Integer page) {
+                                                    @RequestParam(defaultValue = "0") Integer page) throws ResourceNotFoundException {
         return userService.getUserProfile(userId, page);
     }
 }
