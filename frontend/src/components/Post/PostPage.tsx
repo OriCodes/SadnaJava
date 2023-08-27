@@ -53,7 +53,16 @@ const PostPage: React.FC = () => {
           </Text>
         </Flex>
         <Flex mt="2" align="center">
-          <Avatar name={post.user.username} src={post.user.profileUrl} />
+          <Avatar
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              navigate(`/profile/${post.user.userId}`);
+            }}
+            cursor={"pointer"}
+            name={post.user.username}
+            src={post.user.profileUrl}
+          />
           <Text ml="2" fontSize="md" fontWeight="semibold">
             {post.user.username}
           </Text>
