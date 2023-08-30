@@ -7,7 +7,7 @@ interface Post {
   postId: number;
   title: string;
   text: string;
-  createdTimeStamp: string;
+  createdTimeStamp: number;
   user: User;
   topic: Topic;
   comments: Comment[];

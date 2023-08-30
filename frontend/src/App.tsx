@@ -7,6 +7,7 @@ import { useEffect } from "react";
 import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import { axiosInstance } from "./api";
 import LoginPage from "./components/LoginPage";
+import MessagesPage from "./components/Messaging/MessagesPage";
 import CreatePostPage from "./components/Post/CreatePostPage";
 import PostPage from "./components/Post/PostPage";
 import UserProfile from "./components/Profile/UserProfile";
@@ -45,8 +46,12 @@ const router = createBrowserRouter([
         element: <UserProfile />,
       },
       {
-        path: "create-post",
+        path: "/create-post",
         element: <CreatePostPage />,
+      },
+      {
+        path: "/messages",
+        element: <MessagesPage />,
       },
     ],
   },

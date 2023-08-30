@@ -1,8 +1,8 @@
 import Post from "./post";
-import User from "./user";
+import { UserWithStats } from "./user";
 
 interface UserProfile {
-  user: User;
+  user: UserWithStats;
   pagePosts: Post[];
   page: number;
 }

@@ -3,6 +3,7 @@ import { Box, Button, Flex, Heading } from "@chakra-ui/react";
 import { FunctionComponent } from "react";
 import { Link, Outlet } from "react-router-dom";
 import UserMenu from "./Profile/UserMenu";
+import Sidebar from "./Sidebar";
 
 interface PageLayoutProps {}
 
@@ -10,7 +11,7 @@ const PageLayout: FunctionComponent<PageLayoutProps> = () => {
   const { isLoggedIn } = useAuthStore();
 
   return (
-    <Box p={4}>
+    <Box>
       <Flex p={2} justifyContent="space-between" alignItems="center">
         <Link to="/">
           <Heading as="h1" size="lg">
@@ -39,9 +40,12 @@ const PageLayout: FunctionComponent<PageLayoutProps> = () => {
           )}
         </Flex>
       </Flex>
-      <Box>
-        <Outlet />
-      </Box>
+      <Flex>
+        <Sidebar />
+        <Box w="100%">
+          <Outlet />
+        </Box>
+      </Flex>
     </Box>
   );
 };

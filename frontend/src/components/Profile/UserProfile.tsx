@@ -60,6 +60,15 @@ const UserProfile: FunctionComponent = () => {
                 )}
               </Tooltip>
             </Flex>
+
+            <Flex>
+              <Text fontSize="md" fontWeight="light">
+                {user.followedCount} Following
+              </Text>
+              <Text fontSize="md" fontWeight="light" ml="4">
+                {user.followerCount} Followers
+              </Text>
+            </Flex>
           </Heading>
         </Flex>
       </Box>

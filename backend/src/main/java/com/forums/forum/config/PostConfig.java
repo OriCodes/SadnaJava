@@ -15,16 +15,24 @@ public class PostConfig {
 
 
     @Bean
-    CommandLineRunner postCommandLineRunner(TopicRepository topicRepository, UserRepository userRepository, PostRepository postRepository, PostLikeRepository postLikeRepository, CommentRepository commentRepository) {
+    CommandLineRunner postCommandLineRunner(TopicRepository topicRepository, UserRepository userRepository, PostRepository postRepository, PostLikeRepository postLikeRepository, CommentRepository commentRepository, MessageRepository messageRepository) {
         return args -> {
 
             LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
             LocalDate dob2 = LocalDate.of(2013, Month.DECEMBER, 14);
+            LocalDate dob3 = LocalDate.of(2015, Month.DECEMBER, 14);
+
             User user1 = new User("Amit", dob1, "https://api.dicebear.com/6.x/open-peeps/svg?seed=Amit", Gender.MALE, "$2a$10$/YcE1Ahw4tnUUr/zYofhoeq2sSt.9dh816p.SwWadCE66nCTBhLTK");
             User user2 = new User("Venus", dob2, "https://api.dicebear.com/6.x/open-peeps/svg?seed=Venus", Gender.FEMALE, "$2a$10$/YcE1Ahw4tnUUr/zYofhoeq2sSt.9dh816p.SwWadCE66nCTBhLTK");
+            User user3 = new User("David", dob3, "https://api.dicebear.com/6.x/open-peeps/svg?seed=David", Gender.MALE, "$2a$10$/YcE1Ahw4tnUUr/zYofhoeq2sSt.9dh816p.SwWadCE66nCTBhLTK");
+            User user4 = new User("Bob", dob1, "https://api.dicebear.com/6.x/open-peeps/svg?seed=Bob", Gender.MALE, "$2a$10$/YcE1Ahw4tnUUr/zYofhoeq2sSt.9dh816p.SwWadCE66nCTBhLTK");
+
+
             user1.setRole(Role.USER);
             user2.setRole(Role.USER);
-            userRepository.saveAll(List.of(user1, user2));
+            user3.setRole(Role.USER);
+            user4.setRole(Role.USER);
+            userRepository.saveAll(List.of(user1, user2, user3, user4));
 
 
             Topic topic1 = new Topic("Football", "/assets/images/football.jpg");
@@ -62,6 +70,12 @@ public class PostConfig {
             Comment comment4 = new Comment("I'm a big fan of retro games too! My favorite is Super Mario Bros.", user2, post6);
 
             commentRepository.saveAll(List.of(comment1, comment2, comment3, comment4));
+
+            Message message1 = new Message("Hello, how are you?", user1, user2);
+            Message message2 = new Message("I'm doing well, thanks for asking!", user2, user1);
+            Message message3 = new Message("I'm looking forward to the upcoming match!", user1, user2);
+
+            messageRepository.saveAll(List.of(message1, message2, message3));
 
         };
     }

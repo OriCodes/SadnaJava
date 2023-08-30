@@ -13,4 +13,9 @@ interface User {
   auth0Id: string;
 }
 
+export interface UserWithStats extends User {
+  followedCount: number;
+  followerCount: number;
+}
+
 export default User;

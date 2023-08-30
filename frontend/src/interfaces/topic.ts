@@ -1,7 +1,7 @@
 interface Topic {
   topicId: number;
   topicName: string;
-  createdTimeStamp: Date;
+  createdTimeStamp: number;
   thumbnailUrl: string;
 }
 
