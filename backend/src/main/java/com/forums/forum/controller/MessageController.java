@@ -20,7 +20,7 @@ public class MessageController {
     private final MessageService messageService;
 
     @PostMapping(path = "/sendMessage")
-    public @ResponseBody Message sendMessage(@AuthenticationPrincipal User sender, Long receiverId, NewMessageBody messageBody) throws ResourceNotFoundException {
+    public @ResponseBody Message sendMessage(@AuthenticationPrincipal User sender, Long receiverId, @RequestBody NewMessageBody messageBody) throws ResourceNotFoundException {
         Long senderId = sender.getUserId();
         return messageService.addMessage(senderId, receiverId, messageBody.getMessage());
     }
