@@ -3,7 +3,7 @@ package com.forums.forum.service;
 import com.forums.forum.dto.UserProfile;
 import com.forums.forum.dto.UserWithStats;
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+import com.forums.forum.exception.IllegalUserNameException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.Post;
 import com.forums.forum.model.Role;
@@ -30,9 +30,9 @@ public class UserService {
     private final ModelMapper modelMapper;
     private final FollowService followService;
 
-    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws UserNameAlreadyExistException {
+    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws IllegalUserNameException {
         if (userRepository.existsByUsername(userName)) {
-            throw new UserNameAlreadyExistException();
+            throw new IllegalUserNameException("User name already exist");
         }
         User newUser = new User(userName, dob, profileUrl, gender, password);
         newUser.setRole(Role.USER);
@@ -76,13 +76,13 @@ public class UserService {
 
     @Transactional
     public User updateUser(Long userId, String userName, LocalDate dob, String profileUrl, Gender gender)
-            throws UserNameAlreadyExistException, ResourceNotFoundException {
+            throws IllegalUserNameException, ResourceNotFoundException {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User with id " + userId + " not found"));
 
         if (userName != null && userName.length() > 0 && !Objects.equals(userName, user.getUsername())) {
             if (userRepository.existsByUsername(userName)) {
-                throw new UserNameAlreadyExistException();
+                throw new IllegalUserNameException("User name already exist");
             }
             user.setUsername(userName);
         }

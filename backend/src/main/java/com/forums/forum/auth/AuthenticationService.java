@@ -1,7 +1,7 @@
 package com.forums.forum.auth;
 
 import com.forums.forum.config.JwtService;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+import com.forums.forum.exception.IllegalUserNameException;
 import com.forums.forum.model.Role;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.UserRepository;
@@ -20,11 +20,15 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) throws UserNameAlreadyExistException {
+    public AuthenticationResponse register(RegisterRequest request) throws IllegalUserNameException {
 
-        if (userRepository.existsByUsername(request.getUserName())) {
-            throw new UserNameAlreadyExistException();
+        if(request.getUserName().isEmpty()){
+            throw new IllegalUserNameException("User name can't be empty");
         }
+        if (userRepository.existsByUsername(request.getUserName())) {
+            throw new IllegalUserNameException("User name already exist");
+        }
+
         var user = User.builder()
                .username(request.getUserName())
                .dob(request.getDob())

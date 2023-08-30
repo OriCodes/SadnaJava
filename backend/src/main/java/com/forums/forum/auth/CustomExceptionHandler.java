@@ -3,7 +3,7 @@ package com.forums.forum.auth;
 import com.forums.forum.exception.ResourceNotFoundException;
 import com.forums.forum.exception.TopicAlreadyExistException;
 import com.forums.forum.exception.UserActionNotAllowedException;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+import com.forums.forum.exception.IllegalUserNameException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(UserNameAlreadyExistException.class)
+    @ExceptionHandler(IllegalUserNameException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public void handleUserNameAlreadyExistException() {}
 

@@ -2,7 +2,7 @@ package com.forums.forum.controller;
 
 import com.forums.forum.dto.UserProfile;
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+import com.forums.forum.exception.IllegalUserNameException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
 import com.forums.forum.service.DeleteService;
@@ -35,7 +35,7 @@ public class UserController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam String profileUrl,
             @RequestParam Gender gender,
-            @RequestParam String password) throws UserNameAlreadyExistException {
+            @RequestParam String password) throws IllegalUserNameException {
         return userService.registerUser(userName, dob, profileUrl, gender, password);
     }
 
@@ -46,7 +46,7 @@ public class UserController {
             @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
             @RequestParam(required = false) String profileUrl,
             @RequestParam(required = false) Gender gender
-    ) throws UserNameAlreadyExistException, ResourceNotFoundException {
+    ) throws IllegalUserNameException, ResourceNotFoundException {
         return userService.updateUser(userId, userName, dob, profileUrl, gender);
     }
 

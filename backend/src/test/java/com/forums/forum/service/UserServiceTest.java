@@ -1,7 +1,7 @@
 package com.forums.forum.service;
 
 import com.forums.forum.exception.ResourceNotFoundException;
-import com.forums.forum.exception.UserNameAlreadyExistException;
+import com.forums.forum.exception.IllegalUserNameException;
 import com.forums.forum.model.Gender;
 import com.forums.forum.model.User;
 import com.forums.forum.repo.PostRepository;
@@ -65,7 +65,7 @@ class UserServiceTest {
             //then
             verify(userRepository, times(1)).save(any(User.class));
             assertThat(newUser).isEqualTo(savedUser);
-        } catch (UserNameAlreadyExistException e) { // this should never happen
+        } catch (IllegalUserNameException e) { // this should never happen
             System.out.println(e.getStackTrace());
         }
     }
@@ -82,7 +82,7 @@ class UserServiceTest {
 
         //then
         assertThatThrownBy(()-> userService.registerUser(userName,dob,profileUrl,gender,auth0Id)).
-                isInstanceOf(UserNameAlreadyExistException.class);
+                isInstanceOf(IllegalUserNameException.class);
         verify(userRepository, never()).save(any());
     }
 
@@ -144,7 +144,7 @@ class UserServiceTest {
 
         //then
         assertThatThrownBy(() -> userService.updateUser(userId, userName, dob, profileUrl, gender))
-                .isInstanceOf(UserNameAlreadyExistException.class);
+                .isInstanceOf(IllegalUserNameException.class);
 
     }
 
