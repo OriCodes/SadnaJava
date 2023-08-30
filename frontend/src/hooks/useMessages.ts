@@ -11,12 +11,11 @@ import { Message } from "@/interfaces/message";
 import User from "@/interfaces/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-export function useSendMessage() {
+export function useSendMessage(message: string, receiverId: number) {
   const queryClient = useQueryClient();
   return useMutation(
-    ["sendMessage", { message: "", receiverId: 0 }],
-    ({ message, receiverId }: { message: string; receiverId: number }) =>
-      sendApiMessage(message, receiverId),
+    ["sendMessage", { message, receiverId }],
+    () => sendApiMessage(message, receiverId),
     {
       onSuccess: (newMessage: Message) => {
         queryClient.invalidateQueries([

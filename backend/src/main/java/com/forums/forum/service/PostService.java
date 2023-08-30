@@ -13,6 +13,7 @@ import com.forums.forum.repo.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -127,6 +128,14 @@ public class PostService {
         }
 
         return result;
+    }
+
+    public void deleteOldPosts() {
+        Timestamp nowBeforeAWeek = new Timestamp(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+        postRepository.findAllByCreatedTimeStampBefore(nowBeforeAWeek).forEach(post -> {
+            postLikeRepository.deleteAllByPost(post);
+            postRepository.delete(post);
+        });
     }
 
 }

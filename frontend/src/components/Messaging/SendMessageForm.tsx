@@ -8,12 +8,11 @@ interface SendMessageFormProps {
 
 const SendMessageForm: React.FC<SendMessageFormProps> = ({ receiverId }) => {
   const [message, setMessage] = useState("");
-  const { mutate, isLoading } = useSendMessage();
+  const { mutate, isLoading } = useSendMessage(message, receiverId);
 
   const handleSendMessage = async () => {
     if (message.trim()) {
-      await mutate({ message, receiverId });
-      setMessage("");
+      await mutate();
     }
   };
 

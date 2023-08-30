@@ -1,7 +1,9 @@
+import { useFollow, useFollowers, useFollowing } from "@/hooks/useFollowing";
 import { useUserProfile } from "@/hooks/useUser";
 import {
   Avatar,
   Box,
+  Button,
   Container,
   Flex,
   Heading,
@@ -23,6 +25,11 @@ const UserProfile: FunctionComponent = () => {
   const userId = toNumber(paramUserId);
 
   const { userProfile, error, isError, isLoading } = useUserProfile(userId);
+
+  const { follow, unfollow, isFollowing } = useFollow(userId);
+
+  const { followers } = useFollowers(userId);
+  const { following } = useFollowing(userId);
 
   if (isLoading || !userProfile) {
     return <Loader />;
@@ -63,12 +70,21 @@ const UserProfile: FunctionComponent = () => {
 
             <Flex>
               <Text fontSize="md" fontWeight="light">
-                {user.followedCount} Following
+                {followers?.length ?? "..."} Following
               </Text>
               <Text fontSize="md" fontWeight="light" ml="4">
-                {user.followerCount} Followers
+                {following?.length ?? "..."} Followers
               </Text>
             </Flex>
+            {isFollowing ? (
+              <Button onClick={() => unfollow()} colorScheme="teal" mt="4">
+                Unfollow
+              </Button>
+            ) : (
+              <Button onClick={() => follow()} colorScheme="teal" mt="4">
+                Follow
+              </Button>
+            )}
           </Heading>
         </Flex>
       </Box>

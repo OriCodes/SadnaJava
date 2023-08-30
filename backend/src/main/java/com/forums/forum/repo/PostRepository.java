@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.PagingAndSortingRepository;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 @Repository
@@ -36,5 +37,7 @@ public interface PostRepository extends PagingAndSortingRepository<Post, Long>, 
     List<Post> findAllByTopic(Topic topic);
 
     List<Post> findAllByTopicAndUser(Topic topic, User user);
+
+    List<Post> findAllByCreatedTimeStampBefore(Timestamp timestamp);
 
 }

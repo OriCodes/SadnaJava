@@ -1,25 +1,26 @@
+import Follow from "@/interfaces/follow";
 import { routedApi } from ".";
 
 const api = routedApi("follows");
 
 export function followUser(userId: number) {
-  return api(`followUser?followedId=${userId}`, {
+  return api<Follow>(`follow?followedId=${userId}`, {
     method: "POST",
   });
 }
 
 export function unfollowUser(userId: number) {
-  return api(`unfollowUser?followedId=${userId}`, {
+  return api<void>(`unfollow?followedId=${userId}`, {
     method: "DELETE",
   });
 }
 
 export function getFollowers(userId: number) {
-  return api(`followers/${userId}`);
+  return api<Follow[]>(`followers/${userId}`);
 }
 
 export function getFollowings(userId: number) {
-  return api(`following/${userId}`);
+  return api<Follow[]>(`following/${userId}`);
 }
 
 export function isFollowing(userId: number) {
