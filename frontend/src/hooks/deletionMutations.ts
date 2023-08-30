@@ -14,7 +14,7 @@ export const useDeleteComment = (commentId: number, postId: number) => {
       queryClient.invalidateQueries(["post", postId]);
 
       toast({
-        title: "Post deleted",
+        title: "Comment deleted",
         status: "success",
         duration: 3000,
         isClosable: true,

@@ -14,8 +14,9 @@ import {
 } from "@chakra-ui/react";
 import { toNumber } from "lodash";
 import React from "react";
-import { AiFillDelete, AiOutlineComment } from "react-icons/ai";
+import { AiOutlineComment } from "react-icons/ai";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import DeleteDialog from "../DeleteDialog";
 import Error from "../Error";
 import Loader from "../Loader";
 import CommentBox from "./Comment/CommentBox";
@@ -92,21 +93,13 @@ const PostPage: React.FC = () => {
         <Flex mt="4" align="center" justify="space-between">
           <Flex align="center">
             <PostLike post={post} />
-            {user?.userId === post.user.userId && (
-              <Flex align="center">
-                <Tooltip label="Delete Post" placement="top">
-                  <IconButton
-                    color="red.400"
-                    onClick={() => {
-                      deletePostMutation.mutate();
-                    }}
-                    isLoading={deletePostMutation.isLoading}
-                    icon={<AiFillDelete />}
-                    aria-label="Comment"
-                    variant="ghost"
-                  />
-                </Tooltip>
-              </Flex>
+            {user?.userId == post.user.userId && (
+              <DeleteDialog
+                name={"Post"}
+                doAction={() => {
+                  deletePostMutation.mutate();
+                }}
+              />
             )}
           </Flex>
 

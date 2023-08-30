@@ -11,7 +11,7 @@ import {
   Select,
   Textarea,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toNumber } from "lodash";
 import React, { FunctionComponent, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -29,11 +29,14 @@ const CreatePostPage: FunctionComponent<CreatePostPageProps> = () => {
   const [selectedTopic, setSelectedTopic] = useState(1);
   const navigate = useNavigate();
 
+  const queryClient = useQueryClient();
+
   const createPostMutation = useMutation(
     ["createPost", { title, content, selectedTopic }],
     () => addPost(selectedTopic, title, content),
     {
       onSuccess: (newPost: Post) => {
+        queryClient.invalidateQueries(["posts"]);
         navigate(`/posts/${newPost.postId}`);
       },
     }
