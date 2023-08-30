@@ -46,7 +46,13 @@ const PostCard: React.FC<PostCardProps> = ({ post }) => {
           {shortenedText}
         </Text>
         <Flex mt="4" align="center" justify="space-between">
-          <Badge colorScheme="teal">{post.topic.topicName}</Badge>
+          <Badge
+            as={Link}
+            to={`/topics/${post.topic.topicId}`}
+            colorScheme="teal"
+          >
+            {post.topic.topicName}
+          </Badge>
           <PostTimestamp post={post} />
         </Flex>
         <PostLikes post={post} />

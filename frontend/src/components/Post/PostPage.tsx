@@ -1,4 +1,6 @@
+import { useDeletePost } from "@/hooks/deletionMutations";
 import usePost from "@/hooks/usePost";
+import { useCurrentUser } from "@/hooks/useUser";
 import { ArrowBackIcon } from "@chakra-ui/icons";
 import {
   Avatar,
@@ -12,8 +14,8 @@ import {
 } from "@chakra-ui/react";
 import { toNumber } from "lodash";
 import React from "react";
-import { AiOutlineComment } from "react-icons/ai";
-import { useNavigate, useParams } from "react-router-dom";
+import { AiFillDelete, AiOutlineComment } from "react-icons/ai";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import Error from "../Error";
 import Loader from "../Loader";
 import CommentBox from "./Comment/CommentBox";
@@ -22,9 +24,15 @@ import PostLikes from "./PostLikes";
 import PostTimestamp from "./PostTimestamp";
 
 const PostPage: React.FC = () => {
-  const { postId } = useParams<{ postId: string }>();
+  const { postId: postIdParam } = useParams<{ postId: string }>();
 
-  const { post, isLoading, isError, error } = usePost(toNumber(postId));
+  const postId = toNumber(postIdParam);
+
+  const { user } = useCurrentUser();
+
+  const deletePostMutation = useDeletePost(postId);
+
+  const { post, isLoading, isError, error } = usePost(postId);
 
   const navigate = useNavigate();
 
@@ -71,14 +79,38 @@ const PostPage: React.FC = () => {
           {post.text}
         </Text>
         <Flex mt="4" align="center" justify="space-between">
-          <Badge colorScheme="teal">{post.topic.topicName}</Badge>
+          <Badge
+            as={Link}
+            to={`/topics/${post.topic.topicId}`}
+            colorScheme="teal"
+          >
+            {post.topic.topicName}
+          </Badge>
           <PostTimestamp post={post} />
         </Flex>
         <PostLikes post={post} />
         <Flex mt="4" align="center" justify="space-between">
           <Flex align="center">
             <PostLike post={post} />
+            {user?.userId === post.user.userId && (
+              <Flex align="center">
+                <Tooltip label="Delete Post" placement="top">
+                  <IconButton
+                    color="red.400"
+                    onClick={() => {
+                      deletePostMutation.mutate();
+                    }}
+                    isLoading={deletePostMutation.isLoading}
+                    icon={<AiFillDelete />}
+                    aria-label="Comment"
+                    variant="ghost"
+                  />
+                </Tooltip>
+              </Flex>
+            )}
           </Flex>
+
+          <Flex align="center"></Flex>
           <Flex align="center">
             <Tooltip label="Comment" placement="top">
               <IconButton

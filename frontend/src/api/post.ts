@@ -6,16 +6,9 @@ const BASE_URL = "posts"; // Adjust the URL path as needed
 
 const api = routedApi(BASE_URL);
 
-export async function deletePost(
-  postId: number,
-  userId: number
-): Promise<void> {
-  await api<void>("deletePost", {
+export async function deletePost(postId: number): Promise<void> {
+  await api<void>(`deletePost?postId=${postId}`, {
     method: "DELETE",
-    data: { postId, userId },
-    headers: {
-      "Content-Type": "application/json",
-    },
   });
 }
 

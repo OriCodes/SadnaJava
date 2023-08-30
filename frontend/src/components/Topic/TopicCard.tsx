@@ -11,7 +11,7 @@ const TopicCard: React.FC<TopicCardProps> = ({ topic }) => {
   const { topicName, createdTimeStamp, thumbnailUrl, topicId } = topic;
 
   return (
-    <Link to={`/topic/${topicId}`}>
+    <Link to={`/topics/${topicId}`}>
       <Box
         borderWidth="1px"
         borderRadius="lg"

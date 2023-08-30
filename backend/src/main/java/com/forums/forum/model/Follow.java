@@ -28,11 +28,11 @@ public class Follow {
     @Column(name = "follow_id")
     private Long followId;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "follower_id")
     private User follower;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @ManyToOne
     @JoinColumn(name = "followed_id")
     private User followed;
     @Column(name = "follow_date")

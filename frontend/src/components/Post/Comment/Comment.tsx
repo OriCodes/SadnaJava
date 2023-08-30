@@ -1,7 +1,10 @@
+import { useDeleteComment } from "@/hooks/deletionMutations";
+import { useCurrentUser } from "@/hooks/useUser";
 import Comment from "@/interfaces/comment";
-import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
+import { Avatar, Box, Flex, IconButton, Text, Tooltip } from "@chakra-ui/react";
 import { formatDistanceToNow } from "date-fns"; // Import date-fns function
 import { FunctionComponent } from "react";
+import { AiFillDelete } from "react-icons/ai";
 import CommentLike from "./CommentLike";
 
 interface CommentProps {
@@ -16,6 +19,12 @@ const Comment: FunctionComponent<CommentProps> = ({ comment, postId }) => {
       addSuffix: true,
     }
   );
+
+  const { user } = useCurrentUser();
+
+  const deleteCommentMutation = useDeleteComment(comment.commentId, postId);
+
+  const isUserThePoster = user?.userId === comment.user.userId;
 
   return (
     <Box p="4" borderWidth="1px" borderRadius="md" boxShadow="md">
@@ -32,6 +41,20 @@ const Comment: FunctionComponent<CommentProps> = ({ comment, postId }) => {
         </Box>
         <Flex mt="4" align="center" justify="space-between">
           <CommentLike comment={comment} postId={postId} />
+
+          {isUserThePoster && (
+            <Tooltip title="Delete Comment">
+              <IconButton
+                color="red"
+                variant="ghost"
+                aria-label="Delete Comment"
+                icon={<AiFillDelete />}
+                onClick={() => {
+                  deleteCommentMutation.mutate();
+                }}
+              />
+            </Tooltip>
+          )}
         </Flex>
       </Flex>
     </Box>

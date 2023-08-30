@@ -34,7 +34,7 @@ const router = createBrowserRouter([
         element: <RegisterForm />,
       },
       {
-        path: "/topic/:topicId",
+        path: "/topics/:topicId",
         element: <TopicPosts />,
       },
       {
