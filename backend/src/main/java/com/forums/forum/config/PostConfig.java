@@ -15,7 +15,7 @@ public class PostConfig {
 
 
     @Bean
-    CommandLineRunner postCommandLineRunner(TopicRepository topicRepository, UserRepository userRepository, PostRepository postRepository, PostLikeRepository postLikeRepository, CommentRepository commentRepository, MessageRepository messageRepository) {
+    CommandLineRunner postCommandLineRunner(TopicRepository topicRepository, UserRepository userRepository, PostRepository postRepository, PostLikeRepository postLikeRepository, CommentRepository commentRepository, MessageRepository messageRepository, FollowRepository followRepository) {
         return args -> {
 
             LocalDate dob1 = LocalDate.of(2003, Month.DECEMBER, 14);
@@ -37,8 +37,9 @@ public class PostConfig {
 
             Topic topic1 = new Topic("Football", "/assets/images/football.jpg");
             Topic topic2 = new Topic("Gaming", "/assets/images/gaming.jpg");
+            Topic topic3 = new Topic("Coding", "/assets/images/coding.jpg");
 
-            topicRepository.saveAll(List.of(topic1, topic2));
+            topicRepository.saveAll(List.of(topic1, topic2, topic3));
 
 
             Post post1 = new Post("Exciting Football Match Last Night!", "Hey everyone, did you catch the thrilling football match last night? The game went into overtime, and the final score was 3-2. The winning goal in the last minute had everyone on the edge of their seats. What were your favorite moments from the game?", user1, topic1);
@@ -54,7 +55,11 @@ public class PostConfig {
 
             Post post7 = new Post("Upcoming Football Transfers", "Hey folks, transfer season is here! Any reliable sources or rumors about potential football transfers? Let's discuss the potential impact of these transfers on the teams and the league as a whole. Speculations, predictions, and insights are all welcome!", user1, topic1);
 
-            postRepository.saveAll(List.of(post1, post2, post3, post4, post5, post6, post7));
+            Post post8 = new Post("Best Programming Languages for Beginners", "Hello fellow coders, I'm new to programming and I'm looking for recommendations on which programming language to learn first. I'm interested in web development and mobile app development. Any suggestions on which programming languages I should start with?", user3, topic3);
+
+            Post post9 = new Post("What's your favorite github repo?", "Mine is Talksphere obviously, but I'm curious to know what other people's favorite github repos are. I'm looking for some inspiration for my next project. Share your favorite github repos and why you like them!", user4, topic3);
+
+            postRepository.saveAll(List.of(post1, post2, post3, post4, post5, post6, post7, post8, post9));
 
             PostLike postLike1 = new PostLike(user1, post1);
             PostLike postLike2 = new PostLike(user2, post1);
@@ -77,6 +82,12 @@ public class PostConfig {
 
             messageRepository.saveAll(List.of(message1, message2, message3));
 
+            Follow follow1 = new Follow(user1, user2);
+            Follow follow2 = new Follow(user1, user3);
+            Follow follow3 = new Follow(user2, user1);
+            Follow follow4 = new Follow(user4, user3);
+
+            followRepository.saveAll(List.of(follow1, follow2, follow3, follow4));
         };
     }
 }
