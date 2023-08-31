@@ -2,6 +2,7 @@ import { useConversation } from "@/hooks/useMessages";
 import User from "@/interfaces/user";
 import { Text, VStack } from "@chakra-ui/react";
 import React from "react";
+import { Link } from "react-router-dom";
 import Message from "./Message";
 
 interface ConversationProps {
@@ -13,7 +14,9 @@ const Conversation: React.FC<ConversationProps> = ({ user }) => {
 
   return (
     <VStack p="4" align="flex-start" spacing="2" w="full">
-      <Text fontWeight="bold">{user.username}</Text>
+      <Text as={Link} to={`/profile/${user.userId}`} fontWeight="bold">
+        {user.username}
+      </Text>
       {messages?.map((message) => (
         <Message message={message} />
       ))}

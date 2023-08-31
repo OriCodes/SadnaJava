@@ -13,6 +13,7 @@ const SendMessageForm: React.FC<SendMessageFormProps> = ({ receiverId }) => {
   const handleSendMessage = async () => {
     if (message.trim()) {
       await mutate();
+      setMessage("");
     }
   };
 

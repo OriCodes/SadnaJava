@@ -20,7 +20,6 @@ const Message: FunctionComponent<MessageProps> = ({ message }) => {
       bg={isUserSender ? "teal.100" : "gray.200"}
       borderRadius="md"
       alignSelf={isUserSender ? "flex-end" : "flex-start"}
-      maxW="70%"
     >
       <Avatar size="xs" mr="2" src={message.sender.profileUrl} />
       {message.content}
