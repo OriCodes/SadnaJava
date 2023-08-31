@@ -40,34 +40,4 @@ public class CommentController {
         return commentService.likeComment(user.getUserId(), commentId);
     }
 }
-//
-//    @GetMapping(path = "/commentsForPost")
-//    public @ResponseBody List<Comment> commentsForPost(Long postId) throws ResourceNotFoundException {
-//        return commentService.getAllCommentsForPost(postId);
-//    }
-//
-//    @GetMapping(path = "/commentsByUser")
-//    public @ResponseBody List<Comment> commentsByUser(Long userId) throws ResourceNotFoundException {
-//        return commentService.getAllCommentsByUser(userId);
-//    }
-//
-//    @GetMapping(path = "/postCommentCounter")
-//    public @ResponseBody int postCommentCounter(Long postId) throws ResourceNotFoundException {
-//        return commentService.getNumberOfCommentsForPost(postId);
-//    }
-//
-//    @GetMapping(path = "/userCommentCounter")
-//    public @ResponseBody int userCommentCounter(Long userId) throws ResourceNotFoundException {
-//        return commentService.getNumberOfCommentsByUser(userId);
-//    }
-//
-//    @GetMapping(path = "/commentLikeCounter")
-//    public @ResponseBody int commentLikeCounter(Long commentId) throws ResourceNotFoundException {
-//        return commentService.getNumberOfLikes(commentId);
-//    }
-//
-//    @GetMapping(path = "/hasLikedComment")
-//    public @ResponseBody boolean hasLikedComment(Long userId, Long commentId) throws ResourceNotFoundException {
-//        return commentService.hasLiked(userId, commentId);
-//    }
-//}
+
