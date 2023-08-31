@@ -20,6 +20,7 @@ const Conversation: React.FC<ConversationProps> = ({ user }) => {
       {messages?.map((message) => (
         <Message message={message} />
       ))}
+      {messages?.length == 0 && <Text>No messages yet.</Text>}
     </VStack>
   );
 };
