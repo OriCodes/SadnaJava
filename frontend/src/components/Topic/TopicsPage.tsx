@@ -58,7 +58,7 @@ const TopicsPage: FunctionComponent<TopicPageProps> = () => {
           </Box>
         </Container>
       </Box>
-      {!isLoggedIn && <TopicList topics={topics} />}
+      {isLoggedIn && <TopicList topics={topics} />}
     </>
   );
 };
