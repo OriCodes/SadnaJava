@@ -3,9 +3,9 @@ import useAuthStore from "@/store/auth";
 import { Box, Container, Divider, Flex, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Conversation from "./Conversation"; // Assume you've created a Conversation component
-import SendMessageForm from "./SendMessageForm"; // Assume you've created a SendMessageForm component
-import UserList from "./UserList"; // Assume you've created a UserList component
+import Conversation from "./Conversation";
+import SendMessageForm from "./SendMessageForm";
+import UserList from "./UserList";
 
 const MessagesPage: React.FC = () => {
   const [selectedUser, setSelectedUser] = useState<User | null>(null);

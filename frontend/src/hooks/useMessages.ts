@@ -6,7 +6,7 @@ import {
   getUsersHavingConversations as getApiUsersHavingConversations,
   hasConversationBetween as hasApiConversationBetween,
   sendMessage as sendApiMessage,
-} from "@/api/message"; // Adjust the import paths as needed
+} from "@/api/message";
 import { Message } from "@/interfaces/message";
 import User from "@/interfaces/user";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

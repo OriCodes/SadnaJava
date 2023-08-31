@@ -3,7 +3,7 @@ import { useDeleteComment } from "@/hooks/deletionMutations";
 import { useCurrentUser } from "@/hooks/useUser";
 import Comment from "@/interfaces/comment";
 import { Avatar, Box, Flex, Text } from "@chakra-ui/react";
-import { formatDistanceToNow } from "date-fns"; // Import date-fns function
+import { formatDistanceToNow } from "date-fns";
 import { FunctionComponent } from "react";
 import CommentLike from "./CommentLike";
 

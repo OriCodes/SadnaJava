@@ -1,5 +1,5 @@
 import { addComment } from "@/api/comment";
-import Post from "@/interfaces/post"; // Adjust the import path as needed
+import Post from "@/interfaces/post";
 import { Box, Button, Stack, Text, Textarea } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { FunctionComponent, useState } from "react";

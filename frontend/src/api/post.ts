@@ -2,7 +2,7 @@ import Post from "@/interfaces/post";
 import PostLike from "@/interfaces/postLike";
 import { routedApi } from ".";
 
-const BASE_URL = "posts"; // Adjust the URL path as needed
+const BASE_URL = "posts";
 
 const api = routedApi(BASE_URL);
 
