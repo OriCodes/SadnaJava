@@ -66,8 +66,9 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User byId(Long id) {
-        return userRepository.findById(id).orElse(null);
+    public User byId(Long id) throws ResourceNotFoundException{
+        return userRepository.findById(id)
+                .orElseThrow(()-> new ResourceNotFoundException("User with id "+id+" not found"));
     }
 
     public User byUserName(String userName) {

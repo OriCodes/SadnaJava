@@ -57,7 +57,7 @@ public class UserController {
     }
 
     @GetMapping(path = "byId/{userId}")
-    public @ResponseBody User byId(@PathVariable("userId") Long userId) {
+    public @ResponseBody User byId(@PathVariable("userId") Long userId) throws ResourceNotFoundException {
         return userService.byId(userId);
     }
 
