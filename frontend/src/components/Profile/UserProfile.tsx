@@ -3,7 +3,6 @@ import { useUserProfile } from "@/hooks/useUser";
 import {
   Avatar,
   Box,
-  Button,
   Container,
   Flex,
   Heading,
@@ -16,6 +15,7 @@ import { FunctionComponent } from "react";
 import { BiFemale, BiMale } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import Error from "../Error";
+import FollowStats from "../FollowStats";
 import Loader from "../Loader";
 import PostList from "../Post/PostList";
 
@@ -68,23 +68,7 @@ const UserProfile: FunctionComponent = () => {
               </Tooltip>
             </Flex>
 
-            <Flex>
-              <Text fontSize="md" fontWeight="light">
-                {followers?.length ?? "..."} Followers
-              </Text>
-              <Text fontSize="md" fontWeight="light" ml="4">
-                {following?.length ?? "..."} Following
-              </Text>
-            </Flex>
-            {isFollowing ? (
-              <Button onClick={() => unfollow()} colorScheme="teal" mt="4">
-                Unfollow
-              </Button>
-            ) : (
-              <Button onClick={() => follow()} colorScheme="teal" mt="4">
-                Follow
-              </Button>
-            )}
+            <FollowStats userId={userId} />
           </Heading>
         </Flex>
       </Box>
