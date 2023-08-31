@@ -8,6 +8,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.Timestamp;
+
 @AllArgsConstructor
 @Service
 public class DeleteService {
@@ -132,6 +134,12 @@ public class DeleteService {
            deletePost(post);
        }
        topicRepository.delete(topic);
+    }
+
+
+    public void deleteOldPosts() {
+        Timestamp nowBeforeAWeek = new Timestamp(System.currentTimeMillis() - 7 * 24 * 60 * 60 * 1000);
+        postRepository.findAllByCreatedTimeStampBefore(nowBeforeAWeek).forEach(post -> {deletePost(post);});
     }
 
     private void deleteComment(Comment comment){
