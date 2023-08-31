@@ -16,9 +16,11 @@ export const useCurrentUser = () => {
   };
 };
 
-export const useUserProfile = (userId: number) => {
+export const useUserProfile = (userId: number, page: number = 0) => {
   const authStore = useAuthStore();
-  const query = useQuery(["userProfile", userId], () => getUserProfile(userId));
+  const query = useQuery(["userProfile", userId, page], () =>
+    getUserProfile(userId, page)
+  );
 
   return {
     ...query,

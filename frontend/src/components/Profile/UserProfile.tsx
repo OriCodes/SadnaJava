@@ -5,13 +5,14 @@ import {
   Container,
   Flex,
   Heading,
+  IconButton,
   Stack,
   Text,
   Tooltip,
 } from "@chakra-ui/react";
 import { capitalize, toNumber } from "lodash";
-import { FunctionComponent } from "react";
-import { BiFemale, BiMale } from "react-icons/bi";
+import { FunctionComponent, useState } from "react";
+import { BiFemale, BiLeftArrow, BiMale, BiRightArrow } from "react-icons/bi";
 import { useParams } from "react-router-dom";
 import Error from "../Error";
 import FollowStats from "../FollowStats";
@@ -23,7 +24,12 @@ const UserProfile: FunctionComponent = () => {
 
   const userId = toNumber(paramUserId);
 
-  const { userProfile, error, isError, isLoading } = useUserProfile(userId);
+  const [page, setPage] = useState(0);
+
+  const { userProfile, error, isError, isLoading } = useUserProfile(
+    userId,
+    page
+  );
 
   if (isLoading || !userProfile) {
     return <Loader />;
@@ -33,7 +39,7 @@ const UserProfile: FunctionComponent = () => {
     return <Error error={error} />;
   }
 
-  const { user, pagePosts, page } = userProfile;
+  const { user, pagePosts } = userProfile;
 
   const { gender } = user;
 
@@ -72,7 +78,22 @@ const UserProfile: FunctionComponent = () => {
           Posts by {user.username}
         </Heading>
         <PostList posts={pagePosts} />
-        <Text>{page} Page</Text>
+
+        <Flex justifyContent="center">
+          <IconButton
+            aria-label="Previous Page"
+            icon={<BiLeftArrow />}
+            onClick={() => setPage(Math.max(page - 1, 0))}
+          />
+          <Text fontSize="lg" m="2">
+            Page {page + 1}
+          </Text>
+          <IconButton
+            aria-label="Next Page"
+            icon={<BiRightArrow />}
+            onClick={() => setPage(page + 1)}
+          />
+        </Flex>
       </Stack>
     </Container>
   );
