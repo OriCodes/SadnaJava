@@ -7,10 +7,10 @@ enum Gender {
 interface User {
   userId: number;
   username: string;
-  dob: string;
+  dob: [number, number, number];
   profileUrl: string;
   gender: Gender;
-  auth0Id: string;
+  role: "USER" | "ADMIN";
 }
 
 export interface UserWithStats extends User {
