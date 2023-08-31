@@ -70,10 +70,10 @@ const UserProfile: FunctionComponent = () => {
 
             <Flex>
               <Text fontSize="md" fontWeight="light">
-                {followers?.length ?? "..."} Following
+                {followers?.length ?? "..."} Followers
               </Text>
               <Text fontSize="md" fontWeight="light" ml="4">
-                {following?.length ?? "..."} Followers
+                {following?.length ?? "..."} Following
               </Text>
             </Flex>
             {isFollowing ? (
