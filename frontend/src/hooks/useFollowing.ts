@@ -52,7 +52,7 @@ export const useFollow = (userId: number) => {
     () => unfollowUser(userId),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries(["followers", userId]);
+        queryClient.invalidateQueries(["followings", userId]);
         queryClient.setQueriesData(["isFollowing", userId], false);
       },
     }

@@ -1,4 +1,3 @@
-import { useFollow, useFollowers, useFollowing } from "@/hooks/useFollowing";
 import { useUserProfile } from "@/hooks/useUser";
 import {
   Avatar,
@@ -25,11 +24,6 @@ const UserProfile: FunctionComponent = () => {
   const userId = toNumber(paramUserId);
 
   const { userProfile, error, isError, isLoading } = useUserProfile(userId);
-
-  const { follow, unfollow, isFollowing } = useFollow(userId);
-
-  const { followers } = useFollowers(userId);
-  const { following } = useFollowing(userId);
 
   if (isLoading || !userProfile) {
     return <Loader />;

@@ -44,30 +44,29 @@ const UserList: React.FC<UserListProps> = ({ onSelectUser, selectedUser }) => {
           </ListItem>
         ))}
       </UnorderedList>
-      <UnorderedList listStyleType="none" p="4">
-        <Text fontSize="lg" fontWeight="bold">
-          Following
-        </Text>
-        {followingUsersNotHavingConversations?.map((user) => (
-          <ListItem
-            key={user.userId}
-            p="2"
-            cursor="pointer"
-            bg={
-              selectedUser?.userId === user.userId ? "gray.200" : "transparent"
-            }
-            onClick={() => onSelectUser(user)}
-          >
-            <Avatar size="xs" mr="2" src={user.profileUrl} />
-            {user.username}
-          </ListItem>
-        ))}
-        {followingUsersNotHavingConversations?.length === 0 && (
-          <Text fontSize="sm" color="gray.500">
-            You are not following anyone
+      {followingUsersNotHavingConversations?.length != 0 && (
+        <UnorderedList listStyleType="none" p="4">
+          <Text fontSize="lg" fontWeight="bold">
+            Following
           </Text>
-        )}
-      </UnorderedList>
+          {followingUsersNotHavingConversations?.map((user) => (
+            <ListItem
+              key={user.userId}
+              p="2"
+              cursor="pointer"
+              bg={
+                selectedUser?.userId === user.userId
+                  ? "gray.200"
+                  : "transparent"
+              }
+              onClick={() => onSelectUser(user)}
+            >
+              <Avatar size="xs" mr="2" src={user.profileUrl} />
+              {user.username}
+            </ListItem>
+          ))}
+        </UnorderedList>
+      )}
     </>
   );
 };
