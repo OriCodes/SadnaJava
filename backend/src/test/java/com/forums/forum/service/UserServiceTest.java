@@ -47,44 +47,6 @@ class UserServiceTest {
     }
 
 
-    @Test
-    public void addUserSuccess() {
-        //given
-        when(userRepository.existsByUsername(anyString())).thenReturn(false);
-        String userName = "poseidon";
-        LocalDate dob2 = LocalDate.of(1999, Month.APRIL,7);
-        String profileUrl = "Profile_URL";
-        Gender gender = Gender.MALE;
-        String email= "email.gmail.com";
-        User savedUser = new User(userName, dob2, profileUrl, gender, email);
-        when(userRepository.save(any(User.class))).thenReturn(savedUser);
-        //when
-
-        try {
-            User newUser = userService.registerUser(userName,dob2,profileUrl,gender,email);
-            //then
-            verify(userRepository, times(1)).save(any(User.class));
-            assertThat(newUser).isEqualTo(savedUser);
-        } catch (IllegalUserNameException e) { // this should never happen
-            System.out.println(e.getStackTrace());
-        }
-    }
-
-    @Test
-    public void addUserShouldThrow() {
-        //given
-        when(userRepository.existsByUsername(anyString())).thenReturn(true);
-        String userName = "poseidon";
-        LocalDate dob = LocalDate.of(1999, Month.APRIL,7);
-        String profileUrl = "Profile_URL";
-        Gender gender = Gender.MALE;
-        String auth0Id= "auth0Id";
-
-        //then
-        assertThatThrownBy(()-> userService.registerUser(userName,dob,profileUrl,gender,auth0Id)).
-                isInstanceOf(IllegalUserNameException.class);
-        verify(userRepository, never()).save(any());
-    }
 
     @Test
     public void allUsers(){

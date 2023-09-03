@@ -29,16 +29,6 @@ public class UserController {
         deleteService.deleteUser(userId);
     }
 
-    @PostMapping("/register")
-    public @ResponseBody User registerUser(
-            @RequestParam String userName,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dob,
-            @RequestParam String profileUrl,
-            @RequestParam Gender gender,
-            @RequestParam String password) throws IllegalUserNameException {
-        return userService.registerUser(userName, dob, profileUrl, gender, password);
-    }
-
     @PutMapping(path = "{userId}")
     public @ResponseBody User updateUser(
             @PathVariable("userId") Long userId,

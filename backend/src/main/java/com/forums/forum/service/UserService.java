@@ -28,16 +28,6 @@ public class UserService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
-    private final FollowService followService;
-
-    public User registerUser(String userName, LocalDate dob, String profileUrl, Gender gender, String password) throws IllegalUserNameException {
-        if (userRepository.existsByUsername(userName)) {
-            throw new IllegalUserNameException("User name already exist");
-        }
-        User newUser = new User(userName, dob, profileUrl, gender, password);
-        newUser.setRole(Role.USER);
-        return userRepository.save(newUser);
-    }
 
     public List<User> searchUserByUserName(String userName) {
 
